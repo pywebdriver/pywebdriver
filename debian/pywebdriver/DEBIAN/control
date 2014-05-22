@@ -1,0 +1,17 @@
+Package: pywebdriver
+Version: 0.1
+Architecture: amd64
+Maintainer: Sylvain LE GAL <sylvain.legal@grap.coop>
+Installed-Size: 26
+Depends: python-flask
+Section: python
+Priority: extra
+Homepage: http://www.akretion.com
+Description: Python Web Services to communicate wih Devices
+ This Software installs Web Services to allow easy communications with some
+ devices. It provides Web Pages to see the status of the devices.
+ Moreover it provides webservices compatible with Odoo Software, that is an
+ OpenSource ERP Solution. (For more information, see https//odoo.com).
+ PyWebDriver is currently compatible with Odoo 7.0 and 8.0 series.
+ Main Devices compatible:
+ * EPSON - TMT20;
