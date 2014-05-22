@@ -9,5 +9,16 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
+DESTDIR=debian/pywebdriver
+CONFDIR=$(DESTDIR)/etc/pywebdriver
+APPDIR=$(DESTDIR)/usr/share/pyshared/pywebdriver
+
 %:
-	dh $@ 
+	dh $@
+	# Create Configuration Folder
+	mkdir -p $(CONFDIR)
+	
+	# Create Application Folder
+	mkdir -p $(APPDIR)
+	cp pywebdriver.py $(APPDIR)
+	### cp lib/*.py $(APPDIR)

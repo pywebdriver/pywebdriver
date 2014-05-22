@@ -1,3 +1,8 @@
+# File from Debian packaging output
+debian/pywebdriver/
+debian/pywebdriver.debhelper.log
+debian/pywebdriver.substvars
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
