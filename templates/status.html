@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<!-- ********************************************************************** -->
+<!--    PyWebDriver Software                                                -->
+<!--    Copyright (C) 2014-TODAY Akretion <http://www.akretion.com>         -->
+<!--    @author Sylvain LE GAL (https://twitter.com/legalsylvain)           -->
+
+<!--This program is free software: you can redistribute it and/or modify    -->
+<!--it under the terms of the GNU Affero General Public License as          -->
+<!--published by the Free Software Foundation, either version 3 of the      -->
+<!--License, or (at your option) any later version.                         -->
+
+<!--This program is distributed in the hope that it will be useful,         -->
+<!--but WITHOUT ANY WARRANTY; without even the implied warranty of          -->
+<!--MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           -->
+<!--GNU Affero General Public License for more details.                     -->
+
+<!--You should have received a copy of the GNU Affero General Public License-->
+<!--along with this program.  If not, see <http://www.gnu.org/licenses/>.   -->
+<!-- ********************************************************************** -->
+
+{% extends "layout.html" %}
+
+{% block page_title %}{{ _('Status')}}{% endblock %}
+
+{% block content_title %}{{ _('Hardware Status')}}{% endblock %}
+
+{% block content %}
+        <p>{{ _('The list of enabled drivers and their status')}}</p>
+    {% for driver in statuses %}
+        {% if statuses[driver]['state']['status']== 'connected' %}
+            <h2 style="color:green;">{{driver}} : {{ _('Connected')}}</h2>
+        {% elif statuses[driver]['state']['status']== 'connecting' %}
+            <h2 style="color:blue;">{{driver}} : {{ _('Connecting')}}</h2>
+        {% elif statuses[driver]['state']['status']== 'disconnected' %}
+            <h2 style="color:brown;">{{driver}} : {{ _('Disconnected')}}</h2>
+        {% elif statuses[driver]['state']['status']== 'error' %}
+            <h2 style="color:red;">{{driver}} : {{ _('Error')}}</h2>
+        {% else %}
+            <h2 style="color:black;">{{driver}} : {{statuses[driver]['state']['status']}}</h2>
+        {% endif %}
+        {% if statuses[driver]['image'] %}
+            <img src="{{statuses[driver]['image']}}" style="width:200px; height:200px;" />
+        {% endif %}
+                <ul>
+        {% for message in statuses[driver]['state']['messages'] %}
+                <li>{{message}}</li>
+        {% endfor %}
+        {% if statuses[driver]['state']['status']== 'connected' and driver =='escpos' %}
+                <li><a href="print_status.html" target="new">{{_('Print Status Receipt')}}</a></li>
+        {% endif %}
+                </ul>
+    {% endfor %}
+{% endblock %}

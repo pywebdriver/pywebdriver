@@ -1,0 +1,85 @@
+<!doctype html>
+<!-- ********************************************************************** -->
+<!--    PyWebDriver Software                                                -->
+<!--    Copyright (C) 2014-TODAY Akretion <http://www.akretion.com>         -->
+<!--    @author Sylvain LE GAL (https://twitter.com/legalsylvain)           -->
+
+<!--This program is free software: you can redistribute it and/or modify    -->
+<!--it under the terms of the GNU Affero General Public License as          -->
+<!--published by the Free Software Foundation, either version 3 of the      -->
+<!--License, or (at your option) any later version.                         -->
+
+<!--This program is distributed in the hope that it will be useful,         -->
+<!--but WITHOUT ANY WARRANTY; without even the implied warranty of          -->
+<!--MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           -->
+<!--GNU Affero General Public License for more details.                     -->
+
+<!--You should have received a copy of the GNU Affero General Public License-->
+<!--along with this program.  If not, see <http://www.gnu.org/licenses/>.   -->
+<!-- ********************************************************************** -->
+<html>
+  <head>
+
+    <title>{% block page_title %}{% endblock %} - {{ _('PyWebDriver Software')}}</title>
+        <style>
+            #navigation {
+                margin: 0 ;
+                padding: 0 ;
+                list-style: none ;
+                text-align: center ;
+            }
+            #navigation li {
+                display: inline ;
+                margin-right: 1px ;
+                color: #fff ;
+                background: #c00 ;
+            }
+            #navigation li a {
+                padding: 4px 20px ;
+                background: #c00 ;
+                color: #fff ;
+                border: 1px solid #600 ;
+                font: 1em "Trebuchet MS",Arial,sans-serif ;
+                line-height: 1em ;
+                text-align: center ;
+                text-decoration: none ;
+            }
+            #navigation li a:hover, #navigation li a:focus, #navigation li a:active {
+                background: #900 ;
+                text-decoration: underline ;
+            }
+            body {
+                width: 960px;
+                margin: 10px auto;
+                font-family: sans-serif;
+                text-align: justify;
+                color: #6B6B6B;
+            }
+            .list-item {
+                border-bottom: solid 1px rgb(216,216,216);
+                padding: 9px;
+            }
+            .list-item:nth-child(2n) {
+                background:rgb(240,240,240);
+            }
+        </style>
+    {% block style %}
+    {% endblock %}
+  </head>
+  <body>
+    <div id="menu">
+        <ul id="navigation">
+          <li><a href="index.html">{{_('Home')}}</a></li>
+          <li><a href="status.html">{{ _('Status')}}</a></li>
+          <li><a href="devices.html">{{_('Devices')}}</a></li>
+          <li><a href="system.html">{{_('System')}}</a></li>
+        </ul>
+        
+    </div>
+    <div id="content">
+    <h1>{% block content_title %}{% endblock %}</h1>
+    {% block content %}{% endblock %}
+    </div>
+  </body>
+</html>
+
