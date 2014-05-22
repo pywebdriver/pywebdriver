@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-05-22 21:22+0200\n"
+"POT-Creation-Date: 2014-05-22 21:51+0200\n"
 "PO-Revision-Date: 2014-05-17 11:48+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: fr <LL@li.org>\n"
@@ -111,8 +111,8 @@ msgid "Index"
 msgstr "Index"
 
 #: templates/index.html:25
-msgid "Welcome on the Light-PosBox"
-msgstr "Bienvenue sur la Ligtht-PosBox"
+msgid "Welcome on the PyWebDriver"
+msgstr "Bienvenue sur PyWebDriver"
 
 #: templates/layout.html:23
 msgid "PyWebDriver Software"
@@ -177,4 +177,3 @@ msgstr "Information Système"
 #: templates/system.html:25
 msgid "Technical Information about the system"
 msgstr "Information technique concernant le système"
-

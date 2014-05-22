@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-05-22 21:22+0200\n"
+"POT-Creation-Date: 2014-05-22 21:51+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -105,7 +105,7 @@ msgid "Index"
 msgstr ""
 
 #: templates/index.html:25
-msgid "Welcome on the Light-PosBox"
+msgid "Welcome on the PyWebDriver"
 msgstr ""
 
 #: templates/layout.html:23
