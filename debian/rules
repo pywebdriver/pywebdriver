@@ -22,3 +22,4 @@ APPDIR=$(DESTDIR)/usr/share/pyshared/pywebdriver
 	mkdir -p $(APPDIR)
 	cp pywebdriver.py $(APPDIR)
 	### cp lib/*.py $(APPDIR)
+	# qsdf

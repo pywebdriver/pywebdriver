@@ -13,7 +13,8 @@ Architecture: any
 Depends: ${shlibs:Depends},
     ${misc:Depends},
     ${python:Depends},
-    python-flask
+    python-flask,
+    python-flask-babel
 Description: Python Web Services to communicate wih Devices
  This Software installs Web Services to allow easy communications with some
  devices. It provides Web Pages to see the status of the devices.
