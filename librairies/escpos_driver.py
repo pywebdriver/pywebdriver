@@ -241,13 +241,16 @@ class EscposDriver(Thread):
         eprint.cut()
 
     def print_receipt_body(self,eprint,receipt):
-        #<PyWebDriver> refactoring of the function to allow localisation
+        #<PyWebDriver> refactoring of the function to : 
+        # - allow localisation;
+        # - fix some problems if receipt dictionnary doesn't have all keys;
+        # - Print taxes;
         def check(string):
             return string != True and bool(string) and string.strip()
-        
+
         def price(amount):
             return ("{0:."+str(receipt['precision']['price'])+"f}").format(amount)
-        
+
         def money(amount):
             return ("{0:."+str(receipt['precision']['money'])+"f}").format(amount)
 
@@ -273,12 +276,12 @@ class EscposDriver(Thread):
             return ' ' * indent + left + right + '\n'
         
         def print_taxes():
-            taxes = receipt['tax_details']
+            taxes = receipt.get('tax_details', [])
             for tax in taxes:
                 eprint.text(printline(tax['tax']['name'],price(tax['amount']), width=40,ratio=0.6))
 
         # Receipt Header
-        if receipt['company']['logo']:
+        if receipt['company'].get('logo', False):
             eprint.set(align='center')
             eprint.print_base64_image(receipt['company']['logo'])
             eprint.text('\n')
@@ -287,19 +290,19 @@ class EscposDriver(Thread):
             eprint.text(receipt['company']['name'] + '\n')
 
         eprint.set(align='center',type='b')
-        if check(receipt['company']['contact_address']):
+        if check(receipt['company'].get('contact_address', False)):
             eprint.text(receipt['company']['contact_address'] + '\n')
-        if check(receipt['company']['phone']):
+        if check(receipt['company'].get('phone', False)):
             eprint.text(_(u'Tel:') + receipt['company']['phone'] + '\n')
-        if check(receipt['company']['vat']):
+        if check(receipt['company'].get('vat', False)):
             eprint.text(_(u'VAT:') + receipt['company']['vat'] + '\n')
-        if check(receipt['company']['email']):
+        if check(receipt['company'].get('email', False)):
             eprint.text(receipt['company']['email'] + '\n')
-        if check(receipt['company']['website']):
+        if check(receipt['company'].get('website', False)):
             eprint.text(receipt['company']['website'] + '\n')
-        if check(receipt['header']):
+        if check(receipt.get('header')):
             eprint.text(receipt['header']+'\n')
-        if check(receipt['cashier']):
+        if check(receipt.get('cashier')):
             eprint.text('-'*32+'\n')
             eprint.text(_(u'Served by ')+receipt['cashier']+'\n')
 
@@ -325,7 +328,7 @@ class EscposDriver(Thread):
             eprint.text(printline('','-------'));
             eprint.text(printline(_(u'Subtotal'),money(receipt['subtotal']),width=40, ratio=0.6))
             print_taxes()
-            #eprint.text(printline(_(u'Taxes'),money(receipt['total_tax']),width=40, ratio=0.6))
+            eprint.text(printline(_(u'Taxes'),money(receipt['total_tax']),width=40, ratio=0.6))
             taxincluded = False
 
 
@@ -351,10 +354,10 @@ class EscposDriver(Thread):
             eprint.text(printline(_(u'Discounts'),money(receipt['total_discount']),width=40, ratio=0.6))
         if taxincluded:
             print_taxes()
-            #eprint.text(printline(_(u'Taxes'),money(receipt['total_tax']),width=40, ratio=0.6))
+            eprint.text(printline(_(u'Taxes'),money(receipt['total_tax']),width=40, ratio=0.6))
 
         # Footer
-        if check(receipt['footer']):
+        if check(receipt.get('footer')):
             eprint.text('\n'+receipt['footer']+'\n\n')
         eprint.text(receipt['name']+'\n')
         eprint.text(      str(receipt['date']['date']).zfill(2)

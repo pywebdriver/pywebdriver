@@ -24,10 +24,12 @@
 # Core Imports
 import platform
 import commands
+
 from os.path import isfile, join
 from ConfigParser import ConfigParser
 
 # Librairies Imports
+import simplejson
 from flask import (
     Flask, render_template, request, jsonify, make_response, session)
 from flask.ext.babel import Babel
@@ -107,21 +109,46 @@ def system_http():
 def image_html(path=None):
     return app.send_static_file(join('images/', path))
 
+# ############################################################################
+# [Odoo 7.0] Proxy behaviour
+# ############################################################################
+
+@app.route('/pos/print_receipt', methods=['GET'])
+@crossdomain(origin='*')
+def print_receipt_http():
+    """ For Odoo 7.0"""
+    params = dict(request.args)
+    receipt = simplejson.loads(params['r'][0])['params']['receipt']
+    # Add required information if not provided
+    if not receipt.get('precision', False):
+        receipt['precision'] = {
+            'price': config.getint('odoo', 'precision_price'),
+            'money': config.getint('odoo', 'precision_money'),
+            'quantity': config.getint('odoo', 'precision_quantity')}
+    else:
+        if not receipt['precision'].get('price', False):
+            receipt['precision']['price'] = config.getint('odoo', 'precision_price')
+        if not receipt['precision'].get('money', False):
+            receipt['precision']['money'] = config.getint('odoo', 'precision_money')
+        if not receipt['precision'].get('quantity', False):
+            receipt['precision']['quantity'] = config.getint('odoo', 'precision_quantity')
+    drivers['escpos'].push_task('receipt', receipt)
+    return make_response('')
 
 # ############################################################################
-# Route Section Emulating Odoo hw_proxy behaviour
+# [Odoo 8.0] Route Section Emulating Odoo hw_proxy behaviour
 # ############################################################################
 
 
 @app.route('/hw_proxy/hello', methods=['GET'])
 @crossdomain(origin='*')
-def hello():
+def hello_http():
     return make_response('ping')
 
 
 @app.route('/hw_proxy/handshake', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
 @crossdomain(origin='*', headers='accept, content-type')
-def handshake():
+def handshake_json():
     return jsonify(jsonrpc='2.0', result=True)
 
 
@@ -133,21 +160,12 @@ def status_json():
         statuses[driver] = drivers[driver].get_status()
     return jsonify(jsonrpc='2.0', result=statuses)
 
-
-#@app.route(
-#    '/hw_proxy/print_receipt',
-#    methods=['POST', 'GET', 'PUT', 'OPTIONS'])
-#@crossdomain(origin='*', headers='accept, content-type')
-#def print_receipt():
-#    receipt = request.json['params']['receipt']
-#    drivers['escpos'].push_task('receipt', receipt)
-
-
 @app.route(
     '/hw_proxy/print_xml_receipt',
     methods=['POST', 'GET', 'PUT', 'OPTIONS'])
 @crossdomain(origin='*', headers='accept, content-type')
-def print_xml_receipt():
+def print_xml_receipt_json():
+    """ For Odoo 8.0+"""
     receipt = request.json['params']['receipt']
     encoding = config.get('odoo', 'force_receipt_encoding')
     if encoding != '':
@@ -158,7 +176,7 @@ def print_xml_receipt():
 
 @app.route('/hw_proxy/log', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
 @crossdomain(origin='*', headers='accept, content-type')
-def log():
+def log_json():
     arguments = request.json['params']['arguments']
     print (' '.join(str(v) for v in arguments))
     return jsonify(jsonrpc='2.0', result=True)
