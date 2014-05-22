@@ -1,0 +1,186 @@
+# French translations for PROJECT.
+# Copyright (C) 2014 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2014-05-21 01:36+0200\n"
+"PO-Revision-Date: 2014-05-17 11:48+0200\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: fr <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 1.3\n"
+
+#: main.py:113
+msgid "OS - System"
+msgstr "OS - Système"
+
+#: main.py:115
+msgid "OS - Release"
+msgstr "OS - Noyau"
+
+#: main.py:117
+msgid "OS - Version"
+msgstr "OS - Version"
+
+#: main.py:119
+msgid "OS - Machine"
+msgstr "OS - Machine"
+
+#: escpos/driver.py:134
+#, python-format
+msgid "Connected to %s"
+msgstr "Connecté(e) à %s"
+
+#: escpos/driver.py:140
+msgid "Printer Not Found"
+msgstr "Imprimante non trouvée"
+
+#: escpos/driver.py:217
+msgid "PosBox Status"
+msgstr "Statut de la PosBox"
+
+#: escpos/driver.py:222
+msgid ""
+"ERROR: Could not connect to LAN\n"
+"\n"
+"Please check that the PosBox is correc-\n"
+"tly connected with a network cable,\n"
+" that the LAN is setup with DHCP, and\n"
+"that network addresses are available"
+msgstr ""
+"ERREUR : Impossible de se connecter au\n"
+"réseau local : Vérifiez si la PosBox est\n"
+"correctement connectée au cable réseau,\n"
+"que le réseau local est en DHCP,\n"
+"et que les adresses réseaux sont \n"
+"disponible."
+
+#: escpos/driver.py:230
+msgid "IP Address:"
+msgstr "Adresse IP :"
+
+#: escpos/driver.py:231
+msgid "Homepage:"
+msgstr "Page d'accueil :"
+
+#: escpos/driver.py:287
+msgid "Tel: "
+msgstr "Tél : "
+
+#: escpos/driver.py:289
+msgid "VAT: "
+msgstr "TVA Intracom : "
+
+#: escpos/driver.py:298
+msgid "Served by "
+msgstr "Servi par "
+
+#: escpos/driver.py:320
+msgid "Subtotal"
+msgstr "Sous-Total"
+
+#: escpos/driver.py:330
+msgid "         TOTAL"
+msgstr "         TOTAL"
+
+#: escpos/driver.py:343
+msgid "        CHANGE"
+msgstr "       MONNAIE"
+
+#: escpos/driver.py:351
+msgid "Discounts"
+msgstr "Remises"
+
+#: templates/devices.html:27
+msgid "Connected Devices"
+msgstr "Périphériques connectés (USB)"
+
+#: templates/devices.html:29
+msgid "Connected Devices (USB)"
+msgstr "Périphériques connectés (USB)"
+
+#: templates/devices.html:32
+msgid "The list of connected USB devices as seen by the posbox"
+msgstr ""
+"La liste des périphériques USB connectés, tels qu'ils sont détectés par "
+"la Light-PosBox"
+
+#: templates/index.html:27
+msgid "Index"
+msgstr "Index"
+
+#: templates/index.html:29
+msgid "Welcome on the Light-PosBox"
+msgstr "Bienvenue sur la Ligtht-PosBox"
+
+#: templates/layout.html:27
+msgid "Light-PosBox For Odoo"
+msgstr "Statut de la Light-PosBox Pour Odoo"
+
+#: templates/layout.html:76
+msgid "Home"
+msgstr "Accueil"
+
+#: templates/layout.html:77 templates/status.html:27
+msgid "Status"
+msgstr "Statut de la PosBox"
+
+#: templates/layout.html:78
+msgid "Devices"
+msgstr "Périphériques"
+
+#: templates/layout.html:79
+msgid "System"
+msgstr "Système"
+
+#: templates/print_status.html:27
+msgid "Print Status"
+msgstr "Imprimer un état de la PosBox"
+
+#: templates/print_status.html:29
+msgid "Please close this page"
+msgstr "Merci de fermer cette page"
+
+#: templates/status.html:29
+msgid "Hardware Status"
+msgstr "Etat du Matériel"
+
+#: templates/status.html:32
+msgid "The list of enabled drivers and their status"
+msgstr "La lise des pilotes activés avec leur état"
+
+#: templates/status.html:35
+msgid "Connected"
+msgstr "Connecté(e)"
+
+#: templates/status.html:37
+msgid "Connecting"
+msgstr "En cours de connexion"
+
+#: templates/status.html:39
+msgid "Disconnected"
+msgstr "Déconnecté(e)"
+
+#: templates/status.html:41
+msgid "Error"
+msgstr "En Erreur"
+
+#: templates/status.html:53
+msgid "Print Status Receipt"
+msgstr "Imprimer un ticket indiquant le statut"
+
+#: templates/system.html:27
+msgid "System Information"
+msgstr "Information Système"
+
+#: templates/system.html:29
+msgid "Technical Information about the Light-PosBox"
+msgstr "Information technique concernant la Light-PosBox"
+
