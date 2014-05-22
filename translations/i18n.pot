@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-05-22 21:08+0200\n"
+"POT-Creation-Date: 2014-05-22 21:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -100,75 +100,75 @@ msgstr ""
 msgid "Connected Devices (USB)"
 msgstr ""
 
-#: templates/index.html:27
+#: templates/index.html:23
 msgid "Index"
 msgstr ""
 
-#: templates/index.html:29
+#: templates/index.html:25
 msgid "Welcome on the Light-PosBox"
 msgstr ""
 
-#: templates/layout.html:27
-msgid "Light-PosBox For Odoo"
+#: templates/layout.html:23
+msgid "PyWebDriver Software"
 msgstr ""
 
-#: templates/layout.html:76
+#: templates/layout.html:72
 msgid "Home"
 msgstr ""
 
-#: templates/layout.html:77 templates/status.html:27
+#: templates/layout.html:73 templates/status.html:23
 msgid "Status"
 msgstr ""
 
-#: templates/layout.html:78
+#: templates/layout.html:74
 msgid "Devices"
 msgstr ""
 
-#: templates/layout.html:79
+#: templates/layout.html:75
 msgid "System"
 msgstr ""
 
-#: templates/print_status.html:27
+#: templates/print_status.html:23
 msgid "Print Status"
 msgstr ""
 
-#: templates/print_status.html:29
+#: templates/print_status.html:25
 msgid "Please close this page"
 msgstr ""
 
-#: templates/status.html:29
+#: templates/status.html:25
 msgid "Hardware Status"
 msgstr ""
 
-#: templates/status.html:32
+#: templates/status.html:28
 msgid "The list of enabled drivers and their status"
 msgstr ""
 
-#: templates/status.html:35
+#: templates/status.html:31
 msgid "Connected"
 msgstr ""
 
-#: templates/status.html:37
+#: templates/status.html:33
 msgid "Connecting"
 msgstr ""
 
-#: templates/status.html:39
+#: templates/status.html:35
 msgid "Disconnected"
 msgstr ""
 
-#: templates/status.html:41
+#: templates/status.html:37
 msgid "Error"
 msgstr ""
 
-#: templates/status.html:53
+#: templates/status.html:49
 msgid "Print Status Receipt"
 msgstr ""
 
-#: templates/system.html:27
+#: templates/system.html:23
 msgid "System Information"
 msgstr ""
 
-#: templates/system.html:29
-msgid "Technical Information about the Light-PosBox"
+#: templates/system.html:25
+msgid "Technical Information about the system"
 msgstr ""
 
