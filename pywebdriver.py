@@ -24,7 +24,6 @@
 # Core Imports
 import platform
 import commands
-import logging
 from os.path import isfile, join
 from ConfigParser import ConfigParser
 
@@ -140,7 +139,6 @@ def status_json():
     methods=['POST', 'GET', 'PUT', 'OPTIONS'])
 @crossdomain(origin='*', headers='accept, content-type')
 def print_receipt():
-    _logger.info('ESC/POS: PRINT RECEIPT')
     receipt = request.json['params']['receipt']
     drivers['escpos'].push_task('receipt', receipt)
 
@@ -150,7 +148,6 @@ def print_receipt():
     methods=['POST', 'GET', 'PUT', 'OPTIONS'])
 @crossdomain(origin='*', headers='accept, content-type')
 def print_xml_receipt():
-    _logger.info('ESC/POS: PRINT XML RECEIPT')
     receipt = request.json['params']['receipt']
     drivers['escpos'].push_task('xml_receipt', receipt)
 
@@ -175,9 +172,6 @@ config.read(config_file)
 # Localization
 app.config['BABEL_DEFAULT_LOCALE'] = config.get('localization', 'locale')
 babel = Babel(app)
-
-# Extra-Tools
-_logger = logging.getLogger(__name__)
 
 # Drivers
 drivers = {}
