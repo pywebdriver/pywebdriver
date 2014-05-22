@@ -149,7 +149,11 @@ def status_json():
 @crossdomain(origin='*', headers='accept, content-type')
 def print_xml_receipt():
     receipt = request.json['params']['receipt']
-    drivers['escpos'].push_task('xml_receipt', receipt)
+    encoding = config.get('odoo', 'force_receipt_encoding')
+    if encoding != '':
+        drivers['escpos'].push_task('xml_receipt', receipt.encode(encoding))
+    else:
+        drivers['escpos'].push_task('xml_receipt', receipt)
     return jsonify(jsonrpc='2.0', result=True)
 
 @app.route('/hw_proxy/log', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
