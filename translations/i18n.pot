@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-05-22 17:52+0200\n"
+"POT-Creation-Date: 2014-05-22 21:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,81 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 1.3\n"
+
+#: pywebdriver.py:93
+msgid "OS - System"
+msgstr ""
+
+#: pywebdriver.py:95
+msgid "OS - Release"
+msgstr ""
+
+#: pywebdriver.py:97
+msgid "OS - Version"
+msgstr ""
+
+#: pywebdriver.py:99
+msgid "OS - Machine"
+msgstr ""
+
+#: librairies/escpos_driver.py:149
+#, python-format
+msgid "Connected to %s"
+msgstr ""
+
+#: librairies/escpos_driver.py:153
+msgid "Printer Not Found"
+msgstr ""
+
+#: librairies/escpos_driver.py:223
+msgid "PyWebDriver Software Status"
+msgstr ""
+
+#: librairies/escpos_driver.py:228
+msgid ""
+"ERROR: Could not connect to LAN\n"
+"\n"
+"Please check that your system is correc-\n"
+"tly connected with a network cable,\n"
+" that the LAN is setup with DHCP, and\n"
+"that network addresses are available"
+msgstr ""
+
+#: librairies/escpos_driver.py:236
+msgid "IP Address:"
+msgstr ""
+
+#: librairies/escpos_driver.py:237
+msgid "Homepage:"
+msgstr ""
+
+#: librairies/escpos_driver.py:293
+msgid "Tel:"
+msgstr ""
+
+#: librairies/escpos_driver.py:295
+msgid "VAT:"
+msgstr ""
+
+#: librairies/escpos_driver.py:304
+msgid "Served by "
+msgstr ""
+
+#: librairies/escpos_driver.py:326
+msgid "Subtotal"
+msgstr ""
+
+#: librairies/escpos_driver.py:335
+msgid "         TOTAL"
+msgstr ""
+
+#: librairies/escpos_driver.py:345
+msgid "        CHANGE"
+msgstr ""
+
+#: librairies/escpos_driver.py:351
+msgid "Discounts"
+msgstr ""
 
 #: templates/devices.html:23
 msgid "Connected Devices"
@@ -25,75 +100,75 @@ msgstr ""
 msgid "Connected Devices (USB)"
 msgstr ""
 
-#: templates/index.html:23
+#: templates/index.html:27
 msgid "Index"
 msgstr ""
 
-#: templates/index.html:25
-msgid "Welcome on PyWebDriver"
+#: templates/index.html:29
+msgid "Welcome on the Light-PosBox"
 msgstr ""
 
-#: templates/layout.html:23
-msgid "PyWebDriver Software"
+#: templates/layout.html:27
+msgid "Light-PosBox For Odoo"
 msgstr ""
 
-#: templates/layout.html:72
+#: templates/layout.html:76
 msgid "Home"
 msgstr ""
 
-#: templates/layout.html:73 templates/status.html:23
+#: templates/layout.html:77 templates/status.html:27
 msgid "Status"
 msgstr ""
 
-#: templates/layout.html:74
+#: templates/layout.html:78
 msgid "Devices"
 msgstr ""
 
-#: templates/layout.html:75
+#: templates/layout.html:79
 msgid "System"
 msgstr ""
 
-#: templates/print_status.html:23
+#: templates/print_status.html:27
 msgid "Print Status"
 msgstr ""
 
-#: templates/print_status.html:25
+#: templates/print_status.html:29
 msgid "Please close this page"
 msgstr ""
 
-#: templates/status.html:25
+#: templates/status.html:29
 msgid "Hardware Status"
 msgstr ""
 
-#: templates/status.html:28
+#: templates/status.html:32
 msgid "The list of enabled drivers and their status"
 msgstr ""
 
-#: templates/status.html:31
+#: templates/status.html:35
 msgid "Connected"
 msgstr ""
 
-#: templates/status.html:33
+#: templates/status.html:37
 msgid "Connecting"
 msgstr ""
 
-#: templates/status.html:35
+#: templates/status.html:39
 msgid "Disconnected"
 msgstr ""
 
-#: templates/status.html:37
+#: templates/status.html:41
 msgid "Error"
 msgstr ""
 
-#: templates/status.html:49
+#: templates/status.html:53
 msgid "Print Status Receipt"
 msgstr ""
 
-#: templates/system.html:23
+#: templates/system.html:27
 msgid "System Information"
 msgstr ""
 
-#: templates/system.html:25
-msgid "Technical Information about your system"
+#: templates/system.html:29
+msgid "Technical Information about the Light-PosBox"
 msgstr ""
 
