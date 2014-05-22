@@ -1,8 +1,13 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    hw_escpos Module for Odoo
-#    Copyright (C) Odoo SA.
+#    This file comes from Odoo Project
+#    Copyright (C) 2004-TODAY Odoo S.A (<http://odoo.com>).
+#   
+#    Some modification are done for PyWebDriver compatility or improvement
+#    There are marked by <PyWebDriver>
+#    Copyright (C) 2014-TODAY Akretion <http://www.akretion.com>.
+#    @author Sylvain LE GAL (https://twitter.com/legalsylvain)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -18,6 +23,12 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+# <PyWebDriver-begin> Extra Import
+import gettext
+from pif import get_public_ip
+# <PyWebDriver-end> Extra Import
+
 import commands
 import simplejson
 import os
@@ -32,31 +43,41 @@ import pickle
 import re
 import subprocess
 import traceback
-import usb.core
-import gettext
 from threading import Thread, Lock
 from Queue import Queue, Empty
-from PIL import Image
-from pif import get_public_ip
 
-from . import printer
-from . import supported_devices
+try:
+    import usb.core
+except ImportError:
+    usb = None
+
+from escpos import printer
+from escpos import supported_devices
+
+from PIL import Image
+
+
+
 
 class EscposDriver(Thread):
-    def __init__(self,
-            localization='en',
-            port=8069):
+    def __init__(self, localization, port):
         Thread.__init__(self)
         self.queue = Queue()
         self.lock  = Lock()
-        self.vendor_product = None
         self.status = {'status':'connecting', 'messages':[]}
+        # PyWebDriver-begin : Add extra behaviour for the PosDriver
+        self.vendor_product = None
         self.port = port
         language = gettext.translation (
             'messages',
             './translations/',
             [localization])
         language.install(unicode = True)
+        # <PyWebDriver-end>
+
+    # <PyWebDriver> : New function that return a string with vendor and product
+    def get_vendor_product(self):
+        return self.vendor_product
 
     def supported_devices(self):
         if not os.path.isfile('escpos_devices.pickle'):
@@ -120,32 +141,28 @@ class EscposDriver(Thread):
                 self.start()
     
     def get_escpos_printer(self):
+        #<PyWebDriver> Add vendor_product setting in the function
         try:
             printers = self.connected_usb_devices()
             if len(printers) > 0:
-                self.set_status(
-                    'connected',
-                    _(u'Connected to %s') %(printers[0]['name']))
                 self.vendor_product = str(printers[0]['vendor']) + '_' + str(printers[0]['product'])
+                self.set_status('connected', _(u'Connected to %s') %(printers[0]['name']))
                 return printer.Usb(printers[0]['vendor'], printers[0]['product'])
             else:
-                self.set_status(
-                    'disconnected',
-                    _(u'Printer Not Found'))
                 self.vendor_product = None
+                self.set_status('disconnected', _(u'Printer Not Found'))
+
                 return None
         except Exception as e:
-            self.set_status('error',str(e))
             self.vendor_product = None
+            self.set_status('error',str(e))
             return None
 
     def get_status(self):
         self.push_task('status')
         return self.status
 
-    def get_vendor_product(self):
-        self.push_task('status')
-        return self.vendor_product
+
 
     def open_cashbox(self,printer):
         printer.cashdraw(2)
@@ -198,6 +215,8 @@ class EscposDriver(Thread):
         self.queue.put((time.time(),task,data))
 
     def print_status(self,eprint):
+        #<PyWebDriver> Full refactoring of the function to allow
+        # localisation and to make more easy the search of the ip
         ip = get_public_ip()
         eprint.text('\n\n')
         eprint.set(align='center',type='b',height=2,width=2)
@@ -222,7 +241,7 @@ class EscposDriver(Thread):
         eprint.cut()
 
     def print_receipt_body(self,eprint,receipt):
-
+        #<PyWebDriver> refactoring of the function to allow localisation
         def check(string):
             return string != True and bool(string) and string.strip()
         
@@ -271,9 +290,9 @@ class EscposDriver(Thread):
         if check(receipt['company']['contact_address']):
             eprint.text(receipt['company']['contact_address'] + '\n')
         if check(receipt['company']['phone']):
-            eprint.text(_(u'Tel: ') + receipt['company']['phone'] + '\n')
+            eprint.text(_(u'Tel:') + receipt['company']['phone'] + '\n')
         if check(receipt['company']['vat']):
-            eprint.text(_(u'VAT: ') + receipt['company']['vat'] + '\n')
+            eprint.text(_(u'VAT:') + receipt['company']['vat'] + '\n')
         if check(receipt['company']['email']):
             eprint.text(receipt['company']['email'] + '\n')
         if check(receipt['company']['website']):
@@ -282,7 +301,7 @@ class EscposDriver(Thread):
             eprint.text(receipt['header']+'\n')
         if check(receipt['cashier']):
             eprint.text('-'*32+'\n')
-            eprint.text(_(u'Served by ') + receipt['cashier']+'\n')
+            eprint.text(_(u'Served by ')+receipt['cashier']+'\n')
 
         # Orderlines
         eprint.text('\n\n')
@@ -313,30 +332,23 @@ class EscposDriver(Thread):
         # Total
         eprint.text(printline('','-------'));
         eprint.set(align='center',height=2)
-        eprint.text(printline(
-            _(u'         TOTAL'),
-            money(receipt['total_with_tax']), width=40, ratio=0.6))
+        eprint.text(printline(_(u'         TOTAL'),money(receipt['total_with_tax']), width=40, ratio=0.6))
         eprint.text('\n\n');
         
         # Paymentlines
         eprint.set(align='center')
         for line in receipt['paymentlines']:
-            eprint.text(printline(
-                line['journal'], money(line['amount']), ratio=0.6))
+            eprint.text(printline(line['journal'], money(line['amount']), ratio=0.6))
 
         eprint.text('\n');
         eprint.set(align='center',height=2)
-        eprint.text(printline(
-            _(u'        CHANGE'),
-            money(receipt['change']),width=40, ratio=0.6))
+        eprint.text(printline(_(u'        CHANGE'),money(receipt['change']),width=40, ratio=0.6))
         eprint.set(align='center')
         eprint.text('\n');
 
         # Extra Payment info
         if receipt['total_discount'] != 0:
-            eprint.text(printline(
-                _(u'Discounts'),
-                money(receipt['total_discount']),width=40, ratio=0.6))
+            eprint.text(printline(_(u'Discounts'),money(receipt['total_discount']),width=40, ratio=0.6))
         if taxincluded:
             print_taxes()
             #eprint.text(printline(_(u'Taxes'),money(receipt['total_tax']),width=40, ratio=0.6))
@@ -350,8 +362,3 @@ class EscposDriver(Thread):
                     +'/'+ str(receipt['date']['year']).zfill(4)
                     +' '+ str(receipt['date']['hour']).zfill(2)
                     +':'+ str(receipt['date']['minute']).zfill(2) )
-
-
-
-
-

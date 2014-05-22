@@ -35,7 +35,7 @@ from flask.ext.babel import gettext as _
 
 # Project Import
 from librairies.cors_decorator import crossdomain
-from librairies.escpos.driver import EscposDriver
+from librairies.escpos_driver import EscposDriver
 
 
 # Application
