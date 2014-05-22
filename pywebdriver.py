@@ -134,13 +134,13 @@ def status_json():
     return jsonify(jsonrpc='2.0', result=statuses)
 
 
-@app.route(
-    '/hw_proxy/print_receipt',
-    methods=['POST', 'GET', 'PUT', 'OPTIONS'])
-@crossdomain(origin='*', headers='accept, content-type')
-def print_receipt():
-    receipt = request.json['params']['receipt']
-    drivers['escpos'].push_task('receipt', receipt)
+#@app.route(
+#    '/hw_proxy/print_receipt',
+#    methods=['POST', 'GET', 'PUT', 'OPTIONS'])
+#@crossdomain(origin='*', headers='accept, content-type')
+#def print_receipt():
+#    receipt = request.json['params']['receipt']
+#    drivers['escpos'].push_task('receipt', receipt)
 
 
 @app.route(
@@ -150,7 +150,14 @@ def print_receipt():
 def print_xml_receipt():
     receipt = request.json['params']['receipt']
     drivers['escpos'].push_task('xml_receipt', receipt)
+    return jsonify(jsonrpc='2.0', result=True)
 
+@app.route('/hw_proxy/log', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
+@crossdomain(origin='*', headers='accept, content-type')
+def log():
+    arguments = request.json['params']['arguments']
+    print (' '.join(str(v) for v in arguments))
+    return jsonify(jsonrpc='2.0', result=True)
 
 # ############################################################################
 # Init Section
