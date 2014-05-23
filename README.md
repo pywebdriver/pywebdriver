@@ -27,7 +27,7 @@ A lot of the code come from other projects. Licences and copyright are mentionne
 
 # <a name="features"></a>Features
 
-## <a name="feature-1"></a>A/ Specific WebServices for Odoo
+## <a name="feature-a"></a>A/ Specific WebServices for Odoo
 * **State** : To be released;
 * **Compatibility** : Odoo 7.0; Odoo 8.0;
 
