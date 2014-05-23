@@ -10,22 +10,20 @@ The aim of this project is to make more easy communication between application a
 Table of Content
 ----------------
 * [Contributors](#contributors) 
+* [Features](#features)
+  * [A/ Specific WebServices for Odoo](#feature-a)
+  * [B/ Generic WebServices using CUP](#feature-b)
 
 # <a name="contributors"></a>Contributors
-=========================================
 * Sylvain Le Gal <https://twitter/legalsylvain>
 * Sébastien Beau <sebastien.beau@akretion.com>
 * Arthur Vuillard <arthur@hashbang.fr>
 
-Features :
-==========
+# <a name="features"></a>Features
 
-1/ Provide Specific WebServices for Odoo Project
-------------------------------------------------
+## <a name="feature-1"></a>A/ Specific WebServices for Odoo
 * **State** : To be released;
 * **Compatibility** : Odoo 7.0; Odoo 8.0;
 
-
-
-2/ Provides WebServices for any Project using CUP drivers
----------------------------------------------------------
+## <a name="feature-b"></a>B/ Generic WebServices using CUP
+* **State** : Planned;
