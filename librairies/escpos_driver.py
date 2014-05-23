@@ -241,7 +241,7 @@ class EscposDriver(Thread):
         eprint.cut()
 
     def print_receipt_body(self,eprint,receipt):
-        #<PyWebDriver> refactoring of the function to : 
+        #<PyWebDriver> refactoring of the function to :
         # - allow localisation;
         # - fix some problems if receipt dictionnary doesn't have all keys;
         # - Print taxes;
@@ -320,7 +320,7 @@ class EscposDriver(Thread):
                 if line['unit_name'] == 'Unit(s)':
                     eprint.text( printline( quantity(line['quantity']) + ' x ' + price(line['price']), pricestr, ratio=0.6, indent=2))
                 else:
-                    eprint.text( printline( quantity(line['quantity']) + line['unit_name'] + ' x ' + price(line['price']), pricestr, ratio=0.6, indent=2))
+                    eprint.text( printline( quantity(line['quantity']) + ' ' + line['unit_name'] + ' x ' + price(line['price']), pricestr, ratio=0.6, indent=2))
 
         # Subtotal if the taxes are not included
         taxincluded = True
