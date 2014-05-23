@@ -25,15 +25,14 @@ Table of Content
 # <a name="features"></a>Features
 
 ## <a name="feature-a"></a>Specific WebServices for Odoo
-* **Main State** : To be released;
-* **Compatibility** : Odoo 7.0; Odoo 8.0;
 The aim of this sub project is provide WebServices and Web Page to simulate the behaviour of Odoo Apps (hw_proxy applications & co) to allow Odoo users to use Odoo Point of Sale with PyWebDriver as a Proxy.
-State of the project depending of devices type:
-* **Printers** : To be released for 7.0 and 8.0 Series;
-* **Scale**, **Barcode Reader**, **Cash Box**, **Credit Carte Reader** : Not Planned;
+* **State** (depending of devices type):
+ * **Printers** : To be released for 7.0 and 8.0 Series;
+ * **Scale**, **Barcode Reader**, **Cash Box**, **Credit Carte Reader** : Not Planned;
+* **Compatibility** : Odoo 7.0; Odoo 8.0;
 
 ## <a name="feature-b"></a>Generic WebServices using CUP
-* **Main State** : Planned;
+* **State** : Planned;
 
 # <a name="customers"></a>End-Users / Customers Section
 If a you're interested by a feature that is not currently supported, please [contact our team](http://www.akretion.com) for a quotation.
