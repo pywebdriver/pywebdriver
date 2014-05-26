@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-05-22 21:51+0200\n"
+"POT-Creation-Date: 2014-05-26 21:23+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,19 +17,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 1.3\n"
 
-#: pywebdriver.py:93
+#: pywebdriver.py:95
 msgid "OS - System"
 msgstr ""
 
-#: pywebdriver.py:95
+#: pywebdriver.py:97
 msgid "OS - Release"
 msgstr ""
 
-#: pywebdriver.py:97
+#: pywebdriver.py:99
 msgid "OS - Version"
 msgstr ""
 
-#: pywebdriver.py:99
+#: pywebdriver.py:101
 msgid "OS - Machine"
 msgstr ""
 
@@ -64,31 +64,39 @@ msgstr ""
 msgid "Homepage:"
 msgstr ""
 
-#: librairies/escpos_driver.py:293
+#: librairies/escpos_driver.py:296
 msgid "Tel:"
 msgstr ""
 
-#: librairies/escpos_driver.py:295
+#: librairies/escpos_driver.py:298
 msgid "VAT:"
 msgstr ""
 
-#: librairies/escpos_driver.py:304
+#: librairies/escpos_driver.py:307
 msgid "Served by "
 msgstr ""
 
-#: librairies/escpos_driver.py:326
+#: librairies/escpos_driver.py:319
+msgid "Discount: "
+msgstr ""
+
+#: librairies/escpos_driver.py:329
 msgid "Subtotal"
 msgstr ""
 
-#: librairies/escpos_driver.py:335
+#: librairies/escpos_driver.py:331 librairies/escpos_driver.py:357
+msgid "Taxes"
+msgstr ""
+
+#: librairies/escpos_driver.py:338
 msgid "         TOTAL"
 msgstr ""
 
-#: librairies/escpos_driver.py:345
+#: librairies/escpos_driver.py:348
 msgid "        CHANGE"
 msgstr ""
 
-#: librairies/escpos_driver.py:351
+#: librairies/escpos_driver.py:354
 msgid "Discounts"
 msgstr ""
 

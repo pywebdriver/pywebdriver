@@ -316,7 +316,7 @@ class EscposDriver(Thread):
             else:
                 eprint.text(printline(line['product_name'],ratio=0.6))
                 if line['discount'] != 0:
-                    eprint.text(printline('Discount: '+str(line['discount'])+'%', ratio=0.6, indent=2))
+                    eprint.text(printline(_(u'Discount: ')+str(line['discount'])+'%', ratio=0.6, indent=2))
                 if line['unit_name'] == 'Unit(s)':
                     eprint.text( printline( quantity(line['quantity']) + ' x ' + price(line['price']), pricestr, ratio=0.6, indent=2))
                 else:
