@@ -84,7 +84,7 @@ msgstr "Servi par "
 
 #: librairies/escpos_driver.py:319
 msgid "Discount: "
-msgstr "Remises"
+msgstr "Remises : "
 
 #: librairies/escpos_driver.py:329
 msgid "Subtotal"
