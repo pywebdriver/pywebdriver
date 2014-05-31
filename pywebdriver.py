@@ -39,6 +39,7 @@ from flask.ext.babel import gettext as _
 from librairies.cors_decorator import crossdomain
 from librairies.escpos_driver import EscposDriver
 
+from librairies.cups_driver import CupsDriver
 
 # Application
 app = Flask(__name__)
@@ -182,6 +183,20 @@ def log_json():
     return jsonify(jsonrpc='2.0', result=True)
 
 # ############################################################################
+# Cups Route
+# ############################################################################
+
+@app.route('/cups', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
+@crossdomain(origin='*', headers='accept, content-type')
+def cupsapi():
+    method = request.json['method']
+    args = request.json.get('args', [])
+    kwargs = request.json.get('kwargs', {})
+    result = getattr(drivers['cups'], method)(*args, **kwargs)
+    return jsonify(jsonrpc='2.0', result=result)
+
+
+# ############################################################################
 # Init Section
 # ############################################################################
 
@@ -211,6 +226,9 @@ if config.getboolean('application', 'print_status_start'):
     drivers['escpos'].push_task('printstatus')
 else:
     drivers['escpos'].push_task('status')
+
+#Connect to local cups
+drivers['cups'] = CupsDriver()
 
 # Run application
 if __name__ == '__main__':
