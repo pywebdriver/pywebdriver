@@ -186,12 +186,16 @@ def log_json():
 # Cups Route
 # ############################################################################
 
-@app.route('/cups', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
+@app.route('/cups/<method>', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
 @crossdomain(origin='*', headers='accept, content-type')
-def cupsapi():
-    method = request.json['method']
-    args = request.json.get('args', [])
-    kwargs = request.json.get('kwargs', {})
+def cupsapi(method):
+    args = []
+    kwargs = {}
+    if request.json:
+        args = request.json.get('args', [])
+        kwargs = request.json.get('kwargs', {})
+    if request.args:
+        kwargs = request.args.to_dict()
     result = getattr(drivers['cups'], method)(*args, **kwargs)
     return jsonify(jsonrpc='2.0', result=result)
 
