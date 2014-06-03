@@ -2,8 +2,8 @@ Package: pywebdriver
 Version: 0.1
 Architecture: amd64
 Maintainer: Sylvain LE GAL <sylvain.legal@grap.coop>
-Installed-Size: 26
-Depends: python-flask
+Installed-Size: 141
+Depends: python2.7, python (>= 2.7.1-0ubuntu2), python (<< 2.8), python-flask, python-flask-babel
 Section: python
 Priority: extra
 Homepage: http://www.akretion.com

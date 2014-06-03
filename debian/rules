@@ -13,13 +13,19 @@ DESTDIR=debian/pywebdriver
 CONFDIR=$(DESTDIR)/etc/pywebdriver
 APPDIR=$(DESTDIR)/usr/share/pyshared/pywebdriver
 
+
 %:
-	dh $@
+	dh $@ --with python2
+
+
+override_dh_auto_install:
 	# Create Configuration Folder
 	mkdir -p $(CONFDIR)
 	
 	# Create Application Folder
 	mkdir -p $(APPDIR)
+	mkdir -p $(APPDIR)/librairies
+	mkdir -p $(APPDIR)/librairies/escpos
 	cp pywebdriver.py $(APPDIR)
-	### cp lib/*.py $(APPDIR)
-	# qsdf
+	cp librairies/*.py $(APPDIR)/librairies
+	cp librairies/escpos/*.py $(APPDIR)/librairies/escpos
