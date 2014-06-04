@@ -49,4 +49,24 @@ class CupsDriver(cups.Connection):
             string_options[str(key)] = str(value)
         return super(CupsDriver, self).printFiles(
             printer, filenames, title, string_options)
- 
+
+    def get_vendor_product(self):
+        return 'cups-icon'
+
+    def get_status(self):
+        messages = []
+        mapstate = {
+            3: 'Idle',
+            4: 'Printing',
+            5: 'Stopped',
+            }
+        for printer, value in self.getPrinters().items():
+            messages.append("%s : %s"
+                %(printer, mapstate[value['printer-state']]
+                ))
+        state = {
+            'status': 'connected',
+            'messages': messages,
+        }
+        return state
+
