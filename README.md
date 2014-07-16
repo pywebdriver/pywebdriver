@@ -56,6 +56,11 @@ A lot of the code come from other projects. Licences and copyright are mentionne
 
 To test this module, do the following steps: 
 * download it from git;
+* Install dependency by running this two command
+```
+sudo apt-get cups python-cups python-pip
+sudo pip install -r requirement.txt
+```
 * set correct parameters in the config/config.ini file;
 * call this command:
 ```

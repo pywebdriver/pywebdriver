@@ -1,0 +1,6 @@
+simplejson
+Flask
+Flask-Babel
+pyusb
+pyserial
+pif
