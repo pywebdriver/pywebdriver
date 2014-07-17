@@ -35,9 +35,9 @@ from flask import (
     Flask, render_template, request, jsonify, make_response, session)
 from flask.ext.babel import Babel
 from flask.ext.babel import gettext as _
+from flask_cors import cross_origin
 
 # Project Import
-from librairies.cors_decorator import crossdomain
 from librairies.escpos_driver import EscposDriver
 
 from librairies.cups_driver import CupsDriver
@@ -53,20 +53,20 @@ app = Flask(__name__)
 
 @app.route("/")
 @app.route('/index.html', methods=['GET'])
-@crossdomain(origin='*')
+@cross_origin()
 def index_http():
     return render_template('index.html')
 
 
 @app.route('/print_status.html', methods=['GET'])
-@crossdomain(origin='*')
+@cross_origin()
 def print_status_http():
     drivers['escpos'].push_task('printstatus')
     return render_template('print_status.html')
 
 
 @app.route('/status.html', methods=['GET'])
-@crossdomain(origin='*')
+@cross_origin()
 def status_http():
     statuses = {}
     for driver in drivers:
@@ -83,14 +83,14 @@ def status_http():
 
 
 @app.route('/devices.html', methods=['GET'])
-@crossdomain(origin='*')
+@cross_origin()
 def devices_http():
     devices = commands.getoutput("lsusb").split('\n')
     return render_template('devices.html', devices=devices)
 
 
 @app.route('/system.html', methods=['GET'])
-@crossdomain(origin='*')
+@cross_origin()
 def system_http():
     system_info = []
     system_info.append({
@@ -116,7 +116,7 @@ def image_html(path=None):
 # ############################################################################
 
 @app.route('/pos/print_receipt', methods=['GET'])
-@crossdomain(origin='*')
+@cross_origin()
 def print_receipt_http():
     """ For Odoo 7.0"""
     params = dict(request.args)
@@ -143,19 +143,19 @@ def print_receipt_http():
 
 
 @app.route('/hw_proxy/hello', methods=['GET'])
-@crossdomain(origin='*')
+@cross_origin()
 def hello_http():
     return make_response('ping')
 
 
 @app.route('/hw_proxy/handshake', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
-@crossdomain(origin='*', headers='accept, content-type')
+@cross_origin(headers=['Content-Type'])
 def handshake_json():
     return jsonify(jsonrpc='2.0', result=True)
 
 
 @app.route('/hw_proxy/status_json', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
-@crossdomain(origin='*', headers='accept, content-type')
+@cross_origin(headers=['Content-Type'])
 def status_json():
     statuses = {}
     for driver in drivers:
@@ -165,7 +165,7 @@ def status_json():
 @app.route(
     '/hw_proxy/print_xml_receipt',
     methods=['POST', 'GET', 'PUT', 'OPTIONS'])
-@crossdomain(origin='*', headers='accept, content-type')
+@cross_origin(headers=['Content-Type'])
 def print_xml_receipt_json():
     """ For Odoo 8.0+"""
     receipt = request.json['params']['receipt']
@@ -177,7 +177,7 @@ def print_xml_receipt_json():
     return jsonify(jsonrpc='2.0', result=True)
 
 @app.route('/hw_proxy/log', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
-@crossdomain(origin='*', headers='accept, content-type')
+@cross_origin(headers=['Content-Type'])
 def log_json():
     arguments = request.json['params']['arguments']
     print (' '.join(str(v) for v in arguments))
@@ -188,7 +188,7 @@ def log_json():
 # ############################################################################
 
 @app.route('/cups/<method>', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
-@crossdomain(origin='*', headers='accept, content-type')
+@cross_origin(headers=['Content-Type'])
 def cupsapi(method):
     args = []
     kwargs = {}
