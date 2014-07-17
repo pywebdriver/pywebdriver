@@ -24,8 +24,9 @@
 # Core Imports
 import platform
 import commands
+import os
+import gettext
 
-from os.path import isfile, join
 from ConfigParser import ConfigParser
 
 # Librairies Imports
@@ -108,7 +109,7 @@ def system_http():
     '/static/images/<path:path>',
     methods=['POST', 'GET', 'PUT', 'OPTIONS'])
 def image_html(path=None):
-    return app.send_static_file(join('images/', path))
+    return app.send_static_file(os.path.join('images/', path))
 
 # ############################################################################
 # [Odoo 7.0] Proxy behaviour
@@ -205,13 +206,13 @@ def cupsapi(method):
 # ############################################################################
 
 # Config Section
-LOCAL_CONFIG_PATH = 'config/config.ini'
+LOCAL_CONFIG_PATH = '%s/config/config.ini' % os.path.dirname(os.path.realpath(__file__))
 PACKAGE_CONFIG_PATH = '/etc/pywebdriver/config.ini'
 
 config_file = LOCAL_CONFIG_PATH
-if not isfile(config_file):
+if not os.path.isfile(config_file):
     config_file = PACKAGE_CONFIG_PATH
-assert isfile(config_file), (
+assert os.path.isfile(config_file), (
     'Could not find config file (looking at %s and %s )' % (
         LOCAL_CONFIG_PATH, PACKAGE_CONFIG_PATH))
 config = ConfigParser()
@@ -221,10 +222,20 @@ config.read(config_file)
 app.config['BABEL_DEFAULT_LOCALE'] = config.get('localization', 'locale')
 babel = Babel(app)
 
+path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'i18n')
+localization=config.get('localization', 'locale')
+language = gettext.translation (
+    'messages',
+    path,
+    [localization])
+language.install(unicode = True)
+
+
+
+
 # Drivers
 drivers = {}
 drivers['escpos'] = EscposDriver(
-    localization=config.get('localization', 'locale'),
     port=config.get('flask', 'port'))
 if config.getboolean('application', 'print_status_start'):
     drivers['escpos'].push_task('printstatus')

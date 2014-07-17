@@ -25,7 +25,6 @@
 ##############################################################################
 
 # <PyWebDriver-begin> Extra Import
-import gettext
 from pif import get_public_ip
 # <PyWebDriver-end> Extra Import
 
@@ -60,7 +59,7 @@ from PIL import Image
 
 
 class EscposDriver(Thread):
-    def __init__(self, localization, port):
+    def __init__(self, port):
         Thread.__init__(self)
         self.queue = Queue()
         self.lock  = Lock()
@@ -68,11 +67,6 @@ class EscposDriver(Thread):
         # PyWebDriver-begin : Add extra behaviour for the PosDriver
         self.vendor_product = None
         self.port = port
-        language = gettext.translation (
-            'messages',
-            './translations/',
-            [localization])
-        language.install(unicode = True)
         # <PyWebDriver-end>
 
     # <PyWebDriver> : New function that return a string with vendor and product
