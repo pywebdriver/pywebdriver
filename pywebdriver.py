@@ -247,5 +247,6 @@ drivers['cups'] = CupsDriver()
 # Run application
 if __name__ == '__main__':
     app.run(
+        host='0.0.0.0',
         port=config.getint('flask', 'port'),
         debug=config.getboolean('flask', 'debug'))
