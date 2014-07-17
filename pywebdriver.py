@@ -222,15 +222,14 @@ config.read(config_file)
 app.config['BABEL_DEFAULT_LOCALE'] = config.get('localization', 'locale')
 babel = Babel(app)
 
-path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'i18n')
+path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'translations')
 localization=config.get('localization', 'locale')
+print localization
 language = gettext.translation (
     'messages',
     path,
     [localization])
 language.install(unicode = True)
-
-
 
 
 # Drivers
