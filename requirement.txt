@@ -5,3 +5,4 @@ Flask-cors
 pyusb>=1.0.0b2
 pyserial
 pif
+PIL
