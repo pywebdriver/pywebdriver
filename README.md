@@ -56,9 +56,12 @@ A lot of the code come from other projects. Licences and copyright are mentionne
 
 To test this module, do the following steps: 
 * download it from git;
+```
+git clone https://github.com/akretion/pywebdriver.git
+```
 * Install dependency by running this two command
 ```
-sudo apt-get cups python-cups python-pip
+sudo apt-get install cups python-cups python-pip
 sudo pip install -r requirement.txt
 ```
 * set correct parameters in the config/config.ini file;
@@ -66,7 +69,7 @@ sudo pip install -r requirement.txt
 ```
    python pywebdriver.py
 ```
-* Call the url : http://localhost:8237 (by default, but depending of your config.ini file) in a browser to see devices state;
+* Call the url : http://localhost:8069 (by default, but depending of your config.ini file) in a browser to see devices state;
 
 ## <a name="contribute"></a>Contribute
 
