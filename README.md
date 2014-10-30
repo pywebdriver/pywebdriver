@@ -69,7 +69,7 @@ sudo pip install -r requirement.txt
 ```
    python pywebdriver.py
 ```
-* Call the url : http://localhost:8237 (by default, but depending of your config.ini file) in a browser to see devices state;
+* Call the url : http://localhost:8069 (by default, but depending of your config.ini file) in a browser to see devices state;
 
 ## <a name="contribute"></a>Contribute
 
