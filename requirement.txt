@@ -2,6 +2,6 @@ simplejson
 Flask
 Flask-Babel
 Flask-cors
-pyusb
+pyusb>=1.0.0b2
 pyserial
 pif
