@@ -26,6 +26,7 @@ import platform
 import commands
 import os
 import gettext
+import pip
 
 from ConfigParser import ConfigParser
 
@@ -49,8 +50,6 @@ app = Flask(__name__)
 # ############################################################################
 # HTML Pages Route Section
 # ############################################################################
-
-
 @app.route("/")
 @app.route('/index.html', methods=['GET'])
 @cross_origin()
@@ -96,13 +95,22 @@ def system_http():
     system_info.append({
         'name': _('OS - System'), 'value': platform.system()})
     system_info.append({
+        'name': _('OS - Distribution'), 'value': platform.linux_distribution()})
+    system_info.append({
         'name': _('OS - Release'), 'value': platform.release()})
     system_info.append({
         'name': _('OS - Version'), 'value': platform.version()})
     system_info.append({
-        'name': _('OS - Machine'), 'value': platform.machine()})
-
-    return render_template('system.html', system_info=system_info)
+        'name': _('Machine'), 'value': platform.machine()})
+    system_info.append({
+        'name': _('Python Version'), 'value': platform.python_version()})
+    installed_python_packages = pip.get_installed_distributions()
+    installed_python_packages = sorted(
+        installed_python_packages, key=lambda package: package.key)
+    return render_template(
+        'system.html',
+        system_info=system_info,
+        installed_python_packages=installed_python_packages)
 
 
 @app.route(

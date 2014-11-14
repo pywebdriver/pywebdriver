@@ -24,7 +24,9 @@
 
 {% block content_title %}{{ _('Technical Information about the system')}}{% endblock %}
 
+
 {% block content %}
+<h2>{{ _('System')}}</h2>
         <div>
     {% for info in system_info %}
             <div class="list-item" data-device="{{device}}">
@@ -33,4 +35,15 @@
             </div>
     {% endfor %}
         </div>
+
+<h2>{{ _('Python Packages')}}</h2>
+        <div>
+    {% for packages in installed_python_packages %}
+            <div class="list-item" data-device="{{device}}">
+            <b>{{packages['key']}}</b>&nbsp;:&nbsp;
+            {{packages['version']}} ({{packages['location']}})
+            </div>
+    {% endfor %}
+        </div>
+
 {% endblock %}

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-05-26 21:23+0200\n"
+"POT-Creation-Date: 2014-11-14 17:02+0100\n"
 "PO-Revision-Date: 2014-05-17 11:48+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: fr <LL@li.org>\n"
@@ -17,36 +17,44 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 1.3\n"
 
-#: pywebdriver.py:95
+#: pywebdriver.py:96
 msgid "OS - System"
 msgstr "OS - Système"
 
-#: pywebdriver.py:97
+#: pywebdriver.py:98
+msgid "OS - Distribution"
+msgstr "OS - Distribution"
+
+#: pywebdriver.py:100
 msgid "OS - Release"
 msgstr "OS - Noyau"
 
-#: pywebdriver.py:99
+#: pywebdriver.py:102
 msgid "OS - Version"
 msgstr "OS - Version"
 
-#: pywebdriver.py:101
-msgid "OS - Machine"
-msgstr "OS - Machine"
+#: pywebdriver.py:104
+msgid "Machine"
+msgstr "Machine"
 
-#: librairies/escpos_driver.py:149
+#: pywebdriver.py:106
+msgid "Python Version"
+msgstr "Version Python"
+
+#: librairies/escpos_driver.py:143
 #, python-format
 msgid "Connected to %s"
 msgstr "Connecté(e) à %s"
 
-#: librairies/escpos_driver.py:153
+#: librairies/escpos_driver.py:147
 msgid "Printer Not Found"
 msgstr "Imprimante non trouvée"
 
-#: librairies/escpos_driver.py:223
+#: librairies/escpos_driver.py:217
 msgid "PyWebDriver Software Status"
 msgstr "Statut de l'application PyWebDriver"
 
-#: librairies/escpos_driver.py:228
+#: librairies/escpos_driver.py:222
 msgid ""
 "ERROR: Could not connect to LAN\n"
 "\n"
@@ -62,47 +70,47 @@ msgstr ""
 "et que les adresses réseaux sont \n"
 "disponible."
 
-#: librairies/escpos_driver.py:236
+#: librairies/escpos_driver.py:230
 msgid "IP Address:"
 msgstr "Adresse IP :"
 
-#: librairies/escpos_driver.py:237
+#: librairies/escpos_driver.py:231
 msgid "Homepage:"
 msgstr "Page d'accueil :"
 
-#: librairies/escpos_driver.py:296
+#: librairies/escpos_driver.py:290
 msgid "Tel:"
 msgstr "Tél : "
 
-#: librairies/escpos_driver.py:298
+#: librairies/escpos_driver.py:292
 msgid "VAT:"
 msgstr "TVA Intracom : "
 
-#: librairies/escpos_driver.py:307
+#: librairies/escpos_driver.py:301
 msgid "Served by "
 msgstr "Servi par "
 
-#: librairies/escpos_driver.py:319
+#: librairies/escpos_driver.py:313
 msgid "Discount: "
 msgstr "Remises : "
 
-#: librairies/escpos_driver.py:329
+#: librairies/escpos_driver.py:323
 msgid "Subtotal"
 msgstr "Sous-Total"
 
-#: librairies/escpos_driver.py:331 librairies/escpos_driver.py:357
+#: librairies/escpos_driver.py:325 librairies/escpos_driver.py:351
 msgid "Taxes"
 msgstr "Taxes"
 
-#: librairies/escpos_driver.py:338
+#: librairies/escpos_driver.py:332
 msgid "         TOTAL"
 msgstr "         TOTAL"
 
-#: librairies/escpos_driver.py:348
+#: librairies/escpos_driver.py:342
 msgid "        CHANGE"
 msgstr "       MONNAIE"
 
-#: librairies/escpos_driver.py:354
+#: librairies/escpos_driver.py:348
 msgid "Discounts"
 msgstr "Remises"
 
@@ -138,7 +146,7 @@ msgstr "Statut de la PosBox"
 msgid "Devices"
 msgstr "Périphériques"
 
-#: templates/layout.html:75
+#: templates/layout.html:75 templates/system.html:29
 msgid "System"
 msgstr "Système"
 
@@ -185,4 +193,8 @@ msgstr "Information Système"
 #: templates/system.html:25
 msgid "Technical Information about the system"
 msgstr "Information technique concernant le système"
+
+#: templates/system.html:39
+msgid "Python Packages"
+msgstr "Paquets Python"
 
