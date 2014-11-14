@@ -26,6 +26,7 @@
 
 # <PyWebDriver-begin> Extra Import
 from pif import get_public_ip
+from netifaces import interfaces, ifaddresses, AF_INET
 # <PyWebDriver-end> Extra Import
 
 import commands
@@ -227,9 +228,14 @@ class EscposDriver(Thread):
                 """that network addresses are available""")
             eprint.text(msg)
         else:
-            eprint.text(_(u'IP Address:') + '\n'+ ip +'\n')
-            eprint.text('\n' + _(u'Homepage:') + '\n')
-            eprint.text('http://'+ip+':' + self.port + '\n')
+            eprint.text(_(u'IP Addresses:') + '\n')
+            eprint.text(ip + ' (' + _(u'Public') + ')\n')
+            for ifaceName in interfaces():
+                pass
+                addresses = [i['addr'] for i in ifaddresses(ifaceName).setdefault(AF_INET, [{'addr':'No IP addr'}] )]
+                eprint.text(', '.join(addresses) + ' (' + ifaceName + ')\n')
+            eprint.text('\n' + _(u'Port:') + '\n')
+            eprint.text(self.port + '\n')
 
         eprint.text('\n\n')
         eprint.cut()

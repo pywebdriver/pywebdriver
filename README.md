@@ -61,7 +61,7 @@ git clone https://github.com/akretion/pywebdriver.git
 ```
 * Install dependency by running this two command
 ```
-sudo apt-get install cups python-cups python-pip
+sudo apt-get install cups python-cups python-pip python-netifaces
 sudo pip install -r requirement.txt
 ```
 * set correct parameters in the config/config.ini file;
