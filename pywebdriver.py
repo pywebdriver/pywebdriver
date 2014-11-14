@@ -32,7 +32,7 @@ from ConfigParser import ConfigParser
 # Librairies Imports
 import simplejson
 from flask import (
-    Flask, render_template, request, jsonify, make_response, session)
+    Flask, render_template, request, jsonify, make_response)
 from flask.ext.babel import Babel
 from flask.ext.babel import gettext as _
 from flask_cors import cross_origin
@@ -111,10 +111,10 @@ def system_http():
 def image_html(path=None):
     return app.send_static_file(os.path.join('images/', path))
 
+
 # ############################################################################
 # [Odoo 7.0] Proxy behaviour
 # ############################################################################
-
 @app.route('/pos/print_receipt', methods=['GET'])
 @cross_origin()
 def print_receipt_http():
@@ -129,19 +129,21 @@ def print_receipt_http():
             'quantity': config.getint('odoo', 'precision_quantity')}
     else:
         if not receipt['precision'].get('price', False):
-            receipt['precision']['price'] = config.getint('odoo', 'precision_price')
+            receipt['precision']['price'] = config.getint(
+                'odoo', 'precision_price')
         if not receipt['precision'].get('money', False):
-            receipt['precision']['money'] = config.getint('odoo', 'precision_money')
+            receipt['precision']['money'] = config.getint(
+                'odoo', 'precision_money')
         if not receipt['precision'].get('quantity', False):
-            receipt['precision']['quantity'] = config.getint('odoo', 'precision_quantity')
+            receipt['precision']['quantity'] = config.getint(
+                'odoo', 'precision_quantity')
     drivers['escpos'].push_task('receipt', receipt)
     return make_response('')
+
 
 # ############################################################################
 # [Odoo 8.0] Route Section Emulating Odoo hw_proxy behaviour
 # ############################################################################
-
-
 @app.route('/hw_proxy/hello', methods=['GET'])
 @cross_origin()
 def hello_http():
@@ -162,6 +164,7 @@ def status_json():
         statuses[driver] = drivers[driver].get_status()
     return jsonify(jsonrpc='2.0', result=statuses)
 
+
 @app.route(
     '/hw_proxy/print_xml_receipt',
     methods=['POST', 'GET', 'PUT', 'OPTIONS'])
@@ -176,6 +179,7 @@ def print_xml_receipt_json():
         drivers['escpos'].push_task('xml_receipt', receipt)
     return jsonify(jsonrpc='2.0', result=True)
 
+
 @app.route('/hw_proxy/log', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
 @cross_origin(headers=['Content-Type'])
 def log_json():
@@ -183,10 +187,10 @@ def log_json():
     print (' '.join(str(v) for v in arguments))
     return jsonify(jsonrpc='2.0', result=True)
 
+
 # ############################################################################
 # Cups Route
 # ############################################################################
-
 @app.route('/cups/<method>', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
 @cross_origin(headers=['Content-Type'])
 def cupsapi(method):
@@ -204,9 +208,9 @@ def cupsapi(method):
 # ############################################################################
 # Init Section
 # ############################################################################
-
 # Config Section
-LOCAL_CONFIG_PATH = '%s/config/config.ini' % os.path.dirname(os.path.realpath(__file__))
+LOCAL_CONFIG_PATH = '%s/config/config.ini' % os.path.dirname(
+    os.path.realpath(__file__))
 PACKAGE_CONFIG_PATH = '/etc/pywebdriver/config.ini'
 
 config_file = LOCAL_CONFIG_PATH
@@ -223,13 +227,13 @@ app.config['BABEL_DEFAULT_LOCALE'] = config.get('localization', 'locale')
 babel = Babel(app)
 
 path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'translations')
-localization=config.get('localization', 'locale')
+localization = config.get('localization', 'locale')
 print localization
-language = gettext.translation (
+language = gettext.translation(
     'messages',
     path,
     [localization])
-language.install(unicode = True)
+language.install(unicode=True)
 
 
 # Drivers
@@ -241,7 +245,7 @@ if config.getboolean('application', 'print_status_start'):
 else:
     drivers['escpos'].push_task('status')
 
-#Connect to local cups
+# Connect to local cups
 drivers['cups'] = CupsDriver()
 
 # Run application
