@@ -80,6 +80,10 @@ If you want to propose extra features not yet covered, please contact us or subm
 ## <a name="localization"></a>Localization
 
 for the moment, localization is managed for english and french languages. If you want to manage extra lozalisation, do the following step:
+* call this command to generate '.pot' file:
+```
+pybabel extract -F translations/settings_babel.cfg -o translations/i18n.pot .
+```
 * call one of the two commands to generate '.po' file:
 ```
 pybabel init -i translations/i18n.pot -d translations -l <code>  # (First time)
