@@ -41,20 +41,20 @@ msgstr ""
 msgid "Python Version"
 msgstr ""
 
-#: librairies/escpos_driver.py:143
+#: libraries/escpos_driver.py:143
 #, python-format
 msgid "Connected to %s"
 msgstr ""
 
-#: librairies/escpos_driver.py:147
+#: libraries/escpos_driver.py:147
 msgid "Printer Not Found"
 msgstr ""
 
-#: librairies/escpos_driver.py:217
+#: libraries/escpos_driver.py:217
 msgid "PyWebDriver Software Status"
 msgstr ""
 
-#: librairies/escpos_driver.py:222
+#: libraries/escpos_driver.py:222
 msgid ""
 "ERROR: Could not connect to LAN\n"
 "\n"
@@ -64,47 +64,47 @@ msgid ""
 "that network addresses are available"
 msgstr ""
 
-#: librairies/escpos_driver.py:230
+#: libraries/escpos_driver.py:230
 msgid "IP Address:"
 msgstr ""
 
-#: librairies/escpos_driver.py:231
+#: libraries/escpos_driver.py:231
 msgid "Homepage:"
 msgstr ""
 
-#: librairies/escpos_driver.py:290
+#: libraries/escpos_driver.py:290
 msgid "Tel:"
 msgstr ""
 
-#: librairies/escpos_driver.py:292
+#: libraries/escpos_driver.py:292
 msgid "VAT:"
 msgstr ""
 
-#: librairies/escpos_driver.py:301
+#: libraries/escpos_driver.py:301
 msgid "Served by "
 msgstr ""
 
-#: librairies/escpos_driver.py:313
+#: libraries/escpos_driver.py:313
 msgid "Discount: "
 msgstr ""
 
-#: librairies/escpos_driver.py:323
+#: libraries/escpos_driver.py:323
 msgid "Subtotal"
 msgstr ""
 
-#: librairies/escpos_driver.py:325 librairies/escpos_driver.py:351
+#: libraries/escpos_driver.py:325 libraries/escpos_driver.py:351
 msgid "Taxes"
 msgstr ""
 
-#: librairies/escpos_driver.py:332
+#: libraries/escpos_driver.py:332
 msgid "         TOTAL"
 msgstr ""
 
-#: librairies/escpos_driver.py:342
+#: libraries/escpos_driver.py:342
 msgid "        CHANGE"
 msgstr ""
 
-#: librairies/escpos_driver.py:348
+#: libraries/escpos_driver.py:348
 msgid "Discounts"
 msgstr ""
 

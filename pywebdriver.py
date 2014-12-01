@@ -39,9 +39,9 @@ from flask.ext.babel import gettext as _
 from flask_cors import cross_origin
 
 # Project Import
-from librairies.escpos_driver import EscposDriver
+from libraries.escpos_driver import EscposDriver
 
-from librairies.cups_driver import CupsDriver
+from libraries.cups_driver import CupsDriver
 
 # Application
 app = Flask(__name__)
@@ -256,9 +256,12 @@ else:
 # Connect to local cups
 drivers['cups'] = CupsDriver()
 
+def main():
+    host = config.get('flask', 'host')
+    port = config.getint('flask', 'port')
+    debug = config.getboolean('flask', 'debug') 
+    app.run(host=host, port=port, debug=debug)
+
 # Run application
 if __name__ == '__main__':
-    app.run(
-        host=config.get('flask', 'host'),
-        port=config.getint('flask', 'port'),
-        debug=config.getboolean('flask', 'debug'))
+    main()
