@@ -47,7 +47,9 @@ class Usb(Escpos):
                 print "Could not detatch kernel driver: %s" % str(e)
 
         try:
-            self.device.set_configuration()
+            #Remove for now the set configuration
+            #https://github.com/walac/pyusb/issues/76
+            #self.device.set_configuration()
             self.device.reset()
         except usb.core.USBError as e:
             print "Could not set configuration: %s" % str(e)
