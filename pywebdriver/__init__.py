@@ -21,6 +21,7 @@
 #
 ##############################################################################
 
+
 # Core Imports
 import platform
 import commands
@@ -39,14 +40,13 @@ from flask.ext.babel import gettext as _
 from flask_cors import cross_origin
 
 # Project Import
+# Application
+app = Flask(__name__)
 from libraries.escpos_driver import EscposDriver
 
 from libraries.cups_driver import CupsDriver
-from libraries.display_driver import DisplayDriver
 
-# Application
-app = Flask(__name__)
-
+import libraries
 
 # ############################################################################
 # HTML Pages Route Section
@@ -213,23 +213,6 @@ def cupsapi(method):
     result = getattr(drivers['cups'], method)(*args, **kwargs)
     return jsonify(jsonrpc='2.0', result=result)
 
-
-# ############################################################################
-# Display Route
-# ############################################################################
-
-display_driver = DisplayDriver('bixolon', app.config)
-
-@app.route(
-    '/hw_proxy/send_text_customer_display',
-    methods=['POST', 'GET', 'PUT', 'OPTIONS'])
-@cross_origin(headers=['Content-Type'])
-def send_text_customer_display():
-    #logger.debug('LCD: Call send_text_customer_display')
-    text_to_display = request.json['params']['text_to_display']
-    lines = simplejson.loads(text_to_display)
-    display_driver.push_task('send_text', lines)
-    return jsonify(jsonrpc='2.0', result=True)
 
 
 # ############################################################################
