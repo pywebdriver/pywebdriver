@@ -23,21 +23,14 @@
 
 
 # Core Imports
-import platform
-import commands
-import os
 import gettext
-import pip
+import os
 
 from ConfigParser import ConfigParser
 
 # Librairies Imports
-import simplejson
-from flask import (
-    Flask, render_template, request, jsonify, make_response)
+from flask import Flask
 from flask.ext.babel import Babel
-from flask.ext.babel import gettext as _
-from flask_cors import cross_origin
 
 # Config Section
 LOCAL_CONFIG_PATH = '%s/../config/config.ini' % os.path.dirname(
@@ -59,35 +52,19 @@ drivers = {}
 # Application
 app = Flask(__name__)
 
-from plugins.escpos_driver import EscposDriver
-
-import views
-import plugins
-
-
-
-# ############################################################################
-# Init Section
-# ############################################################################
+from . import views
+from . import plugins
 
 # Localization
 app.config['BABEL_DEFAULT_LOCALE'] = config.get('localization', 'locale')
 babel = Babel(app)
 
-path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'translations')
+path = os.path.join(
+    os.path.dirname(os.path.realpath(__file__)),
+    'translations')
 localization = config.get('localization', 'locale')
-print localization
 language = gettext.translation(
     'messages',
     path,
     [localization])
 language.install(unicode=True)
-
-
-# Drivers
-drivers['escpos'] = EscposDriver(
-    port=config.get('flask', 'port'))
-if config.getboolean('application', 'print_status_start'):
-    drivers['escpos'].push_task('printstatus')
-else:
-    drivers['escpos'].push_task('status')

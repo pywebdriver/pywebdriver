@@ -1,10 +1,14 @@
-from pywebdriver import app, config
+from pywebdriver import app, config, drivers
 
 def main():
     host = config.get('flask', 'host')
     port = config.getint('flask', 'port')
     debug = config.getboolean('flask', 'debug') 
     app.run(host=host, port=port, debug=debug)
+    if config.getboolean('application', 'print_status_start'):
+        drivers['escpos'].push_task('printstatus')
+    else:
+        drivers['escpos'].push_task('status')
 
 # Run application
 if __name__ == '__main__':

@@ -20,11 +20,12 @@
 #
 ###############################################################################
 
+import simplejson
+
 from flask_cors import cross_origin
 from flask import request, make_response
 
 from pywebdriver import app, config, drivers
-import simplejson
 
 
 @app.route('/pos/print_receipt', methods=['GET'])

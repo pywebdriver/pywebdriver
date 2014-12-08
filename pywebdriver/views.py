@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 ###############################################################################
 #
-#   Module for OpenERP
 #   Copyright (C) 2014 Akretion (http://www.akretion.com).
 #   @author Sylvain LE GAL (https://twitter.com/legalsylvain)
 #   @author Sébastien BEAU <sebastien.beau@akretion.com>

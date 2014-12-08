@@ -24,6 +24,16 @@
 #
 ##############################################################################
 
+# TODO this code must be refactor and extracted into a separate python lib
+# Indeed big part of this code have been taken from odoo which have
+# done a copy/paste of https://pypi.python.org/pypi/python-escpos
+# from Manuel F Martinez manpaz@bashlinux.com
+# We have to extract the code done by odoo and contribute it
+# to the python-escpos project
+
+
+from pywebdriver import config, drivers
+
 # <PyWebDriver-begin> Extra Import
 from pif import get_public_ip
 from netifaces import interfaces, ifaddresses, AF_INET
@@ -365,3 +375,6 @@ class EscposDriver(Thread):
                     +'/'+ str(receipt['date']['year']).zfill(4)
                     +' '+ str(receipt['date']['hour']).zfill(2)
                     +':'+ str(receipt['date']['minute']).zfill(2) )
+
+
+drivers['escpos'] = EscposDriver(port=config.get('flask', 'port'))
