@@ -42,11 +42,11 @@ from flask_cors import cross_origin
 # Project Import
 # Application
 app = Flask(__name__)
-from libraries.escpos_driver import EscposDriver
+from plugins.escpos_driver import EscposDriver
 
-from libraries.cups_driver import CupsDriver
+from plugins.cups_driver import CupsDriver
 
-import libraries
+import plugins
 
 # ############################################################################
 # HTML Pages Route Section
