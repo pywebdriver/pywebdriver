@@ -42,83 +42,14 @@ from flask_cors import cross_origin
 # Project Import
 # Application
 app = Flask(__name__)
+drivers = {}
+
 from plugins.escpos_driver import EscposDriver
 
 from plugins.cups_driver import CupsDriver
 
+import views
 import plugins
-
-# ############################################################################
-# HTML Pages Route Section
-# ############################################################################
-@app.route("/")
-@app.route('/index.html', methods=['GET'])
-@cross_origin()
-def index_http():
-    return render_template('index.html')
-
-
-@app.route('/print_status.html', methods=['GET'])
-@cross_origin()
-def print_status_http():
-    drivers['escpos'].push_task('printstatus')
-    return render_template('print_status.html')
-
-
-@app.route('/status.html', methods=['GET'])
-@cross_origin()
-def status_http():
-    statuses = {}
-    for driver in drivers:
-        tmp = drivers[driver].get_vendor_product()
-        if tmp:
-            image = 'static/images/' + tmp + '.png'
-        else:
-            image = None
-        statuses[driver] = {
-            'state': drivers[driver].get_status(),
-            'image': image,
-        }
-    return render_template('status.html', statuses=statuses)
-
-
-@app.route('/devices.html', methods=['GET'])
-@cross_origin()
-def devices_http():
-    devices = commands.getoutput("lsusb").split('\n')
-    return render_template('devices.html', devices=devices)
-
-
-@app.route('/system.html', methods=['GET'])
-@cross_origin()
-def system_http():
-    system_info = []
-    system_info.append({
-        'name': _('OS - System'), 'value': platform.system()})
-    system_info.append({
-        'name': _('OS - Distribution'), 'value': platform.linux_distribution()})
-    system_info.append({
-        'name': _('OS - Release'), 'value': platform.release()})
-    system_info.append({
-        'name': _('OS - Version'), 'value': platform.version()})
-    system_info.append({
-        'name': _('Machine'), 'value': platform.machine()})
-    system_info.append({
-        'name': _('Python Version'), 'value': platform.python_version()})
-    installed_python_packages = pip.get_installed_distributions()
-    installed_python_packages = sorted(
-        installed_python_packages, key=lambda package: package.key)
-    return render_template(
-        'system.html',
-        system_info=system_info,
-        installed_python_packages=installed_python_packages)
-
-
-@app.route(
-    '/static/images/<path:path>',
-    methods=['POST', 'GET', 'PUT', 'OPTIONS'])
-def image_html(path=None):
-    return app.send_static_file(os.path.join('images/', path))
 
 
 # ############################################################################
@@ -247,7 +178,6 @@ language.install(unicode=True)
 
 
 # Drivers
-drivers = {}
 drivers['escpos'] = EscposDriver(
     port=config.get('flask', 'port'))
 if config.getboolean('application', 'print_status_start'):
