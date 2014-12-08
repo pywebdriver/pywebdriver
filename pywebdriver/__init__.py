@@ -39,10 +39,25 @@ from flask.ext.babel import Babel
 from flask.ext.babel import gettext as _
 from flask_cors import cross_origin
 
+# Config Section
+LOCAL_CONFIG_PATH = '%s/../config/config.ini' % os.path.dirname(
+    os.path.realpath(__file__))
+PACKAGE_CONFIG_PATH = '/etc/pywebdriver/config.ini'
+
+config_file = LOCAL_CONFIG_PATH
+if not os.path.isfile(config_file):
+    config_file = PACKAGE_CONFIG_PATH
+assert os.path.isfile(config_file), (
+    'Could not find config file (looking at %s and %s )' % (
+        LOCAL_CONFIG_PATH, PACKAGE_CONFIG_PATH))
+config = ConfigParser()
+config.read(config_file)
+
+drivers = {}
+
 # Project Import
 # Application
 app = Flask(__name__)
-drivers = {}
 
 from plugins.escpos_driver import EscposDriver
 
@@ -50,36 +65,6 @@ from plugins.cups_driver import CupsDriver
 
 import views
 import plugins
-
-
-# ############################################################################
-# [Odoo 7.0] Proxy behaviour
-# ############################################################################
-@app.route('/pos/print_receipt', methods=['GET'])
-@cross_origin()
-def print_receipt_http():
-    """ For Odoo 7.0"""
-    params = dict(request.args)
-    receipt = simplejson.loads(params['r'][0])['params']['receipt']
-    # Add required information if not provided
-    if not receipt.get('precision', False):
-        receipt['precision'] = {
-            'price': config.getint('odoo', 'precision_price'),
-            'money': config.getint('odoo', 'precision_money'),
-            'quantity': config.getint('odoo', 'precision_quantity')}
-    else:
-        if not receipt['precision'].get('price', False):
-            receipt['precision']['price'] = config.getint(
-                'odoo', 'precision_price')
-        if not receipt['precision'].get('money', False):
-            receipt['precision']['money'] = config.getint(
-                'odoo', 'precision_money')
-        if not receipt['precision'].get('quantity', False):
-            receipt['precision']['quantity'] = config.getint(
-                'odoo', 'precision_quantity')
-    drivers['escpos'].push_task('receipt', receipt)
-    return make_response('')
-
 
 # ############################################################################
 # [Odoo 8.0] Route Section Emulating Odoo hw_proxy behaviour
@@ -149,19 +134,6 @@ def cupsapi(method):
 # ############################################################################
 # Init Section
 # ############################################################################
-# Config Section
-LOCAL_CONFIG_PATH = '%s/../config/config.ini' % os.path.dirname(
-    os.path.realpath(__file__))
-PACKAGE_CONFIG_PATH = '/etc/pywebdriver/config.ini'
-
-config_file = LOCAL_CONFIG_PATH
-if not os.path.isfile(config_file):
-    config_file = PACKAGE_CONFIG_PATH
-assert os.path.isfile(config_file), (
-    'Could not find config file (looking at %s and %s )' % (
-        LOCAL_CONFIG_PATH, PACKAGE_CONFIG_PATH))
-config = ConfigParser()
-config.read(config_file)
 
 # Localization
 app.config['BABEL_DEFAULT_LOCALE'] = config.get('localization', 'locale')

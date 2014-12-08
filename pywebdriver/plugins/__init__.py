@@ -1,4 +1,5 @@
 from . import escpos
-import cups_driver
-import escpos_driver
-import display_driver
+from . import cups_driver
+from . import escpos_driver
+from . import display_driver
+from . import odoo7
