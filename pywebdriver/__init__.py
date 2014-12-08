@@ -61,26 +61,8 @@ app = Flask(__name__)
 
 from plugins.escpos_driver import EscposDriver
 
-from plugins.cups_driver import CupsDriver
-
 import views
 import plugins
-
-# ############################################################################
-# Cups Route
-# ############################################################################
-@app.route('/cups/<method>', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
-@cross_origin(headers=['Content-Type'])
-def cupsapi(method):
-    args = []
-    kwargs = {}
-    if request.json:
-        args = request.json.get('args', [])
-        kwargs = request.json.get('kwargs', {})
-    if request.args:
-        kwargs = request.args.to_dict()
-    result = getattr(drivers['cups'], method)(*args, **kwargs)
-    return jsonify(jsonrpc='2.0', result=result)
 
 
 
@@ -109,6 +91,3 @@ if config.getboolean('application', 'print_status_start'):
     drivers['escpos'].push_task('printstatus')
 else:
     drivers['escpos'].push_task('status')
-
-# Connect to local cups
-drivers['cups'] = CupsDriver()
