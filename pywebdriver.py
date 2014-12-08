@@ -42,6 +42,7 @@ from flask_cors import cross_origin
 from libraries.escpos_driver import EscposDriver
 
 from libraries.cups_driver import CupsDriver
+from libraries.display_driver import DisplayDriver
 
 # Application
 app = Flask(__name__)
@@ -211,6 +212,24 @@ def cupsapi(method):
         kwargs = request.args.to_dict()
     result = getattr(drivers['cups'], method)(*args, **kwargs)
     return jsonify(jsonrpc='2.0', result=result)
+
+
+# ############################################################################
+# Display Route
+# ############################################################################
+
+display_driver = DisplayDriver('bixolon', app.config)
+
+@app.route(
+    '/hw_proxy/send_text_customer_display',
+    methods=['POST', 'GET', 'PUT', 'OPTIONS'])
+@cross_origin(headers=['Content-Type'])
+def send_text_customer_display():
+    #logger.debug('LCD: Call send_text_customer_display')
+    text_to_display = request.json['params']['text_to_display']
+    lines = simplejson.loads(text_to_display)
+    display_driver.push_task('send_text', lines)
+    return jsonify(jsonrpc='2.0', result=True)
 
 
 # ############################################################################
