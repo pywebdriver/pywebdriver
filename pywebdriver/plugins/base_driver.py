@@ -22,13 +22,36 @@
 #
 ###############################################################################
 
+from pywebdriver import app
 from threading import Thread, Lock
 from Queue import Queue, Empty
+from flask import jsonify
 import traceback
+import functools
 import time
 import logging
 _logger = logging.getLogger(__name__)
 
+def check(installed, plugin):
+    def wrap(func):
+        def wrapped_func(*args, **kwargs):
+            if installed:
+                return func(*args, **kwargs)
+            else:
+                app.logger.warning(
+                    'The plugin %s can not be loaded as one of its dependency '
+                    'is missing. You can install them using pip or debian\n'
+                    'The pip package are : %s \n'
+                    'The debian package are : %s \n'
+                    'More information here : '
+                    'https://github.com/akretion/pywebdriver\n'
+                    'Return False to the API Call'
+                    % (plugin['name'],
+                       plugin['require_pip'],
+                       plugin['require_debian']))
+                return jsonify(jsonrpc='2.0', result=False)
+        return wrapped_func
+    return wrap
 
 class AbstractDriver(object):
     """ Abstract Driver Class"""

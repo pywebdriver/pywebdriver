@@ -19,30 +19,39 @@
 #
 ###############################################################################
 
+meta = {
+    'name': "POS Display",
+    'description': """This plugin add the support of customer display for your
+        pywebdriver""",
+    'require_pip': ['pyposdisplay'],
+    'require_debian': ['python-pyposdisplay'],
+}
+
 from pywebdriver import app
 from flask_cors import cross_origin
 from flask import request, jsonify
-from base_driver import ThreadDriver
+from base_driver import ThreadDriver, check
 import simplejson
 
 try:
     import pyposdisplay
 except:
-    pass
-    #TODO add logger here
+    installed=False
 else:
+    installed=True
     class DisplayDriver(ThreadDriver, pyposdisplay.Driver):
         """ Display Driver class for pywebdriver """
 
     display_driver = DisplayDriver(app.config)
 
-    @app.route(
-        '/hw_proxy/send_text_customer_display',
-        methods=['POST', 'GET', 'PUT', 'OPTIONS'])
-    @cross_origin(headers=['Content-Type'])
-    def send_text_customer_display():
-        #logger.debug('LCD: Call send_text_customer_display')
-        text_to_display = request.json['params']['text_to_display']
-        lines = simplejson.loads(text_to_display)
-        display_driver.push_task('send_text', lines)
-        return jsonify(jsonrpc='2.0', result=True)
+@app.route(
+    '/hw_proxy/send_text_customer_display',
+    methods=['POST', 'GET', 'PUT', 'OPTIONS'])
+@cross_origin(headers=['Content-Type'])
+@check(installed, meta)
+def send_text_customer_display():
+    app.logger.debug('LCD: Call send_text')
+    text_to_display = request.json['params']['text_to_display']
+    lines = simplejson.loads(text_to_display)
+    display_driver.push_task('send_text', lines)
+    return jsonify(jsonrpc='2.0', result=True)
