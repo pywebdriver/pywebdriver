@@ -23,6 +23,12 @@
 import cups
 import tempfile
 
+from flask_cors import cross_origin
+from flask import request, jsonify
+
+from pywebdriver import app, drivers
+
+
 class CupsDriver(cups.Connection):
 
     def printData(self, printer, data, title='Pywebdriver', options=None):
@@ -41,7 +47,8 @@ class CupsDriver(cups.Connection):
         return super(CupsDriver, self).printFile(
             printer, filename, title, string_options)
 
-    def printFiles(self, printer, filenames, title='Pywebdriver', options=None):
+    def printFiles(self, printer, filenames,
+                   title='Pywebdriver', options=None):
         if options is None:
             options = {}
         string_options = {}
@@ -61,12 +68,26 @@ class CupsDriver(cups.Connection):
             5: 'Stopped',
             }
         for printer, value in self.getPrinters().items():
-            messages.append("%s : %s"
-                %(printer, mapstate[value['printer-state']]
-                ))
+            messages.append(
+                "%s : %s" % (printer, mapstate[value['printer-state']]))
         state = {
             'status': 'connected',
             'messages': messages,
         }
         return state
 
+
+@app.route('/cups/<method>', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
+@cross_origin(headers=['Content-Type'])
+def cupsapi(method):
+    args = []
+    kwargs = {}
+    if request.json:
+        args = request.json.get('args', [])
+        kwargs = request.json.get('kwargs', {})
+    if request.args:
+        kwargs = request.args.to_dict()
+    result = getattr(drivers['cups'], method)(*args, **kwargs)
+    return jsonify(jsonrpc='2.0', result=result)
+
+drivers['cups'] = CupsDriver()
