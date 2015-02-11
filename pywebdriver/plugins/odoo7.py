@@ -20,20 +20,32 @@
 #
 ###############################################################################
 
-import simplejson
+import simplejson, json
 
 from flask_cors import cross_origin
-from flask import request, make_response
+from flask import request, make_response, jsonify
 
 from pywebdriver import app, config, drivers
 
+@app.route('/pos/print_receipt', methods=['POST'])
+@cross_origin(headers=['Content-Type'])
+def print_receipt_http_post():
+    receipt = json.loads(request.form['r'].replace("'", "\""))\
+        ['params']['receipt']
+    print_receipt(receipt)
+    return jsonify(jsonrpc='2.0', result=True)
 
 @app.route('/pos/print_receipt', methods=['GET'])
 @cross_origin()
-def print_receipt_http():
-    """ For Odoo 7.0"""
+def print_receipt_http_get():
     params = dict(request.args)
+    if not params.get('r'):
+        return make_response('')
     receipt = simplejson.loads(params['r'][0])['params']['receipt']
+    print_receipt(receipt)
+    return make_response('')
+
+def print_receipt(receipt):
     # Add required information if not provided
     if not receipt.get('precision', False):
         receipt['precision'] = {
@@ -51,4 +63,3 @@ def print_receipt_http():
             receipt['precision']['quantity'] = config.getint(
                 'odoo', 'precision_quantity')
     drivers['escpos'].push_task('receipt', receipt)
-    return make_response('')
