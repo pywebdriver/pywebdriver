@@ -317,10 +317,14 @@ class EscposDriver(Thread):
             eprint.text(_(u'Served by ')+receipt['cashier']+'\n')
 
         # Orderlines
+        if config.get('odoo', 'orderline_price_with_tax') == True:
+            orderline_price_field = 'price_with_tax'
+        else:
+            orderline_price_field = 'price_without_tax'
         eprint.text('\n\n')
         eprint.set(align='center')
         for line in receipt['orderlines']:
-            pricestr = price(line['price_display'])
+            pricestr = price(line[orderline_price_field])
             if line['discount'] == 0 and line['unit_name'] == 'Unit(s)' and line['quantity'] == 1:
                 eprint.text(printline(line['product_name'],pricestr,ratio=0.6))
             else:
