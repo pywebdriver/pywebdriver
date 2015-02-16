@@ -317,7 +317,7 @@ class EscposDriver(Thread):
             eprint.text(_(u'Served by ')+receipt['cashier']+'\n')
 
         # Orderlines
-        if config.get('odoo', 'orderline_price_with_tax') == True:
+        if config.getboolean('odoo', 'orderline_price_with_tax'):
             orderline_price_field = 'price_with_tax'
         else:
             orderline_price_field = 'price_without_tax'
