@@ -63,4 +63,5 @@ def print_receipt(receipt):
         if not receipt['precision'].get('quantity', False):
             receipt['precision']['quantity'] = config.getint(
                 'odoo', 'precision_quantity')
-    drivers['escpos'].push_task('receipt', receipt)
+    print receipt
+    #drivers['escpos'].push_task('receipt', receipt)
