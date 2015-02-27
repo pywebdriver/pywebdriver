@@ -27,7 +27,9 @@ meta = {
     'require_debian': [],
 }
 
+from pif import get_public_ip
 from pywebdriver import app, config, drivers
+from netifaces import interfaces, ifaddresses, AF_INET
 from flask_cors import cross_origin
 from flask import request, jsonify
 from base_driver import ThreadDriver, check
@@ -53,7 +55,7 @@ else:
 
         def connected_usb_devices(self):
             connected = []
-            
+
             for device in self.supported_devices():
                 if usb.core.find(idVendor=device['vendor'], idProduct=device['product']) != None:
                     connected.append(device)
@@ -61,7 +63,7 @@ else:
             return connected
 
         def open_printer(self):
-            
+
             if self.device:
                 return
 
@@ -75,7 +77,10 @@ else:
                     self.in_ep = printer.get('in_ep', 0x82)
                     self.out_ep = printer.get('out_ep', 0x01)
                     self.open()
-            
+                    self.vendor_product = '%s_%s' % (
+                        self.idVendor, self.idProduct
+                    )
+
             except Exception as e:
                 self.set_status('error',str(e))
 
@@ -85,52 +90,70 @@ else:
             self.cashdraw(5)
 
         def get_status(self):
+            messages = []
             self.open_printer()
             if not self.device:
-                res = []
                 status = 'disconnected'
             else:
-                res = self.get_printer_status()
-                import pprint
-                pprint.pprint(res)
+                try:
+                    res = self.get_printer_status()
+                    if res['printer']['online']:
+                        status = 'connected'
+                    else:
+                        status = 'connecting'
 
-                if res['printer']['online']:
-                    status = 'connected'
-                else:
-                    status = 'connecting'
-            res['state'] = {'status': status}
-            return res
+                    if res['printer']['status_error']:
+                        status = 'error'
+                        messages.append('Error code: %i' % res['printer']['status_error'])
 
-        def print_status(self,eprint):
+                except Exception, err:
+                    status = 'error'
+                    self.device = False
+                    messages.append('Error: %s' % err)
+
+            return {
+                'status': status,
+                'messages': messages,
+            }
+
+        def printstatus(self,eprint):
             #<PyWebDriver> Full refactoring of the function to allow
             # localisation and to make more easy the search of the ip
+
+            self.open_printer()
             ip = get_public_ip()
-            eprint.text('\n\n')
-            eprint.set(align='center',type='b',height=2,width=2)
-            eprint.text(_(u'PyWebDriver Software Status'))
-            eprint.text('\n\n')
-            eprint.set(align='center')
 
             if not ip:
                 msg = _(
-                    """ERROR: Could not connect to LAN\n\n"""
-                    """Please check that your system is correc-\n"""
-                    """tly connected with a network cable,\n"""
-                    """ that the LAN is setup with DHCP, and\n"""
+                    """ERROR: Could not connect to LAN<br/><br/>"""
+                    """Please check that your system is correc-<br/>"""
+                    """tly connected with a network cable,<br/>"""
+                    """ that the LAN is setup with DHCP, and<br/>"""
                     """that network addresses are available""")
-                eprint.text(msg)
+                self.receipt('<div>'+msg+'</div>')
+                self.cut()
             else:
-                eprint.text(_(u'IP Addresses:') + '\n')
-                eprint.text(ip + ' (' + _(u'Public') + ')\n')
+                addr_lines = []
                 for ifaceName in interfaces():
-                    pass
                     addresses = [i['addr'] for i in ifaddresses(ifaceName).setdefault(AF_INET, [{'addr':'No IP addr'}] )]
-                    eprint.text(', '.join(addresses) + ' (' + ifaceName + ')\n')
-                eprint.text('\n' + _(u'Port:') + '\n')
-                eprint.text(self.port + '\n')
-
-            eprint.text('\n\n')
-            eprint.cut()
+                    addr_lines.append(
+                        '<p>'+','.join(addresses) + ' (' + ifaceName + ')' + '</p>'
+                    )
+                msg = _("""
+                       <div align="center">
+                            <h4>PyWebDriver Software Status</h4>
+                            <br/><br/>
+                            <h5>IP Addresses:</h5>
+                            %s<br/>
+                            %s<br/>
+                            Port: %i
+                       </div>
+                """) % (
+                    ip + ' (' + _(u'Public') + ')',
+                    ''.join(addr_lines),
+                    config.getint('flask', 'port'),
+                )
+                self.receipt(msg)
 
 drivers['escpos'] = ESCPOSDriver(app.config)
 
@@ -140,10 +163,10 @@ drivers['escpos'] = ESCPOSDriver(app.config)
 @cross_origin(headers=['Content-Type'])
 def print_xml_receipt_json():
     """ For Odoo 8.0+"""
-    
+
     driver = drivers['escpos']
     driver.open_printer()
     receipt = request.json['params']['receipt']
     driver.push_task('receipt', receipt)
-    
+
     return jsonify(jsonrpc='2.0', result=True)

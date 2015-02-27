@@ -47,7 +47,7 @@
         {% endfor %}
                 </ul>
         {% if driver =='escpos' %}
-                {% if statuses[driver]['state']['printer']['online'] %}
+                {% if statuses[driver]['state']['status']  == 'connected' %}
                     <li><a href="print_status.html" target="new">{{_('Print Status Receipt')}}</a></li>
                 {% endif %}
 
