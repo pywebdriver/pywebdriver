@@ -155,7 +155,7 @@ else:
                 )
                 self.receipt(msg)
 
-drivers['escpos'] = ESCPOSDriver(app.config)
+    drivers['escpos'] = ESCPOSDriver(app.config)
 
 @app.route(
         '/hw_proxy/print_xml_receipt',
@@ -163,6 +163,9 @@ drivers['escpos'] = ESCPOSDriver(app.config)
 @cross_origin(headers=['Content-Type'])
 def print_xml_receipt_json():
     """ For Odoo 8.0+"""
+
+    if 'escpos' not in drivers:
+        return jsonify(jsonrpc='2.0', result=False)
 
     driver = drivers['escpos']
     driver.open_printer()
