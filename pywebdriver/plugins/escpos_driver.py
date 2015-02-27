@@ -19,6 +19,16 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ###############################################################################
+
+from pif import get_public_ip
+from pywebdriver import app, config, drivers
+from netifaces import interfaces, ifaddresses, AF_INET
+from flask_cors import cross_origin
+from flask import request, jsonify, render_template
+from base_driver import ThreadDriver, check
+import simplejson
+import usb.core
+
 meta = {
     'name': "ESCPOS Printer",
     'description': """This plugin add the support of ESCPOS Printer for your
@@ -27,22 +37,13 @@ meta = {
     'require_debian': [],
 }
 
-from pif import get_public_ip
-from pywebdriver import app, config, drivers
-from netifaces import interfaces, ifaddresses, AF_INET
-from flask_cors import cross_origin
-from flask import request, jsonify
-from base_driver import ThreadDriver, check
-import simplejson
-import usb.core
-
 try:
     from xmlescpos.printer import Usb
     from xmlescpos.supported_devices import device_list
-except:
-    installed=False
+except ImportError:
+    installed = False
+    print 'ESCPOS: xmlescpos python library not installed'
 else:
-    installed=True
     class ESCPOSDriver(ThreadDriver, Usb):
         """ ESCPOS Printer Driver class for pywebdriver """
 
@@ -155,21 +156,26 @@ else:
                 )
                 self.receipt(msg)
 
-    drivers['escpos'] = ESCPOSDriver(app.config)
+    driver = ESCPOSDriver(app.config)
+    drivers['escpos'] = driver
+    installed=True
 
-@app.route(
-        '/hw_proxy/print_xml_receipt',
-        methods=['POST', 'GET', 'PUT', 'OPTIONS'])
-@cross_origin(headers=['Content-Type'])
-def print_xml_receipt_json():
-    """ For Odoo 8.0+"""
+    @app.route(
+            '/hw_proxy/print_xml_receipt',
+            methods=['POST', 'GET', 'PUT', 'OPTIONS'])
+    @cross_origin(headers=['Content-Type'])
+    def print_xml_receipt_json():
+        """ For Odoo 8.0+"""
 
-    if 'escpos' not in drivers:
-        return jsonify(jsonrpc='2.0', result=False)
+        driver.open_printer()
+        receipt = request.json['params']['receipt']
+        driver.push_task('receipt', receipt)
 
-    driver = drivers['escpos']
-    driver.open_printer()
-    receipt = request.json['params']['receipt']
-    driver.push_task('receipt', receipt)
+        return jsonify(jsonrpc='2.0', result=True)
 
-    return jsonify(jsonrpc='2.0', result=True)
+    @app.route('/print_status.html', methods=['GET'])
+    @cross_origin()
+    def print_status_http():
+        driver.push_task('printstatus')
+        return render_template('print_status.html')
+
