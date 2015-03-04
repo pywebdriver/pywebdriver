@@ -1,0 +1,6 @@
+pywebdriver (0.2.0-1) UNRELEASED; urgency=medium
+
+  [ Sylvain Calador ]
+  * Use pyxmlescpos library for printing
+
+ -- Sylvain Calador <sylvain.calador@akretion.com>  Tue, 03 Mar 2015 18:53:48 +0100
