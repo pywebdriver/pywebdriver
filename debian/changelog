@@ -1,6 +1,5 @@
-pywebdriver (0.2.0-1) UNRELEASED; urgency=medium
+pywebdriver (0.2.0-0ubuntu1) trusty; urgency=medium
 
-  [ Sylvain Calador ]
-  * Use pyxmlescpos library for printing
+  * launchpad build for trusty
 
- -- Sylvain Calador <sylvain.calador@akretion.com>  Tue, 03 Mar 2015 18:53:48 +0100
+ -- Sylvain Calador <sylvain.calador@gmail.com>  Wed, 15 Apr 2015 15:22:47 +0200

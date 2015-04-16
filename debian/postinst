@@ -5,12 +5,10 @@ USERNAME=pywebdriver
 GROUP=usbusers
 
 # TODO create deb packages for these dependencies
-echo "Update pip installation to the last version"
-pip install pip --upgrade
 echo "Installing python dependencies via pip"
 pip install jcconv pif Flask-Babel Flask-cors Pillow
-pip install git+https://github.com/akretion/py-xml-escpos.git@8.0-slip-support
 pip install --pre pyusb
+pip install git+https://github.com/akretion/py-xml-escpos.git@8.0-slip-support
 
 echo "Configure pywebdriver user and group"
 groupadd -f $GROUP
