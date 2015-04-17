@@ -9,7 +9,7 @@ override_dh_auto_build:
 
 override_dh_install:
 	install -d debian/tmp/etc/pywebdriver
-	install -m 644 ../config/config.ini debian/tmp/etc/pywebdriver/config.ini
+	install -m 644 debian/config.ini debian/tmp/etc/pywebdriver/config.ini
 	install -d debian/tmp/etc/supervisor/conf.d
 	install -m 644 debian/pywebdriver.conf debian/tmp/etc/supervisor/conf.d/pywebdriver.conf
 	install -d debian/tmp/lib/udev/rules.d
