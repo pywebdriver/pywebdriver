@@ -58,7 +58,6 @@ class AbstractDriver(object):
 
     def __init__(self, *args, **kwargs):
         self.status = {'status':'connecting', 'messages':[]}
-        super(AbstractDriver, self).__init__(*args, **kwargs)
 
 
 class ThreadDriver(Thread, AbstractDriver):

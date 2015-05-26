@@ -45,9 +45,13 @@
         {% for message in statuses[driver]['state']['messages'] %}
                 <li>{{message}}</li>
         {% endfor %}
-        {% if statuses[driver]['state']['status']== 'connected' and driver =='escpos' %}
-                <li><a href="print_status.html" target="new">{{_('Print Status Receipt')}}</a></li>
-        {% endif %}
                 </ul>
+        {% if driver =='escpos' %}
+                {% if statuses[driver]['state']['status']  == 'connected' %}
+                    <li><a href="print_status.html" target="new">{{_('Print Status Receipt')}}</a></li>
+                {% endif %}
+
+        {% endif %}
+
     {% endfor %}
 {% endblock %}

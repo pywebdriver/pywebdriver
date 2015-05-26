@@ -7,9 +7,8 @@ def main():
     port = config.getint('flask', 'port')
     debug = config.getboolean('flask', 'debug') 
     if config.getboolean('application', 'print_status_start'):
-        drivers['escpos'].push_task('printstatus')
-    else:
-        drivers['escpos'].push_task('status')
+        if 'escpos' in drivers:
+            drivers['escpos'].push_task('printstatus')
     app.run(host=host, port=port, debug=debug)
 
 # Run application

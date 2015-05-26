@@ -39,13 +39,6 @@ def index_http():
     return render_template('index.html')
 
 
-@app.route('/print_status.html', methods=['GET'])
-@cross_origin()
-def print_status_http():
-    drivers['escpos'].push_task('printstatus')
-    return render_template('print_status.html')
-
-
 @app.route('/status.html', methods=['GET'])
 @cross_origin()
 def status_http():

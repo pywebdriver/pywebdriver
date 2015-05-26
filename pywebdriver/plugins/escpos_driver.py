@@ -1,384 +1,181 @@
-# -*- encoding: utf-8 -*-
-##############################################################################
+# -*- coding: utf-8 -*-
+###############################################################################
 #
-#    This file comes from Odoo Project
-#    Copyright (C) 2004-TODAY Odoo S.A (<http://odoo.com>).
-#   
-#    Some modification are done for PyWebDriver compatility or improvement
-#    There are marked by <PyWebDriver>
-#    Copyright (C) 2014-TODAY Akretion <http://www.akretion.com>.
-#    @author Sylvain LE GAL (https://twitter.com/legalsylvain)
+#   Copyright (C) 2014 Akretion (http://www.akretion.com).
+#   @author Sébastien BEAU <sebastien.beau@akretion.com>
+#   @author Sylvain CALADOR <sylvain.calador@akretion.com>
 #
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
+#   This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU Affero General Public License as
+#   published by the Free Software Foundation, either version 3 of the
+#   License, or (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#   You should have received a copy of the GNU Affero General Public License
+#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-##############################################################################
+###############################################################################
 
-# TODO this code must be refactor and extracted into a separate python lib
-# Indeed big part of this code have been taken from odoo which have
-# done a copy/paste of https://pypi.python.org/pypi/python-escpos
-# from Manuel F Martinez manpaz@bashlinux.com
-# We have to extract the code done by odoo and contribute it
-# to the python-escpos project
-
-
-from pywebdriver import config, drivers
-
-# <PyWebDriver-begin> Extra Import
 from pif import get_public_ip
+from pywebdriver import app, config, drivers
 from netifaces import interfaces, ifaddresses, AF_INET
-# <PyWebDriver-end> Extra Import
-
-import commands
+from flask_cors import cross_origin
+from flask import request, jsonify, render_template
+from base_driver import ThreadDriver, check
 import simplejson
-import os
-import os.path
-import io
-import base64
-import time
-import random
-import math
-import md5
-import pickle
-import re
-import subprocess
-import traceback
-from threading import Thread, Lock
-from Queue import Queue, Empty
+import usb.core
+
+meta = {
+    'name': "ESCPOS Printer",
+    'description': """This plugin add the support of ESCPOS Printer for your
+        pywebdriver""",
+    'require_pip': ['pyxmlescpos'],
+    'require_debian': [],
+}
 
 try:
-    import usb.core
+    from xmlescpos.printer import Usb
+    from xmlescpos.supported_devices import device_list
 except ImportError:
-    usb = None
+    installed = False
+    print 'ESCPOS: xmlescpos python library not installed'
+else:
+    class ESCPOSDriver(ThreadDriver, Usb):
+        """ ESCPOS Printer Driver class for pywebdriver """
 
-from escpos import printer
-from escpos import supported_devices
-
-from PIL import Image
-
-
-
-
-class EscposDriver(Thread):
-    def __init__(self, port):
-        Thread.__init__(self)
-        self.queue = Queue()
-        self.lock  = Lock()
-        self.status = {'status':'connecting', 'messages':[]}
-        # PyWebDriver-begin : Add extra behaviour for the PosDriver
-        self.vendor_product = None
-        self.port = port
-        # <PyWebDriver-end>
-
-    # <PyWebDriver> : New function that return a string with vendor and product
-    def get_vendor_product(self):
-        return self.vendor_product
-
-    def supported_devices(self):
-        if not os.path.isfile('escpos_devices.pickle'):
-            return supported_devices.device_list
-        else:
-            try:
-                f = open('escpos_devices.pickle','r')
-                return pickle.load(f)
-                f.close()
-            except Exception as e:
-                self.set_status('error',str(e))
-                return supported_devices.device_list
-
-    def add_supported_device(self,device_string):
-        r = re.compile('[0-9A-Fa-f]{4}:[0-9A-Fa-f]{4}');
-        match = r.search(device_string)
-        if match:
-            match = match.group().split(':')
-            vendor = int(match[0],16)
-            product = int(match[1],16)
-            name = device_string.split('ID')
-            if len(name) >= 2:
-                name = name[1]
-            else:
-                name = name[0]
-            
-            device_list = supported_devices.device_list[:]
-            if os.path.isfile('escpos_devices.pickle'):
-                try:
-                    f = open('escpos_devices.pickle','r')
-                    device_list = pickle.load(f)
-                    f.close()
-                except Exception as e:
-                    self.set_status('error',str(e))
-            device_list.append({
-                'vendor': vendor,
-                'product': product,
-                'name': name,
-            })
-
-            try:
-                f = open('escpos_devices.pickle','w+')
-                f.seek(0)
-                pickle.dump(device_list,f)
-                f.close()
-            except Exception as e:
-                self.set_status('error',str(e))
-
-    def connected_usb_devices(self):
-        connected = []
-        
-        for device in self.supported_devices():
-            if usb.core.find(idVendor=device['vendor'], idProduct=device['product']) != None:
-                connected.append(device)
-        return connected
-
-    def lockedstart(self):
-        with self.lock:
-            if not self.isAlive():
-                self.daemon = True
-                self.start()
-    
-    def get_escpos_printer(self):
-        #<PyWebDriver> Add vendor_product setting in the function
-        try:
-            printers = self.connected_usb_devices()
-            if len(printers) > 0:
-                self.vendor_product = str(printers[0]['vendor']) + '_' + str(printers[0]['product'])
-                self.set_status('connected', _(u'Connected to %s') %(printers[0]['name']))
-                return printer.Usb(printers[0]['vendor'], printers[0]['product'])
-            else:
-                self.vendor_product = None
-                self.set_status('disconnected', _(u'Printer Not Found'))
-
-                return None
-        except Exception as e:
+        def __init__(self, *args, **kwargs):
             self.vendor_product = None
-            self.set_status('error',str(e))
-            return None
+            ThreadDriver.__init__(self, args, kwargs)
 
-    def get_status(self):
-        self.push_task('status')
-        return self.status
+        def supported_devices(self):
+            return device_list
 
+        def connected_usb_devices(self):
+            connected = []
 
+            for device in self.supported_devices():
+                if usb.core.find(idVendor=device['vendor'], idProduct=device['product']) != None:
+                    connected.append(device)
 
-    def open_cashbox(self,printer):
-        printer.cashdraw(2)
-        printer.cashdraw(5)
+            return connected
 
-    def set_status(self, status, message = None):
-        if status == self.status['status']:
-            if message != None and (len(self.status['messages']) == 0 or message != self.status['messages'][-1]):
-                self.status['messages'].append(message)
-        else:
-            self.status['status'] = status
-            if message:
-                self.status['messages'] = [message]
-            else:
-                self.status['messages'] = []
+        def open_printer(self):
 
-    def run(self):
-        while True:
+            if self.device:
+                return
+
             try:
-                timestamp, task, data = self.queue.get(True)
-
-                printer = self.get_escpos_printer()
-
-                if printer == None:
-                    if task != 'status':
-                        self.queue.put((timestamp,task,data))
-                    time.sleep(5)
-                    continue
-                elif task == 'receipt': 
-                    if timestamp >= time.time() - 1 * 60 * 60:
-                        self.print_receipt_body(printer,data)
-                        printer.cut()
-                elif task == 'xml_receipt':
-                    if timestamp >= time.time() - 1 * 60 * 60:
-                        printer.receipt(data)
-                elif task == 'cashbox':
-                    if timestamp >= time.time() - 12:
-                        self.open_cashbox(printer)
-                elif task == 'printstatus':
-                    self.print_status(printer)
-                elif task == 'status':
-                    pass
+                printers = self.connected_usb_devices()
+                if printers:
+                    printer = printers[0]
+                    self.idVendor = printer.get('vendor')
+                    self.idProduct = printer.get('product')
+                    self.interface = printer.get('interface', 0)
+                    self.in_ep = printer.get('in_ep', 0x82)
+                    self.out_ep = printer.get('out_ep', 0x01)
+                    self.open()
+                    self.vendor_product = '%s_%s' % (
+                        self.idVendor, self.idProduct
+                    )
 
             except Exception as e:
-                self.set_status('error', str(e))
-                errmsg = str(e) + '\n' + '-'*60+'\n' + traceback.format_exc() + '-'*60 + '\n'
+                self.set_status('error',str(e))
 
-    def push_task(self,task, data = None):
-        self.lockedstart()
-        self.queue.put((time.time(),task,data))
+        def open_cashbox(self,printer):
+            self.open_printer()
+            self.cashdraw(2)
+            self.cashdraw(5)
 
-    def print_status(self,eprint):
-        #<PyWebDriver> Full refactoring of the function to allow
-        # localisation and to make more easy the search of the ip
-        ip = get_public_ip()
-        eprint.text('\n\n')
-        eprint.set(align='center',type='b',height=2,width=2)
-        eprint.text(_(u'PyWebDriver Software Status'))
-        eprint.text('\n\n')
-        eprint.set(align='center')
-
-        if not ip:
-            msg = _(
-                """ERROR: Could not connect to LAN\n\n"""
-                """Please check that your system is correc-\n"""
-                """tly connected with a network cable,\n"""
-                """ that the LAN is setup with DHCP, and\n"""
-                """that network addresses are available""")
-            eprint.text(msg)
-        else:
-            eprint.text(_(u'IP Addresses:') + '\n')
-            eprint.text(ip + ' (' + _(u'Public') + ')\n')
-            for ifaceName in interfaces():
-                pass
-                addresses = [i['addr'] for i in ifaddresses(ifaceName).setdefault(AF_INET, [{'addr':'No IP addr'}] )]
-                eprint.text(', '.join(addresses) + ' (' + ifaceName + ')\n')
-            eprint.text('\n' + _(u'Port:') + '\n')
-            eprint.text(self.port + '\n')
-
-        eprint.text('\n\n')
-        eprint.cut()
-
-    def print_receipt_body(self,eprint,receipt):
-        #<PyWebDriver> refactoring of the function to :
-        # - allow localisation;
-        # - fix some problems if receipt dictionnary doesn't have all keys;
-        # - Print taxes;
-        def check(string):
-            return string != True and bool(string) and string.strip()
-
-        def price(amount):
-            return ("{0:."+str(receipt['precision']['price'])+"f}").format(amount)
-
-        def money(amount):
-            return ("{0:."+str(receipt['precision']['money'])+"f}").format(amount)
-
-        def quantity(amount):
-            if math.floor(amount) != amount:
-                return ("{0:."+str(receipt['precision']['quantity'])+"f}").format(amount)
+        def get_status(self):
+            messages = []
+            self.open_printer()
+            if not self.device:
+                status = 'disconnected'
             else:
-                return str(amount)
+                try:
+                    res = self.get_printer_status()
+                    if res['printer']['online']:
+                        status = 'connected'
+                    else:
+                        status = 'connecting'
 
-        def printline(left, right='', width=40, ratio=0.5, indent=0):
-            lwidth = int(width * ratio) 
-            rwidth = width - lwidth 
-            lwidth = lwidth - indent
-            
-            left = left[:lwidth]
-            if len(left) != lwidth:
-                left = left + ' ' * (lwidth - len(left))
+                    if res['printer']['status_error']:
+                        status = 'error'
+                        messages.append('Error code: %i' % res['printer']['status_error'])
 
-            right = right[-rwidth:]
-            if len(right) != rwidth:
-                right = ' ' * (rwidth - len(right)) + right
+                except Exception, err:
+                    status = 'error'
+                    self.device = False
+                    messages.append('Error: %s' % err)
 
-            return ' ' * indent + left + right + '\n'
-        
-        def print_taxes():
-            taxes = receipt.get('tax_details', [])
-            for tax in taxes:
-                eprint.text(printline(tax['tax']['name'],price(tax['amount']), width=40,ratio=0.6))
+            return {
+                'status': status,
+                'messages': messages,
+            }
 
-        # Receipt Header
-        if receipt['company'].get('logo', False):
-            eprint.set(align='center')
-            eprint.print_base64_image(receipt['company']['logo'])
-            eprint.text('\n')
-        else:
-            eprint.set(align='center',type='b',height=2,width=2)
-            eprint.text(receipt['company']['name'] + '\n')
+        def printstatus(self,eprint):
+            #<PyWebDriver> Full refactoring of the function to allow
+            # localisation and to make more easy the search of the ip
 
-        eprint.set(align='center',type='b')
-        if check(receipt['company'].get('contact_address', False)):
-            eprint.text(receipt['company']['contact_address'] + '\n')
-        if check(receipt['company'].get('phone', False)):
-            eprint.text(_(u'Tel:') + receipt['company']['phone'] + '\n')
-        if check(receipt['company'].get('vat', False)):
-            eprint.text(_(u'VAT:') + receipt['company']['vat'] + '\n')
-        if check(receipt['company'].get('email', False)):
-            eprint.text(receipt['company']['email'] + '\n')
-        if check(receipt['company'].get('website', False)):
-            eprint.text(receipt['company']['website'] + '\n')
-        if check(receipt.get('header')):
-            eprint.text(receipt['header']+'\n')
-        if check(receipt.get('cashier')):
-            eprint.text('-'*32+'\n')
-            eprint.text(_(u'Served by ')+receipt['cashier']+'\n')
+            self.open_printer()
+            ip = get_public_ip()
 
-        # Orderlines
-        if config.getboolean('odoo', 'orderline_price_with_tax'):
-            orderline_price_field = 'price_with_tax'
-        else:
-            orderline_price_field = 'price_without_tax'
-        eprint.text('\n\n')
-        eprint.set(align='center')
-        for line in receipt['orderlines']:
-            pricestr = price(line[orderline_price_field])
-            if line['discount'] == 0 and line['unit_name'] == 'Unit(s)' and line['quantity'] == 1:
-                eprint.text(printline(line['product_name'],pricestr,ratio=0.6))
+            if not ip:
+                msg = _(
+                    """ERROR: Could not connect to LAN<br/><br/>"""
+                    """Please check that your system is correc-<br/>"""
+                    """tly connected with a network cable,<br/>"""
+                    """ that the LAN is setup with DHCP, and<br/>"""
+                    """that network addresses are available""")
+                self.receipt('<div>'+msg+'</div>')
+                self.cut()
             else:
-                eprint.text(printline(line['product_name'],ratio=0.6))
-                if line['discount'] != 0:
-                    eprint.text(printline(_(u'Discount: ')+str(line['discount'])+'%', ratio=0.6, indent=2))
-                if line['unit_name'] == 'Unit(s)':
-                    eprint.text( printline( quantity(line['quantity']) + ' x ' + price(line['price']), pricestr, ratio=0.6, indent=2))
-                else:
-                    eprint.text( printline( quantity(line['quantity']) + ' ' + line['unit_name'] + ' x ' + price(line['price']), pricestr, ratio=0.6, indent=2))
+                addr_lines = []
+                for ifaceName in interfaces():
+                    addresses = [i['addr'] for i in ifaddresses(ifaceName).setdefault(AF_INET, [{'addr':'No IP addr'}] )]
+                    addr_lines.append(
+                        '<p>'+','.join(addresses) + ' (' + ifaceName + ')' + '</p>'
+                    )
+                msg = _("""
+                       <div align="center">
+                            <h4>PyWebDriver Software Status</h4>
+                            <br/><br/>
+                            <h5>IP Addresses:</h5>
+                            %s<br/>
+                            %s<br/>
+                            Port: %i
+                       </div>
+                """) % (
+                    ip + ' (' + _(u'Public') + ')',
+                    ''.join(addr_lines),
+                    config.getint('flask', 'port'),
+                )
+                self.receipt(msg)
 
-        # Subtotal if the taxes are not included
-        taxincluded = True
-        if money(receipt['subtotal']) != money(receipt['total_with_tax']):
-            eprint.text(printline('','-------'));
-            eprint.text(printline(_(u'Subtotal'),money(receipt['subtotal']),width=40, ratio=0.6))
-            print_taxes()
-            eprint.text(printline(_(u'Taxes'),money(receipt['total_tax']),width=40, ratio=0.6))
-            taxincluded = False
+    driver = ESCPOSDriver(app.config)
+    drivers['escpos'] = driver
+    installed=True
 
+    @app.route(
+            '/hw_proxy/print_xml_receipt',
+            methods=['POST', 'GET', 'PUT', 'OPTIONS'])
+    @cross_origin(headers=['Content-Type'])
+    def print_xml_receipt_json():
+        """ For Odoo 8.0+"""
 
-        # Total
-        eprint.text(printline('','-------'));
-        eprint.set(align='center',height=2)
-        eprint.text(printline(_(u'         TOTAL'),money(receipt['total_with_tax']), width=40, ratio=0.6))
-        eprint.text('\n\n');
-        
-        # Paymentlines
-        eprint.set(align='center')
-        for line in receipt['paymentlines']:
-            eprint.text(printline(line['journal'], money(line['amount']), ratio=0.6))
+        driver.open_printer()
+        receipt = request.json['params']['receipt']
+        driver.push_task('receipt', receipt)
 
-        eprint.text('\n');
-        eprint.set(align='center',height=2)
-        eprint.text(printline(_(u'        CHANGE'),money(receipt['change']),width=40, ratio=0.6))
-        eprint.set(align='center')
-        eprint.text('\n');
+        return jsonify(jsonrpc='2.0', result=True)
 
-        # Extra Payment info
-        if receipt['total_discount'] != 0:
-            eprint.text(printline(_(u'Discounts'),money(receipt['total_discount']),width=40, ratio=0.6))
-        if taxincluded:
-            print_taxes()
-            eprint.text(printline(_(u'Taxes'),money(receipt['total_tax']),width=40, ratio=0.6))
+    @app.route('/print_status.html', methods=['GET'])
+    @cross_origin()
+    def print_status_http():
+        driver.push_task('printstatus')
+        return render_template('print_status.html')
 
-        # Footer
-        if check(receipt.get('footer')):
-            eprint.text('\n'+receipt['footer']+'\n\n')
-        eprint.text(receipt['name']+'\n')
-        eprint.text(      str(receipt['date']['date']).zfill(2)
-                    +'/'+ str(receipt['date']['month']+1).zfill(2)
-                    +'/'+ str(receipt['date']['year']).zfill(4)
-                    +' '+ str(receipt['date']['hour']).zfill(2)
-                    +':'+ str(receipt['date']['minute']).zfill(2) )
-
-
-drivers['escpos'] = EscposDriver(port=config.get('flask', 'port'))

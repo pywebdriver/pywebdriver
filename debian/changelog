@@ -1,0 +1,11 @@
+pywebdriver (0.2.2-0ubuntu1) trusty; urgency=medium
+
+  * Fix config file
+
+ -- Sylvain Calador <sylvain.calador@gmail.com>  Thu, 16 Apr 2015 12:59:45 +0200
+
+pywebdriver (0.2.0-0ubuntu1) trusty; urgency=medium
+
+  * launchpad build for trusty
+
+ -- Sylvain Calador <sylvain.calador@gmail.com>  Wed, 15 Apr 2015 15:22:47 +0200

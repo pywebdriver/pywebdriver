@@ -46,22 +46,6 @@ def status_json():
         statuses[driver] = drivers[driver].get_status()
     return jsonify(jsonrpc='2.0', result=statuses)
 
-
-@app.route(
-    '/hw_proxy/print_xml_receipt',
-    methods=['POST', 'GET', 'PUT', 'OPTIONS'])
-@cross_origin(headers=['Content-Type'])
-def print_xml_receipt_json():
-    """ For Odoo 8.0+"""
-    receipt = request.json['params']['receipt']
-    encoding = config.get('odoo', 'force_receipt_encoding')
-    if encoding != '':
-        drivers['escpos'].push_task('xml_receipt', receipt.encode(encoding))
-    else:
-        drivers['escpos'].push_task('xml_receipt', receipt)
-    return jsonify(jsonrpc='2.0', result=True)
-
-
 @app.route('/hw_proxy/log', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
 @cross_origin(headers=['Content-Type'])
 def log_json():

@@ -1,0 +1,22 @@
+Source: pywebdriver
+Section: admin
+Priority: extra
+Maintainer: Sylvain Calador <sylvain.calador@akretion.com>
+Build-Depends: debhelper (>= 9), python-setuptools, python-all
+X-Python-Version: >= 2.4
+VCS-Git: git://github.com/akretion/pywebdriver.git
+VCS-Browser: https://github.com/akretion/pywebdriver
+Standards-Version: 3.9.5
+Homepage: https://github.com/akretion/pywebdriver
+
+Package: pywebdriver
+Architecture: all
+Depends: adduser, git, supervisor, nginx, ssl-cert, python, python-dev, python-pip, python-flask, python-simplejson, python-netifaces, cups, python-cups, git, ${misc:Depends},
+Description: Python Web Services to communicate wih Devices
+ This Software installs Web Services to allow easy communications with some
+ devices. It provides Web Pages to see the status of the devices.
+ Moreover it provides webservices compatible with Odoo Software, that is an
+ OpenSource ERP Solution. (For more information, see http://odoo.com).
+ PyWebDriver is currently compatible with Odoo 7.0 and 8.0 series.
+ Main Devices compatible:
+ * EPSON - TMT20;
