@@ -24,7 +24,7 @@ import cups
 import tempfile
 
 from flask_cors import cross_origin
-from flask import request, jsonify
+from flask import request, jsonify, make_response
 
 from pywebdriver import app, drivers
 from .base_driver import AbstractDriver
@@ -100,19 +100,8 @@ def cupsapi(method):
     args = []
     kwargs = {}
     if request.json:
-        params = request.json.get('params')
-
-        # Support previous API Deprecated
-        if not params:
-            # TODO FIX LOG
-            # No handlers could be found for logger
-            # "pywebdriver.plugins.cups_driver"
-            #_logger.warning('A call using the old API have been done')
-            params = request.json
-        # END
-
-        args = params.get('args', [])
-        kwargs = params.get('kwargs', {})
+        args = request.json.get('args', [])
+        kwargs = request.json.get('kwargs', {})
     if request.args:
         kwargs = request.args.to_dict()
     conn = drivers['cups'].getConnection()
@@ -120,12 +109,12 @@ def cupsapi(method):
         result = getattr(conn, method)(*args, **kwargs)
     # TODO we should implement all cups error
     except cups.IPPError as (status, description):
-        return jsonify(
-            jsonrpc='2.0',
-            error={
-                'code': '-32600',
-                'message': '%s - %s' % (status, description)
-                })
+        return make_response(
+            jsonify({
+                'cups_error': 'IPPError',
+                'cups_error_status': status,
+                'cups_error_description': description,
+                }), 400)
     return jsonify(jsonrpc='2.0', result=result)
 
 drivers['cups'] = CupsDriver()
