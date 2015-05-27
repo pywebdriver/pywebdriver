@@ -27,9 +27,12 @@ from flask_cors import cross_origin
 from flask import request, jsonify
 
 from pywebdriver import app, drivers
+from .base_driver import AbstractDriver
+import logging
+_logger = logging.getLogger(__name__)
 
 
-class CupsDriver(cups.Connection):
+class ExtendedCups(cups.Connection):
 
     def printData(self, printer, data, title='Pywebdriver', options=None):
         with tempfile.NamedTemporaryFile() as f:
@@ -44,7 +47,7 @@ class CupsDriver(cups.Connection):
         string_options = {}
         for key, value in options.items():
             string_options[str(key)] = str(value)
-        return super(CupsDriver, self).printFile(
+        return super(ExtendedCups, self).printFile(
             printer, filename, title, string_options)
 
     def printFiles(self, printer, filenames,
@@ -54,8 +57,17 @@ class CupsDriver(cups.Connection):
         string_options = {}
         for key, value in options.items():
             string_options[str(key)] = str(value)
-        return super(CupsDriver, self).printFiles(
+        return super(ExtendedCups, self).printFiles(
             printer, filenames, title, string_options)
+
+
+class CupsDriver(AbstractDriver):
+
+    def getConnection(self):
+        try:
+            return ExtendedCups()
+        except:
+            return False
 
     def get_vendor_product(self):
         return 'cups-icon'
@@ -67,7 +79,13 @@ class CupsDriver(cups.Connection):
             4: 'Printing',
             5: 'Stopped',
             }
-        for printer, value in self.getPrinters().items():
+        conn = self.getConnection()
+        if not conn:
+            return {
+                'status': 'disconnected',
+                'messages': ['Cups Sever is not running'],
+                }
+        for printer, value in self.getConnection().getPrinters().items():
             messages.append(
                 "%s : %s" % (printer, mapstate[value['printer-state']]))
         state = {
@@ -76,18 +94,38 @@ class CupsDriver(cups.Connection):
         }
         return state
 
-
 @app.route('/cups/<method>', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
 @cross_origin(headers=['Content-Type'])
 def cupsapi(method):
     args = []
     kwargs = {}
     if request.json:
-        args = request.json.get('args', [])
-        kwargs = request.json.get('kwargs', {})
+        params = request.json.get('params')
+
+        # Support previous API Deprecated
+        if not params:
+            # TODO FIX LOG
+            # No handlers could be found for logger
+            # "pywebdriver.plugins.cups_driver"
+            #_logger.warning('A call using the old API have been done')
+            params = request.json
+        # END
+
+        args = params.get('args', [])
+        kwargs = params.get('kwargs', {})
     if request.args:
         kwargs = request.args.to_dict()
-    result = getattr(drivers['cups'], method)(*args, **kwargs)
+    conn = drivers['cups'].getConnection()
+    try:
+        result = getattr(conn, method)(*args, **kwargs)
+    # TODO we should implement all cups error
+    except cups.IPPError as (status, description):
+        return jsonify(
+            jsonrpc='2.0',
+            error={
+                'code': '-32600',
+                'message': '%s - %s' % (status, description)
+                })
     return jsonify(jsonrpc='2.0', result=result)
 
 drivers['cups'] = CupsDriver()
