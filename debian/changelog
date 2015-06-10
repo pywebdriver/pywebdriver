@@ -1,3 +1,9 @@
+pywebdriver (0.3.2-0ubuntu1) trusty; urgency=medium
+
+  * Bump version
+
+ -- Sylvain Calador <sylvain.calador@gmail.com>  Wed, 10 Jun 2015 19:22:06 +0200
+
 pywebdriver (0.3.1-0ubuntu1) trusty; urgency=medium
 
   * Bump version
