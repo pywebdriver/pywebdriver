@@ -179,3 +179,9 @@ else:
         driver.push_task('printstatus')
         return render_template('print_status.html')
 
+    @app.route('/hw_proxy/open_cashbox', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
+    @cross_origin(headers=['Content-Type'])
+    def open_cashbox():
+        driver.push_task('open_cashbox')
+        return jsonify(jsonrpc='2.0', result=True)
+
