@@ -42,6 +42,10 @@ else:
     class DisplayDriver(ThreadDriver, pyposdisplay.Driver):
         """ Display Driver class for pywebdriver """
 
+        def __init__(self, *args, **kwargs):
+            ThreadDriver.__init__(self)
+            pyposdisplay.Driver.__init__(self, *args, **kwargs)
+
     display_driver = DisplayDriver(app.config)
 
 @app.route(
