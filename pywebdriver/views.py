@@ -56,11 +56,19 @@ def status():
     return render_template('status.html', statuses=statuses)
 
 
-@app.route('/devices.html', methods=['GET'])
+@app.route('/usb_devices.html', methods=['GET'])
 @cross_origin()
-def devices():
-    devices = commands.getoutput("lsusb").split('\n')
-    return render_template('devices.html', devices=devices)
+def usb_devices():
+    str_devices = commands.getoutput("lsusb").split('\n')
+    devices = []
+    for device in str_devices:
+        devices.append({
+            'bus': device.split(": ID ")[0].split(" ")[1],
+            'device': device.split(": ID ")[0].split(" ")[3],
+            'id': device.split(": ID ")[1][:9],
+            'description': device.split(": ID ")[1][10:],
+        })
+    return render_template('usb_devices.html', devices=devices)
 
 
 @app.route('/system.html', methods=['GET'])
