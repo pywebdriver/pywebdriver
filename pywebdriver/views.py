@@ -35,13 +35,13 @@ from pywebdriver import app, drivers
 @app.route("/")
 @app.route('/index.html', methods=['GET'])
 @cross_origin()
-def index_http():
+def index():
     return render_template('index.html')
 
 
 @app.route('/status.html', methods=['GET'])
 @cross_origin()
-def status_http():
+def status():
     statuses = {}
     for driver in drivers:
         tmp = drivers[driver].get_vendor_product()
@@ -58,14 +58,14 @@ def status_http():
 
 @app.route('/devices.html', methods=['GET'])
 @cross_origin()
-def devices_http():
+def devices():
     devices = commands.getoutput("lsusb").split('\n')
     return render_template('devices.html', devices=devices)
 
 
 @app.route('/system.html', methods=['GET'])
 @cross_origin()
-def system_http():
+def system():
     system_info = []
     system_info.append({
         'name': _('OS - System'), 'value': platform.system()})
