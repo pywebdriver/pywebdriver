@@ -29,15 +29,15 @@
     {% for driver in drivers_info %}
     <div class="col-xs-4 col-md-4 thumbnail" style="margin-right:5px;">
         <h2 style="text-align:center">{{driver}}</h2>
-        <div style="height:20px;">{{_('status: ')}}
+        <div style="height:20px;font-weight:bold;">{{_('status: ')}}
         {% if drivers_info[driver]['state']['status']== 'connected' %}
             <span style="color:green;">{{ _('Connected')}}</span>
         {% elif drivers_info[driver]['state']['status']== 'connecting' %}
-            <span style="color:blue;">{{driver}} : {{ _('Connecting')}}</span>
+            <span style="color:blue;">{{ _('Connecting')}}</span>
         {% elif drivers_info[driver]['state']['status']== 'disconnected' %}
-            <span style="color:brown;">{{driver}} : {{ _('Disconnected')}}</span>
+            <span style="color:gray;">{{ _('Disconnected')}}</span>
         {% elif drivers_info[driver]['state']['status']== 'error' %}
-            <span style="color:red;">{{driver}} : {{ _('Error')}}</span>
+            <span style="color:red;">{{ _('Error')}}</span>
         {% else %}
             <span style="color:black;">{{driver}} : {{drivers_info[driver]['state']['status']}}</span>
         {% endif %}

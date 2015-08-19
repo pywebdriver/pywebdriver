@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-08-19 21:42+0200\n"
+"POT-Creation-Date: 2015-08-19 21:58+0200\n"
 "PO-Revision-Date: 2014-05-17 11:48+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: fr <LL@li.org>\n"
@@ -17,27 +17,27 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 1.3\n"
 
-#: views.py:79
+#: views.py:80
 msgid "OS - System"
 msgstr "OS - Système"
 
-#: views.py:81
+#: views.py:82
 msgid "OS - Distribution"
 msgstr "OS - Distribution"
 
-#: views.py:84
+#: views.py:85
 msgid "OS - Release"
 msgstr "OS - Noyau"
 
-#: views.py:86
+#: views.py:87
 msgid "OS - Version"
 msgstr "OS - Version"
 
-#: views.py:88
+#: views.py:89
 msgid "Machine"
 msgstr "Machine"
 
-#: views.py:90
+#: views.py:91
 msgid "Python Version"
 msgstr "Version Python"
 
@@ -123,25 +123,29 @@ msgstr "Etat du Matériel"
 
 #: templates/status.html:28
 msgid "The list of enabled drivers and their status"
-msgstr "La lise des pilotes activés avec leur état"
+msgstr "La liste des pilotes activés avec leur état"
 
-#: templates/status.html:31
+#: templates/status.html:32
+msgid "status: "
+msgstr "Statut : "
+
+#: templates/status.html:34
 msgid "Connected"
 msgstr "Connecté(e)"
 
-#: templates/status.html:33
+#: templates/status.html:36
 msgid "Connecting"
 msgstr "En cours de connexion"
 
-#: templates/status.html:35
+#: templates/status.html:38
 msgid "Disconnected"
 msgstr "Déconnecté(e)"
 
-#: templates/status.html:37
+#: templates/status.html:40
 msgid "Error"
 msgstr "En Erreur"
 
-#: templates/status.html:51
+#: templates/status.html:46
 msgid "Print Status Receipt"
 msgstr "Imprimer un ticket indiquant le statut"
 
@@ -192,3 +196,4 @@ msgstr "ID"
 #: templates/usb_devices.html:34
 msgid "Description"
 msgstr "Description"
+
