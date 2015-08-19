@@ -27,23 +27,41 @@
 
 {% block content %}
 <h2>{{ _('System')}}</h2>
-        <div>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>{{ _('Name') }}</th>
+            <th>{{ _('Value') }}</th>
+        <tr>
+    </thead>
+    <tbody>
     {% for info in system_info %}
-            <div class="list-item" data-device="{{device}}">
-            <b>{{info['name']}}</b>&nbsp;:&nbsp;
-            {{info['value']}}
-            </div>
+        <tr>
+            <td>{{info['name']}}</td>
+            <td>{{info['value']}}</td>
+        </tr>
     {% endfor %}
-        </div>
+    </tbody>
+</table>
 
 <h2>{{ _('Python Packages')}}</h2>
-        <div>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>{{ _('Name') }}</th>
+            <th>{{ _('Version') }}</th>
+            <th>{{ _('Location') }}</th>
+        <tr>
+    </thead>
+    <tbody>
     {% for packages in installed_python_packages %}
-            <div class="list-item" data-device="{{device}}">
-            <b>{{packages['key']}}</b>&nbsp;:&nbsp;
-            {{packages['version']}} ({{packages['location']}})
-            </div>
+        <tr>
+            <td>{{packages['key']}}</td>
+            <td>{{packages['version']}}</td>
+            <td>{{packages['location']}}</td>
+        </tr>
     {% endfor %}
-        </div>
+    </tbody>
+</table>
 
 {% endblock %}
