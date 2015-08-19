@@ -32,7 +32,7 @@ from flask.ext.babel import gettext as _
 from pywebdriver import app, drivers
 
 
-@app.route("/")
+@app.route("/", methods=['GET'])
 @app.route('/index.html', methods=['GET'])
 @cross_origin()
 def index():
@@ -42,18 +42,19 @@ def index():
 @app.route('/status.html', methods=['GET'])
 @cross_origin()
 def status():
-    statuses = {}
+    drivers_info = {}
+
     for driver in drivers:
         tmp = drivers[driver].get_vendor_product()
         if tmp:
             image = 'static/images/' + tmp + '.png'
         else:
             image = None
-        statuses[driver] = {
+        drivers_info[driver] = {
             'state': drivers[driver].get_status(),
             'image': image,
         }
-    return render_template('status.html', statuses=statuses)
+    return render_template('status.html', drivers_info=drivers_info)
 
 
 @app.route('/usb_devices.html', methods=['GET'])
