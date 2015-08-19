@@ -39,12 +39,7 @@
         {% elif drivers_info[driver]['state']['status']== 'error' %}
             <span style="color:red;">{{ _('Error')}}</span>
         {% else %}
-            <span style="color:black;">{{driver}} : {{drivers_info[driver]['state']['status']}}</span>
-        {% endif %}
-        {% if driver =='escpos' %}
-                {% if drivers_info[driver]['state']['status']  == 'connected' %}
-                    <button type="button" onclick="print_status()" class="btn btn-link btn-xs">{{_('Print Status Receipt')}}</button>
-                {% endif %}
+            <span style="color:orange;">{{drivers_info[driver]['state']['status']}}</span>
         {% endif %}
         </div>
 
@@ -53,8 +48,13 @@
         {% else %}
             <img src="{{ url_for('static', filename='images/device_not_found.jpg') }}" style="width:150px;height:150px;" class="thumbnail img-responsive" />
         {% endif %}
-        <div style="height:80px">
+        <div style="height:80px;">
                 <ul class="list-group">
+        {% if driver =='escpos' %}
+                {% if drivers_info[driver]['state']['status']  == 'connected' %}
+                <li class="list-group-item"><button type="button" onclick="print_status()" class="btn btn-link btn-xs">{{_('Print Status Receipt')}}</button></li>
+                {% endif %}
+        {% endif %}
         {% for message in drivers_info[driver]['state']['messages'] %}
                 <li class="list-group-item list-group-item-danger">{{message}}</li>
         {% endfor %}
