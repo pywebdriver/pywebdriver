@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-11-14 17:02+0100\n"
+"POT-Creation-Date: 2015-08-19 21:42+0200\n"
 "PO-Revision-Date: 2014-05-17 11:48+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: fr <LL@li.org>\n"
@@ -17,110 +17,69 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 1.3\n"
 
-#: pywebdriver.py:96
+#: views.py:79
 msgid "OS - System"
 msgstr "OS - Système"
 
-#: pywebdriver.py:98
+#: views.py:81
 msgid "OS - Distribution"
 msgstr "OS - Distribution"
 
-#: pywebdriver.py:100
+#: views.py:84
 msgid "OS - Release"
 msgstr "OS - Noyau"
 
-#: pywebdriver.py:102
+#: views.py:86
 msgid "OS - Version"
 msgstr "OS - Version"
 
-#: pywebdriver.py:104
+#: views.py:88
 msgid "Machine"
 msgstr "Machine"
 
-#: pywebdriver.py:106
+#: views.py:90
 msgid "Python Version"
 msgstr "Version Python"
 
-#: libraries/escpos_driver.py:143
-#, python-format
-msgid "Connected to %s"
-msgstr "Connecté(e) à %s"
-
-#: libraries/escpos_driver.py:147
-msgid "Printer Not Found"
-msgstr "Imprimante non trouvée"
-
-#: libraries/escpos_driver.py:217
-msgid "PyWebDriver Software Status"
-msgstr "Statut de l'application PyWebDriver"
-
-#: libraries/escpos_driver.py:222
+#: plugins/escpos_driver.py:128
 msgid ""
-"ERROR: Could not connect to LAN\n"
-"\n"
-"Please check that your system is correc-\n"
-"tly connected with a network cable,\n"
-" that the LAN is setup with DHCP, and\n"
-"that network addresses are available"
+"ERROR: Could not connect to LAN<br/><br/>Please check that your system is"
+" correc-<br/>tly connected with a network cable,<br/> that the LAN is "
+"setup with DHCP, and<br/>that network addresses are available"
 msgstr ""
-"ERREUR : Impossible de se connecter au\n"
-"réseau local : Vérifiez si la PosBox est\n"
-"correctement connectée au cable réseau,\n"
-"que le réseau local est en DHCP,\n"
-"et que les adresses réseaux sont \n"
-"disponible."
+"ERREUR : Impossible de se connecter au<br/><br/>réseau local : Vérifiez "
+"si la PosBox est<br/>correctement connectée au cable réseau,<br/>que le "
+"réseau local est en DHCP,<br/>et que les adresses réseaux sont "
+"<br/>disponible."
 
-#: libraries/escpos_driver.py:230
-msgid "IP Address:"
-msgstr "Adresse IP :"
+#: plugins/escpos_driver.py:143
+#, python-format
+msgid ""
+"\n"
+"                       <div align=\"center\">\n"
+"                            <h4>PyWebDriver Software Status</h4>\n"
+"                            <br/><br/>\n"
+"                            <h5>IP Addresses:</h5>\n"
+"                            %s<br/>\n"
+"                            %s<br/>\n"
+"                            Port: %i\n"
+"                       </div>\n"
+"                "
+msgstr ""
+"\n"
+"                       <div align=\"center\">\n"
+"                            <h4>Statut de l'application PyWebDriver</h4>\n"
+"                            <br/><br/>\n"
+"                            <h5>Adresses IP:</h5>\n"
+"                            %s<br/>\n"
+"                            %s<br/>\n"
+"                            Port: %i\n"
+"                       </div>\n"
+"                "
 
-#: libraries/escpos_driver.py:231
-msgid "Homepage:"
-msgstr "Page d'accueil :"
-
-#: libraries/escpos_driver.py:290
-msgid "Tel:"
-msgstr "Tél : "
-
-#: libraries/escpos_driver.py:292
-msgid "VAT:"
-msgstr "TVA Intracom : "
-
-#: libraries/escpos_driver.py:301
-msgid "Served by "
-msgstr "Servi par "
-
-#: libraries/escpos_driver.py:313
-msgid "Discount: "
-msgstr "Remises : "
-
-#: libraries/escpos_driver.py:323
-msgid "Subtotal"
-msgstr "Sous-Total"
-
-#: libraries/escpos_driver.py:325 libraries/escpos_driver.py:351
-msgid "Taxes"
-msgstr "Taxes"
-
-#: libraries/escpos_driver.py:332
-msgid "         TOTAL"
-msgstr "         TOTAL"
-
-#: libraries/escpos_driver.py:342
-msgid "        CHANGE"
-msgstr "       MONNAIE"
-
-#: libraries/escpos_driver.py:348
-msgid "Discounts"
-msgstr "Remises"
-
-#: templates/devices.html:23
-msgid "Connected Devices"
-msgstr "Périphériques connectés (USB)"
-
-#: templates/devices.html:25
-msgid "Connected Devices (USB)"
-msgstr "Périphériques connectés (USB)"
+#: plugins/escpos_driver.py:153
+msgid "Public"
+msgstr "Public"
 
 #: templates/index.html:23
 msgid "Index"
@@ -130,23 +89,23 @@ msgstr "Index"
 msgid "Welcome on the PyWebDriver"
 msgstr "Bienvenue sur PyWebDriver"
 
-#: templates/layout.html:23
+#: templates/layout.html:25
 msgid "PyWebDriver Software"
 msgstr "Application PyWebDriver"
 
-#: templates/layout.html:72
+#: templates/layout.html:47
 msgid "Home"
 msgstr "Accueil"
 
-#: templates/layout.html:73 templates/status.html:23
+#: templates/layout.html:49 templates/status.html:23
 msgid "Status"
 msgstr "Statut de la PosBox"
 
-#: templates/layout.html:74
-msgid "Devices"
-msgstr "Périphériques"
+#: templates/layout.html:51
+msgid "USB Devices"
+msgstr "Périphériques USB"
 
-#: templates/layout.html:75 templates/system.html:29
+#: templates/layout.html:53 templates/system.html:29
 msgid "System"
 msgstr "Système"
 
@@ -182,7 +141,7 @@ msgstr "Déconnecté(e)"
 msgid "Error"
 msgstr "En Erreur"
 
-#: templates/status.html:49
+#: templates/status.html:51
 msgid "Print Status Receipt"
 msgstr "Imprimer un ticket indiquant le statut"
 
@@ -194,7 +153,42 @@ msgstr "Information Système"
 msgid "Technical Information about the system"
 msgstr "Information technique concernant le système"
 
-#: templates/system.html:39
+#: templates/system.html:33 templates/system.html:51
+msgid "Name"
+msgstr "Nom"
+
+#: templates/system.html:34
+msgid "Value"
+msgstr "Valeur"
+
+#: templates/system.html:47
 msgid "Python Packages"
 msgstr "Paquets Python"
 
+#: templates/system.html:52
+msgid "Version"
+msgstr "Version"
+
+#: templates/system.html:53
+msgid "Location"
+msgstr "Emplacement"
+
+#: templates/usb_devices.html:23 templates/usb_devices.html:25
+msgid "Connected Devices (USB)"
+msgstr "Périphériques connectés (USB)"
+
+#: templates/usb_devices.html:31
+msgid "Bus"
+msgstr "Bus"
+
+#: templates/usb_devices.html:32
+msgid "Device"
+msgstr "Périphérique"
+
+#: templates/usb_devices.html:33
+msgid "ID"
+msgstr "ID"
+
+#: templates/usb_devices.html:34
+msgid "Description"
+msgstr "Description"
