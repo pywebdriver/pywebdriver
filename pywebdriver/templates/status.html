@@ -55,6 +55,9 @@
                 <li class="list-group-item"><button type="button" onclick="print_status()" class="btn btn-link btn-xs">{{_('Print Status Receipt')}}</button></li>
                 {% endif %}
         {% endif %}
+        {% if driver =='display_driver' %}
+                <li class="list-group-item"><button type="button" onclick="display_status()" class="btn btn-link btn-xs">{{_('Display Status')}}</button></li>
+        {% endif %}
         {% for message in drivers_info[driver]['state']['messages'] %}
                 <li class="list-group-item list-group-item-danger">{{message}}</li>
         {% endfor %}
@@ -66,6 +69,13 @@
         function print_status(){
             $.ajax({
                 url: "print_status.html",
+                type: "GET",
+                timeout: 1000,
+            })
+        }
+        function display_status(){
+            $.ajax({
+                url: "display_status.html",
                 type: "GET",
                 timeout: 1000,
             })

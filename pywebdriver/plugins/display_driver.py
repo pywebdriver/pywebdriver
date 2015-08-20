@@ -27,9 +27,9 @@ meta = {
     'require_debian': ['python-pyposdisplay'],
 }
 
-from pywebdriver import app
+from pywebdriver import app, drivers
 from flask_cors import cross_origin
-from flask import request, jsonify
+from flask import request, jsonify, render_template
 from base_driver import ThreadDriver, check
 import simplejson
 
@@ -43,10 +43,22 @@ else:
         """ Display Driver class for pywebdriver """
 
         def __init__(self, *args, **kwargs):
+            self.vendor_product = None
             ThreadDriver.__init__(self)
             pyposdisplay.Driver.__init__(self, *args, **kwargs)
 
+        @app.route('/display_status.html', methods=['GET'])
+        @cross_origin()
+        def display_status_http():
+            lines = [u'Akretion', u'TEST OK']
+            display_driver.push_task('send_text', lines)
+            return render_template('display_status.html')
+
+        def get_status(self):
+            return {'status': 'connected', 'message': ['Maybe connected']}
+
     display_driver = DisplayDriver(app.config)
+    drivers['display_driver'] = display_driver
 
 @app.route(
     '/hw_proxy/send_text_customer_display',
