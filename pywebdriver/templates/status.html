@@ -27,7 +27,7 @@
 {% block content %}
         <p>{{ _('The list of enabled drivers and their status')}}</p>
     {% for driver in drivers_info %}
-    <div class="col-xs-4 col-md-4 thumbnail" style="margin-right:5px;">
+    <div class="col-xs-3 col-md-3 thumbnail" style="margin-right:5px;">
         <h2 style="text-align:center">{{driver}}</h2>
         <div style="height:20px;font-weight:bold;">{{_('status: ')}}
         {% if drivers_info[driver]['state']['status']== 'connected' %}
@@ -56,7 +56,9 @@
                 {% endif %}
         {% endif %}
         {% if driver =='display_driver' %}
+                {% if drivers_info[driver]['state']['status']  == 'connected' %}
                 <li class="list-group-item"><button type="button" onclick="display_status()" class="btn btn-link btn-xs">{{_('Display Status')}}</button></li>
+                {% endif %}
         {% endif %}
         {% for message in drivers_info[driver]['state']['messages'] %}
                 <li class="list-group-item list-group-item-danger">{{message}}</li>
