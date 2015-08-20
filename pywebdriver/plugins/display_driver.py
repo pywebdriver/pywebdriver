@@ -55,7 +55,12 @@ else:
             return render_template('display_status.html')
 
         def get_status(self):
-            return {'status': 'connected', 'message': ['Maybe connected']}
+            try:
+                display_driver.push_task('send_text', [_(u'PyWebDriver'), _(u'PosBox Status')])
+                self.set_status('connected')
+            except Exception as e:
+                self.set_status('error', str(e))
+            return self.status
 
     display_driver = DisplayDriver(app.config)
     drivers['display_driver'] = display_driver
