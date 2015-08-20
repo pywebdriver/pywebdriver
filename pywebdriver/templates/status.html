@@ -26,32 +26,49 @@
 
 {% block content %}
         <p>{{ _('The list of enabled drivers and their status')}}</p>
-    {% for driver in statuses %}
-        {% if statuses[driver]['state']['status']== 'connected' %}
-            <h2 style="color:green;">{{driver}} : {{ _('Connected')}}</h2>
-        {% elif statuses[driver]['state']['status']== 'connecting' %}
-            <h2 style="color:blue;">{{driver}} : {{ _('Connecting')}}</h2>
-        {% elif statuses[driver]['state']['status']== 'disconnected' %}
-            <h2 style="color:brown;">{{driver}} : {{ _('Disconnected')}}</h2>
-        {% elif statuses[driver]['state']['status']== 'error' %}
-            <h2 style="color:red;">{{driver}} : {{ _('Error')}}</h2>
+    {% for driver in drivers_info %}
+    <div class="col-xs-4 col-md-4 thumbnail" style="margin-right:5px;">
+        <h2 style="text-align:center">{{driver}}</h2>
+        <div style="height:20px;font-weight:bold;">{{_('status: ')}}
+        {% if drivers_info[driver]['state']['status']== 'connected' %}
+            <span style="color:green;">{{ _('Connected')}}</span>
+        {% elif drivers_info[driver]['state']['status']== 'connecting' %}
+            <span style="color:blue;">{{ _('Connecting')}}</span>
+        {% elif drivers_info[driver]['state']['status']== 'disconnected' %}
+            <span style="color:gray;">{{ _('Disconnected')}}</span>
+        {% elif drivers_info[driver]['state']['status']== 'error' %}
+            <span style="color:red;">{{ _('Error')}}</span>
         {% else %}
-            <h2 style="color:black;">{{driver}} : {{statuses[driver]['state']['status']}}</h2>
+            <span style="color:orange;">{{drivers_info[driver]['state']['status']}}</span>
         {% endif %}
-        {% if statuses[driver]['image'] %}
-            <img src="{{statuses[driver]['image']}}" style="width:200px; height:200px;" />
+        </div>
+
+        {% if drivers_info[driver]['image'] %}
+            <img src="{{drivers_info[driver]['image']}}" style="width:150px;height:150px;" class="thumbnail img-responsive" />
+        {% else %}
+            <img src="{{ url_for('static', filename='images/device_not_found.jpg') }}" style="width:150px;height:150px;" class="thumbnail img-responsive" />
         {% endif %}
-                <ul>
-        {% for message in statuses[driver]['state']['messages'] %}
-                <li>{{message}}</li>
+        <div style="height:80px;">
+                <ul class="list-group">
+        {% if driver =='escpos' %}
+                {% if drivers_info[driver]['state']['status']  == 'connected' %}
+                <li class="list-group-item"><button type="button" onclick="print_status()" class="btn btn-link btn-xs">{{_('Print Status Receipt')}}</button></li>
+                {% endif %}
+        {% endif %}
+        {% for message in drivers_info[driver]['state']['messages'] %}
+                <li class="list-group-item list-group-item-danger">{{message}}</li>
         {% endfor %}
                 </ul>
-        {% if driver =='escpos' %}
-                {% if statuses[driver]['state']['status']  == 'connected' %}
-                    <li><a href="print_status.html" target="new">{{_('Print Status Receipt')}}</a></li>
-                {% endif %}
-
-        {% endif %}
-
+        </div>
+    </div>
     {% endfor %}
+    <script>
+        function print_status(){
+            $.ajax({
+                url: "print_status.html",
+                type: "GET",
+                timeout: 1000,
+            })
+        }
+    </script>
 {% endblock %}

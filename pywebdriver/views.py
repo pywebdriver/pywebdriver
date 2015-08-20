@@ -32,40 +32,49 @@ from flask.ext.babel import gettext as _
 from pywebdriver import app, drivers
 
 
-@app.route("/")
+@app.route("/", methods=['GET'])
 @app.route('/index.html', methods=['GET'])
 @cross_origin()
-def index_http():
+def index():
     return render_template('index.html')
 
 
 @app.route('/status.html', methods=['GET'])
 @cross_origin()
-def status_http():
-    statuses = {}
+def status():
+    drivers_info = {}
+
     for driver in drivers:
         tmp = drivers[driver].get_vendor_product()
         if tmp:
             image = 'static/images/' + tmp + '.png'
         else:
             image = None
-        statuses[driver] = {
+        drivers_info[driver] = {
             'state': drivers[driver].get_status(),
             'image': image,
         }
-    return render_template('status.html', statuses=statuses)
+    return render_template('status.html', drivers_info=drivers_info)
 
 
-@app.route('/devices.html', methods=['GET'])
+@app.route('/usb_devices.html', methods=['GET'])
 @cross_origin()
-def devices_http():
-    devices = commands.getoutput("lsusb").split('\n')
-    return render_template('devices.html', devices=devices)
+def usb_devices():
+    str_devices = commands.getoutput("lsusb").split('\n')
+    devices = []
+    for device in str_devices:
+        devices.append({
+            'bus': device.split(": ID ")[0].split(" ")[1],
+            'device': device.split(": ID ")[0].split(" ")[3],
+            'id': device.split(": ID ")[1][:9],
+            'description': device.split(": ID ")[1][10:],
+        })
+    return render_template('usb_devices.html', devices=devices)
 
 
 @app.route('/system.html', methods=['GET'])
 @cross_origin()
-def system_http():
+def system():
     system_info = []
     system_info.append({
         'name': _('OS - System'), 'value': platform.system()})

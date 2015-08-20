@@ -20,14 +20,28 @@
 
 {% extends "layout.html" %}
 
-{% block page_title %}{{ _('Connected Devices')}}{% endblock %}
+{% block page_title %}{{ _('Connected Devices (USB)')}}{% endblock %}
 
 {% block content_title %}{{ _('Connected Devices (USB)')}}{% endblock %}
 
 {% block content %}
-        <div>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>{{ _('Bus') }}</th>
+            <th>{{ _('Device') }}</th>
+            <th>{{ _('ID') }}</th>
+            <th>{{ _('Description') }}</th>
+        <tr>
+    </thead>
+    <tbody>
     {% for device in devices %}
-            <div class="list-item" data-device="{{device}}">{{device[device.find('ID')+2:]}}</div>
+        <tr>
+            <td>{{device['bus']}}</td>
+            <td>{{device['device']}}</td>
+            <td>{{device['id']}}</td>
+            <td>{{device['description']}}</td>
+        </tr>
     {% endfor %}
         </div>
 {% endblock %}

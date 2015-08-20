@@ -17,69 +17,50 @@
 <!--You should have received a copy of the GNU Affero General Public License-->
 <!--along with this program.  If not, see <http://www.gnu.org/licenses/>.   -->
 <!-- ********************************************************************** -->
-<html>
-  <head>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block page_title %}{% endblock %} - {{ _('PyWebDriver Software')}}</title>
 
-    <title>{% block page_title %}{% endblock %} - {{ _('PyWebDriver Software')}}</title>
-        <style>
-            #navigation {
-                margin: 0 ;
-                padding: 0 ;
-                list-style: none ;
-                text-align: center ;
-            }
-            #navigation li {
-                display: inline ;
-                margin-right: 1px ;
-                color: #fff ;
-                background: #c00 ;
-            }
-            #navigation li a {
-                padding: 4px 20px ;
-                background: #c00 ;
-                color: #fff ;
-                border: 1px solid #600 ;
-                font: 1em "Trebuchet MS",Arial,sans-serif ;
-                line-height: 1em ;
-                text-align: center ;
-                text-decoration: none ;
-            }
-            #navigation li a:hover, #navigation li a:focus, #navigation li a:active {
-                background: #900 ;
-                text-decoration: underline ;
-            }
-            body {
-                width: 960px;
-                margin: 10px auto;
-                font-family: sans-serif;
-                text-align: justify;
-                color: #6B6B6B;
-            }
-            .list-item {
-                border-bottom: solid 1px rgb(216,216,216);
-                padding: 9px;
-            }
-            .list-item:nth-child(2n) {
-                background:rgb(240,240,240);
-            }
-        </style>
-    {% block style %}
-    {% endblock %}
-  </head>
-  <body>
-    <div id="menu">
-        <ul id="navigation">
-          <li><a href="index.html">{{_('Home')}}</a></li>
-          <li><a href="status.html">{{ _('Status')}}</a></li>
-          <li><a href="devices.html">{{_('Devices')}}</a></li>
-          <li><a href="system.html">{{_('System')}}</a></li>
-        </ul>
-        
-    </div>
-    <div id="content">
-    <h1>{% block content_title %}{% endblock %}</h1>
-    {% block content %}{% endblock %}
-    </div>
-  </body>
+        <!-- from : http://code.jquery.com/jquery-2.0.3.min.js -->
+        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+
+        <!-- from : http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js -->
+        <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+        <!-- from : http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css -->
+        <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" />
+
+    {% block extra_css %}{% endblock %}
+
+    </head>
+    <body>
+        <div class="container">
+
+            <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+
+                <div class="container-fluid">
+                    <div class="nav navbar-left">
+                        <a class="btn btn-sm btn-default" href="{{  url_for('index') }}">
+                            {{_('Home')}}</a>
+                        <a class="btn btn-sm btn-default" href="{{  url_for('status') }}">
+                            {{_('Status')}}</a>
+                        <a class="btn btn-sm btn-default" href="{{  url_for('usb_devices') }}">
+                            {{_('USB Devices')}}</a>
+                        <a class="btn btn-sm btn-default" href="{{  url_for('system') }}">
+                            {{_('System')}}</a>
+                    </div>
+                </div>
+            </nav>
+        <div id="content" style="margin-top:70px;">
+        <h1>{% block content_title %}{% endblock %}</h1>
+        {% block content %}{% endblock %}
+        </div>
+
+    {% block extra_js %}{% endblock %}
+
+    </body>
 </html>
 
