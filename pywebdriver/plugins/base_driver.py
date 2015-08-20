@@ -57,7 +57,7 @@ class AbstractDriver(object):
     """ Abstract Driver Class"""
 
     def __init__(self, *args, **kwargs):
-        self.status = {'status':'connecting', 'messages':[]}
+        self.status = {'status':'disconnected', 'messages':[]}
 
 
 class ThreadDriver(Thread, AbstractDriver):
@@ -67,6 +67,7 @@ class ThreadDriver(Thread, AbstractDriver):
         AbstractDriver.__init__(self, *args, **kwargs)
         self.queue = Queue()
         self.lock  = Lock()
+        self.vendor_product = None
 
     def get_vendor_product(self):
         return self.vendor_product
@@ -116,12 +117,3 @@ class ThreadDriver(Thread, AbstractDriver):
                 #TODO FIXME
                 #_logger.error(errmsg)
                 print errmsg
-
-
-class UsbDriver(object):
-
-    def __init__(self, port):
-        self.vendor_product = None
-
-    def get_vendor_product(self):
-        return self.vendor_product
