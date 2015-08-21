@@ -110,6 +110,12 @@ class ThreadDriver(Thread, AbstractDriver):
                 self.set_status('error', str(e))
                 errmsg = str(e) + '\n' + '-'*60+'\n' + traceback.format_exc()\
                          + '-'*60 + '\n'
-                #TODO FIXME
-                #_logger.error(errmsg)
-                print errmsg
+                app.logger.error(errmsg)
+
+class UsbDriver(object):
+
+    def __init__(self, port):
+        self.vendor_product = None
+
+    def get_vendor_product(self):
+        return self.vendor_product
