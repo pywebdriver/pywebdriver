@@ -78,10 +78,6 @@ class ThreadDriver(Thread, AbstractDriver):
                 self.daemon = True
                 self.start()
 
-    def get_status(self):
-        self.push_task('status')
-        return self.status
-
     def set_status(self, status, message = None):
         if status == self.status['status']:
             if message != None and (
