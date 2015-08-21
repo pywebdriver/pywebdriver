@@ -21,7 +21,7 @@
 
 from pywebdriver import app, drivers
 from flask_cors import cross_origin
-from flask import request, jsonify
+from flask import request, jsonify, render_template
 from base_driver import ThreadDriver, check
 import simplejson
 import pypostelium
@@ -37,14 +37,18 @@ class TeliumDriver(ThreadDriver, pypostelium.Driver):
         # TODO : FIXME : Remove once 'status-posdisplay' branch is merged
         self.vendor_product = None
 
+    def get_payment_info_from_price(self, price):
+        return {
+            'amount': price,
+            'payment_mode': 'card',
+            'currency_iso': 'EUR',
+        }
+
     def get_status(self):
         self.status = {'status': 'connected', 'messages': []}
 
-        telium_driver.push_task('transaction_start', json.dumps({
-            'amount': 999.99,
-            'payment_mode': 'card',
-            'currency_iso': 'EUR',
-        }, sort_keys=True))
+        telium_driver.push_task('transaction_start', json.dumps(
+            self.get_payment_info_from_price(999.99), sort_keys=True))
         if self.status['status'] == 'connected':
             # TODO Improve : Get the real modele connected
             self.vendor_product = 'telium_image'
@@ -55,6 +59,7 @@ class TeliumDriver(ThreadDriver, pypostelium.Driver):
 telium_driver = TeliumDriver(app.config)
 drivers['telium'] = telium_driver
 
+
 @app.route(
     '/hw_proxy/payment_terminal_transaction_start',
     methods=['POST', 'GET', 'PUT', 'OPTIONS'])
@@ -63,3 +68,14 @@ def payment_terminal_transaction_start(self, payment_info):
     app.logger.debug('Telium: Call payment_terminal_transaction_start')
     telium_driver.push_task('transaction_start', payment_info)
     return jsonify(jsonrpc='2.0', result=True)
+
+
+@app.route('/telium_status.html', methods=['POST'])
+@cross_origin()
+def telium_status():
+    info = telium_driver.get_payment_info_from_price(
+        float(request.values['price']))
+    telium_driver.push_task('transaction_start', json.dumps(
+        info, sort_keys=True))
+    return render_template('telium_status.html')
+
