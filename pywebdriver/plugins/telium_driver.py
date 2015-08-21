@@ -19,37 +19,46 @@
 #
 ###############################################################################
 
-meta = {
-    'name': "POS Telium payment terminal",
-    'description': """This plugin add the support of Telium payment terminal
-        pywebdriver""",
-    'require_pip': ['pypostelium'],
-    'require_debian': ['python-pypostelium'],
-}
-
-from pywebdriver import app
+from pywebdriver import app, drivers
 from flask_cors import cross_origin
 from flask import request, jsonify
 from base_driver import ThreadDriver, check
 import simplejson
+import pypostelium
+import simplejson as json
+from datetime import datetime
 
-try:
-    import pypostelium
-except:
-    installed = False
-else:
-    installed = True
+class TeliumDriver(ThreadDriver, pypostelium.Driver):
+    """ Telium Driver class for pywebdriver """
 
-    class TeliumDriver(ThreadDriver, pypostelium.Driver):
-        """ Telium Driver class for pywebdriver """
+    def __init__(self, *args, **kwargs):
+        ThreadDriver.__init__(self)
+        pypostelium.Driver.__init__(self, *args, **kwargs)
+        # TODO : FIXME : Remove once 'status-posdisplay' branch is merged
+        self.vendor_product = None
 
-    telium_driver = TeliumDriver(app.config)
+    def get_status(self):
+        self.status = {'status': 'connected', 'messages': []}
+
+        telium_driver.push_task('transaction_start', json.dumps({
+            'amount': 999.99,
+            'payment_mode': 'card',
+            'currency_iso': 'EUR',
+        }, sort_keys=True))
+        if self.status['status'] == 'connected':
+            # TODO Improve : Get the real modele connected
+            self.vendor_product = 'telium_image'
+        else:
+            self.vendor_product = False
+        return self.status
+
+telium_driver = TeliumDriver(app.config)
+drivers['telium'] = telium_driver
 
 @app.route(
     '/hw_proxy/payment_terminal_transaction_start',
     methods=['POST', 'GET', 'PUT', 'OPTIONS'])
 @cross_origin(headers=['Content-Type'])
-@check(installed, meta)
 def payment_terminal_transaction_start(self, payment_info):
     app.logger.debug('Telium: Call payment_terminal_transaction_start')
     telium_driver.push_task('transaction_start', payment_info)
