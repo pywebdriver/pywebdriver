@@ -33,17 +33,20 @@ from pywebdriver import app, config, drivers
 SIGNATURE_FILENAME='signature.svg'
 DOWNLOAD_PATH='/tmp'
 
-_logger = logging.getLogger(__name__)
-
 @app.route('/hw_proxy/get_signature', methods=['GET'])
 @cross_origin()
 def get_signautre_http():
-    
-    mtp = pymtp.MTP()
-    mtp.connect()
 
     file_ = None
     data = None
+
+    try:
+        mtp = pymtp.MTP()
+        mtp.connect()
+    except Exception, err:
+        app.logger.error('Device not connected %s' % str(err))
+        return jsonify(jsonrpc='2.0', result=data)
+
     for f in mtp.get_filelisting():
         if f.filename == SIGNATURE_FILENAME:
             file_ = f
@@ -52,14 +55,14 @@ def get_signautre_http():
         dest_file = os.path.join(DOWNLOAD_PATH, SIGNATURE_FILENAME)
         try:
             mtp.get_file_to_file(file_.item_id, dest_file)
-            _logger.debug('file downloaded to %s' % dest_file)
+            app.logger.debug('file downloaded to %s' % dest_file)
             data = open(dest_file, 'r').read()
-            _logger.debug(data)
+            app.logger.debug(data)
             mtp.delete_object(file_.item_id)
         except Exception, err:
-            _logger.error('error during file transfer %s' % str(err))
+            app.logger.error('error during file transfer %s' % str(err))
     else:
-        _logger.error('file not found on the device: %s' % SIGNATURE_FILENAME)
+        app.logger.error('file not found on the device: %s' % SIGNATURE_FILENAME)
 
     mtp.disconnect()
     return jsonify(jsonrpc='2.0', result=data)
