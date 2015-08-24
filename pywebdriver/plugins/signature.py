@@ -30,39 +30,41 @@ import pymtp
 from pywebdriver import app, config, drivers
 
 
-SIGNATURE_FILENAME='signature.svg'
-DOWNLOAD_PATH='/tmp'
-
 @app.route('/hw_proxy/get_signature', methods=['GET'])
 @cross_origin()
-def get_signautre_http():
+def get_signature_http():
 
     file_ = None
     data = None
+
+    download_path = config.get('signature', 'download_path') or '/tmp'
+    signature_file = config.get('signature', 'signature_file') or 'signature.svg'
 
     try:
         mtp = pymtp.MTP()
         mtp.connect()
     except Exception, err:
-        app.logger.error('Device not connected %s' % str(err))
+        app.logger.error('Unable to connect device %s' % str(err))
         return jsonify(jsonrpc='2.0', result=data)
 
     for f in mtp.get_filelisting():
-        if f.filename == SIGNATURE_FILENAME:
+        if f.filename == signature_file:
             file_ = f
             break
     if file_:
-        dest_file = os.path.join(DOWNLOAD_PATH, SIGNATURE_FILENAME)
+        dest_file = os.path.join(download_path, signature_file)
         try:
             mtp.get_file_to_file(file_.item_id, dest_file)
             app.logger.debug('file downloaded to %s' % dest_file)
-            data = open(dest_file, 'r').read()
+            with open(dest_file, 'r') as f:
+                data = f.read()
             app.logger.debug(data)
             mtp.delete_object(file_.item_id)
         except Exception, err:
+            raise
             app.logger.error('error during file transfer %s' % str(err))
     else:
-        app.logger.error('file not found on the device: %s' % SIGNATURE_FILENAME)
+        app.logger.error('file not found on the device: %s' % signature_file)
 
     mtp.disconnect()
     return jsonify(jsonrpc='2.0', result=data)
