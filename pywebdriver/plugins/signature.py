@@ -61,7 +61,6 @@ def get_signature_http():
             app.logger.debug(data)
             mtp.delete_object(file_.item_id)
         except Exception, err:
-            raise
             app.logger.error('error during file transfer %s' % str(err))
     else:
         app.logger.error('file not found on the device: %s' % signature_file)
