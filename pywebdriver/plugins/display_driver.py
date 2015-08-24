@@ -27,17 +27,25 @@ meta = {
     'require_debian': ['python-pyposdisplay'],
 }
 
-from pywebdriver import app
+from pywebdriver import app, drivers
 from flask_cors import cross_origin
-from flask import request, jsonify
+from flask import request, jsonify, render_template
 from base_driver import ThreadDriver, check
 import simplejson
+import time
 
 try:
     import pyposdisplay
 except:
     installed=False
 else:
+    AUTHOR = [
+        ([u'PyWebDriver', u'By'], 2),
+        ([u'Sylvain CALADOR', u'@ Akretion'], 1.5),
+        ([u'Sébastien BEAU', u'@ Akretion'], 1.5),
+        ([u'Sylvain LE GAL', u'@ GRAP'], 1.5),
+        ([u'Status:', u'OK'], 5),
+    ]
     installed=True
     class DisplayDriver(ThreadDriver, pyposdisplay.Driver):
         """ Display Driver class for pywebdriver """
@@ -45,8 +53,32 @@ else:
         def __init__(self, *args, **kwargs):
             ThreadDriver.__init__(self)
             pyposdisplay.Driver.__init__(self, *args, **kwargs)
+            # TODO FIXME (Actually hardcoded, but no possibility to know
+            # the model easily
+            self.vendor_product = '1504_11'
+
+        @app.route('/display_status.html', methods=['GET'])
+        @cross_origin()
+        def display_status_http():
+            for line, duration in AUTHOR:
+                display_driver.push_task('send_text', line)
+                time.sleep(duration)
+            return render_template('display_status.html')
+
+        def get_status(self):
+            try:
+                self.set_status('connected')
+                display_driver.push_task('send_text', [_(u'PyWebDriver'), _(u'PosBox Status')])
+            except Exception as e:
+                pass
+                # TODO Improve Me
+                # For the time being, it's not possible to know if the display
+                # is 'disconnected' in 'error' state
+                # Maybe could be possible, improving pyposdisplay library.
+            return self.status
 
     display_driver = DisplayDriver(app.config)
+    drivers['display_driver'] = display_driver
 
 @app.route(
     '/hw_proxy/send_text_customer_display',
