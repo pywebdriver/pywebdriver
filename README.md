@@ -10,12 +10,14 @@ The aim of this project is to make easier communication between application and 
 Table of Content
 ----------------
 * [Features](#features)
-  * [Specific WebServices for Odoo](#feature-a)
-  * [Generic WebServices using CUP](#feature-b)
+  * [Web Page](#feature-a)
+  * [Specific WebServices for Odoo](#feature-b)
+  * [Generic WebServices using CUP](#feature-c)
 * [End-Users / Customers Section](#customers)
 * [Contributors](#contributors) 
 * [Developers Section](#developers)
-  * [Deployment](#deployment)
+  * [Installation](#installation)
+  * [Development](#devlopment)
   * [Contribute](#contribute)
   * [Localization](#localization)
   * [Other Projects](#other-projects)
@@ -24,18 +26,34 @@ Table of Content
 
 # <a name="features"></a>Features
 
-## <a name="feature-a"></a>Specific WebServices for Odoo
-The aim of this sub project is provide WebServices and Web Page to simulate the behaviour of Odoo Apps (hw_proxy applications & co) to allow Odoo users to use Odoo Point of Sale with PyWebDriver as a Proxy.
-* **State** (depending of devices type):
- * **Printers** : To be released for 7.0 and 8.0 Series;
- * **Scale**, **Barcode Reader**, **Cash Box**, **Credit Carte Reader** : Not Planned;
-* **Compatibility** : Odoo 7.0; Odoo 8.0;
+## <a name="feature-a"></a>Web Page
+This apps provides a light flask apps to:
+* know the state of the devices;
+* know informations about system;
+* test communication with some devices;(E.G : send a test message to the customer display, print a test ticket ...).
 
-## <a name="feature-b"></a>Generic WebServices using CUP
-* **State** : Planned;
+## <a name="feature-b"></a>Specific WebServices for Odoo
+The aim of this sub project is provide WebServices and Web Page to simulate the behaviour of Odoo Apps (hw_proxy applications & co) to allow Odoo users to use Odoo Point of Sale with PyWebDriver as a Proxy.
+* **Odoo8**:
+  * **Printers** :
+    * Epson TM-T20;
+  * **Credit Carte Reader**:
+    * Ingenico EFTSmart4S;
+    * Ingenico EFTSmart2 2640 with Telim Manager version 37784503;
+    * Ingenico i2200 cheque reader and writer;
+  * **Customer Display**:
+    * Bixolon BCD-1100;
+    * Bixolon BCD-1000;
+  * **Scale**:
+    * TODO : planned by GRAP (Any help welcome);
+  * **Barcode Reader**, **Cash Box** :
+    * Not Planned;
+
+## <a name="feature-c"></a>Generic WebServices using CUP
+Done.
 
 # <a name="customers"></a>End-Users / Customers Section
-If a you're interested by a feature that is not currently supported, please [contact our team](http://www.akretion.com) for a quotation.
+If you're interested by a feature that is not currently supported, please [contact our team](http://www.akretion.com) for a quotation.
 
 Otherwise, if you like this project, feel free to make a donation.
 
@@ -53,7 +71,14 @@ A lot of the code come from other projects. Licences and copyright are mentionne
 
 # <a name="developers"></a>Developers Section
 
-## <a name="deployment"></a>Deployment
+## <a name="installation"></a>Installation
+```
+sudo add-apt-repository ppa:akretion-team/pywebdriver
+sudo apt-get update
+sudo apt-get install pywebdriver
+```
+
+## <a name="devlopment"></a>Devlopement
 
 To test this module, do the following steps: 
 * download it from git;
