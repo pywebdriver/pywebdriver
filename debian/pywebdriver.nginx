@@ -12,7 +12,6 @@ server {
     ssl_prefer_server_ciphers   on;
     ssl_session_cache           shared:SSL:10m;
     ssl_session_timeout         10m;
-    add_header                  Strict-Transport-Security max-age=2592000;
     proxy_buffers               16 64k;
     proxy_buffer_size           128k;
     proxy_set_header            Host $host;
