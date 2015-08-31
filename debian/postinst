@@ -20,6 +20,11 @@ fi
 adduser $USERNAME $GROUP
 adduser $USERNAME dialout
 
+echo "Signature gsettings"
+gsettings set org.gnome.desktop.media-handling automount false
+gsettings set org.gnome.desktop.media-handling automount-open false
+gsettings set org.gnome.desktop.media-handling autorun-never true
+
 echo "Restarting udev"
 service udev restart
 
