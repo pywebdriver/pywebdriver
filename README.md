@@ -5,7 +5,7 @@ Summary
 -------
 Python Web Services to communicate wih Devices.
 
-The aim of this project is to make easier communication between application and Devices, providing light WebServices based on Python-Flask libraries. The software can be installed on a computer or a Raspberry-like device. It is compatible with Linux distribution.
+The aim of this project is to ease the communication between application and Devices, providing light WebServices based on Python-Flask libraries. The software can be installed on a computer or a Raspberry-like device. It is compatible with Linux distribution.
 
 Table of Content
 ----------------
@@ -27,27 +27,26 @@ Table of Content
 # <a name="features"></a>Features
 
 ## <a name="feature-a"></a>Web Page
-This apps provides a light flask apps to:
+This apps provides a light flask app to:
 * know the state of the devices;
 * know informations about system;
-* test communication with some devices;(E.G : send a test message to the customer display, print a test ticket ...).
+* test communication with some devices (e.g. send a test message to the customer display, print a test ticket, etc...).
 
 ## <a name="feature-b"></a>Specific WebServices for Odoo
-The aim of this sub project is provide WebServices and Web Page to simulate the behaviour of Odoo Apps (hw_proxy applications & co) to allow Odoo users to use Odoo Point of Sale with PyWebDriver as a Proxy.
+The aim of this sub project is to provide WebServices and Web Page to simulate the behaviour of Odoo Apps (hw_proxy applications & co) to allow Odoo users to use Odoo Point of Sale with PyWebDriver as a Proxy.
 * **Odoo8**:
   * **Printers** :
-    * Epson TM-T20;
-  * **Credit Carte Reader**:
-    * Ingenico EFTSmart4S;
-    * Ingenico EFTSmart2 2640 with Telim Manager version 37784503;
-    * Ingenico i2200 cheque reader and writer;
+    * Epson TM-T20
+  * **Credit Card Reader**:
+    * Ingenico and Sagem credit card readers with Telium Manager version 37783600 or superior
+    * Ingenico i2200 check reader and writer
   * **Customer Display**:
-    * Bixolon BCD-1100;
-    * Bixolon BCD-1000;
+    * Bixolon BCD-1100
+    * Bixolon BCD-1000
   * **Scale**:
     * TODO : planned by GRAP (Any help welcome);
   * **Barcode Reader**, **Cash Box** :
-    * Not Planned;
+    * Not Planned
 
 ## <a name="feature-c"></a>Generic WebServices using CUP
 Done.
@@ -105,7 +104,7 @@ If you want to propose extra features not yet covered, please contact us or subm
 
 ## <a name="localization"></a>Localization
 
-for the moment, localization is managed for english and french languages. If you want to manage extra lozalisation, do the following step:
+For the moment, localization is managed for english and french languages. If you want to manage extra lozalisation, do the following:
 * call this command to generate '.pot' file:
 ```
 pybabel extract -F translations/settings_babel.cfg -o translations/i18n.pot .
@@ -125,8 +124,9 @@ pybabel compile -d translations
 * Do a Pull Request to share your work;
 
 ## <a name="other-projects"></a>Other Projects
-If you're interested by this project, you could perhaps take a look on this others projects:
+If you're interested by this project, you could perhaps take a look at these other projects:
 * [Odoo](https://github.com/odoo/odoo)
+* [OCA pos](https://github.com/OCA/pos)
 * [OpenERP-ledDisplay](https://github.com/guerrerocarlos/OpenERP-ledDisplay)
 * [ProxyPoS](https://github.com/Fedrojesa/ProxyPoS/)
 
