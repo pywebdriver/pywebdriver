@@ -9,5 +9,6 @@ pif
 Pillow
 netifaces
 pycups
+pymtp
 # temporary desactivate because of a xmlescpos pip issue
 #xmlescpos
