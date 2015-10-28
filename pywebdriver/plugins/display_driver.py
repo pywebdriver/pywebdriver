@@ -68,16 +68,17 @@ else:
         def get_status(self):
             try:
                 self.set_status('connected')
-                # When I use the POS, it regularly displays
+                # When I use Odoo POS v8, it regularly displays
                 # "PyWebDriver / PosBox Status" on the LCD !!!
-                # So I comment this line -- Alexis de Lattre
-                # display_driver.push_task('send_text', [_(u'PyWebDriver'), _(u'PosBox Status')])
-            except Exception as e:
-                pass
+                # So I comment the line below -- Alexis de Lattre
+                # display_driver.push_task(
+                #    'send_text', [_(u'PyWebDriver'), _(u'PosBox Status')])
                 # TODO Improve Me
                 # For the time being, it's not possible to know if the display
                 # is 'disconnected' in 'error' state
                 # Maybe could be possible, improving pyposdisplay library.
+            except Exception as e:
+                pass
             return self.status
 
     driver_config = {}

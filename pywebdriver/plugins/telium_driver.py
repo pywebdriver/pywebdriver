@@ -46,14 +46,13 @@ class TeliumDriver(ThreadDriver, pypostelium.Driver):
 
     def get_status(self):
         self.status = {'status': 'connected', 'messages': []}
-
-        # When I use the POS, it regularly goes through that code
+        # When I use Odoo POS v8, it regularly goes through that code
         # and sends 999.99 to the credit card reader !!!
-        # Si I comment this line -- Alexis
+        # Si I comment the line below -- Alexis
         # telium_driver.push_task('transaction_start', json.dumps(
         #    self.get_payment_info_from_price(999.99, 'card'), sort_keys=True))
+        # TODO Improve : Get the real model connected
         if self.status['status'] == 'connected':
-            # TODO Improve : Get the real modele connected
             self.vendor_product = 'telium_image'
         else:
             self.vendor_product = False
