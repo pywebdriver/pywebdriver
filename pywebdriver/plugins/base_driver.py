@@ -111,11 +111,3 @@ class ThreadDriver(Thread, AbstractDriver):
                 errmsg = str(e) + '\n' + '-'*60+'\n' + traceback.format_exc()\
                          + '-'*60 + '\n'
                 app.logger.error(errmsg)
-
-class UsbDriver(object):
-
-    def __init__(self, port):
-        self.vendor_product = None
-
-    def get_vendor_product(self):
-        return self.vendor_product
