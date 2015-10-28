@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 ###############################################################################
 #
-#   Module for OpenERP
-#   Copyright (C) 2014 Akretion (http://www.akretion.com).
+#   Copyright (C) 2014-2015 Akretion (http://www.akretion.com).
 #   @author Sébastien BEAU <sebastien.beau@akretion.com>
 #   @author Sylvain LE GAL (https://twitter.com/legalsylvain)
 #   Copyright (C) 2004-TODAY Odoo S.A (<http://odoo.com>).
@@ -29,8 +28,6 @@ from flask import jsonify
 import traceback
 import functools
 import time
-import logging
-_logger = logging.getLogger(__name__)
 
 def check(installed, plugin):
     def wrap(func):
@@ -78,10 +75,6 @@ class ThreadDriver(Thread, AbstractDriver):
                 self.daemon = True
                 self.start()
 
-    def get_status(self):
-        self.push_task('status')
-        return self.status
-
     def set_status(self, status, message = None):
         if status == self.status['status']:
             if message != None and (
@@ -114,6 +107,4 @@ class ThreadDriver(Thread, AbstractDriver):
                 self.set_status('error', str(e))
                 errmsg = str(e) + '\n' + '-'*60+'\n' + traceback.format_exc()\
                          + '-'*60 + '\n'
-                #TODO FIXME
-                #_logger.error(errmsg)
-                print errmsg
+                app.logger.error(errmsg)

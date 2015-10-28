@@ -50,6 +50,18 @@
         {% endif %}
         <div style="height:80px;">
                 <ul class="list-group">
+        {% if driver =='telium' %}
+                {% if drivers_info[driver]['state']['status']  == 'connected' %}
+               <li class="list-group-item">
+                    <input type="text" class="form-control" id="telium_price" placeholder="6543.21"/>
+                    <select id="telium_payment_mode">
+                        <option value="card">Credit Card</option>
+                        <option value="check">Check</option>
+                    </select>
+                    <button type="button" onclick="telium_status()" class="btn btn-link btn-xs">{{_('Test Communication')}}</button>
+                </li>
+                {% endif %}
+        {% endif %}
         {% if driver =='escpos' %}
                 {% if drivers_info[driver]['state']['status']  == 'connected' %}
                 <li class="list-group-item"><button type="button" onclick="print_status()" class="btn btn-link btn-xs">{{_('Print Status Receipt')}}</button></li>
@@ -68,6 +80,17 @@
     </div>
     {% endfor %}
     <script>
+        function telium_status(){
+            $.ajax({
+                url: "telium_status.html",
+                type: "POST",
+                data: {
+                    'price': $('#telium_price').val(),
+                    'payment_mode': $('#telium_payment_mode').val(),
+                },
+                timeout: 1000,
+            })
+        }
         function print_status(){
             $.ajax({
                 url: "print_status.html",
