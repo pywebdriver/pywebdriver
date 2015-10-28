@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 ###############################################################################
 #
-#   Module for OpenERP
-#   Copyright (C) 2014 Akretion (http://www.akretion.com).
+#   Copyright (C) 2014-2015 Akretion (http://www.akretion.com).
 #   @author Sébastien BEAU <sebastien.beau@akretion.com>
 #   @author Sylvain LE GAL (https://twitter.com/legalsylvain)
 #   Copyright (C) 2004-TODAY Odoo S.A (<http://odoo.com>).
@@ -29,8 +28,6 @@ from flask import jsonify
 import traceback
 import functools
 import time
-import logging
-_logger = logging.getLogger(__name__)
 
 def check(installed, plugin):
     def wrap(func):

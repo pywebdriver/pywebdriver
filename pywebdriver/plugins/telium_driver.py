@@ -19,7 +19,7 @@
 #
 ###############################################################################
 
-from pywebdriver import app, drivers
+from pywebdriver import app, config, drivers
 from flask_cors import cross_origin
 from flask import request, jsonify, render_template
 from base_driver import ThreadDriver, check
@@ -56,7 +56,15 @@ class TeliumDriver(ThreadDriver, pypostelium.Driver):
             self.vendor_product = False
         return self.status
 
-telium_driver = TeliumDriver(app.config)
+driver_config = {}
+if config.get('telium_driver', 'device_name'):
+    driver_config['telium_terminal_device_name'] =\
+        config.get('telium_driver', 'device_name')
+if config.getint('telium_driver', 'device_rate'):
+    driver_config['telium_terminal_device_rate'] =\
+        config.getint('telium_driver', 'device_rate')
+
+telium_driver = TeliumDriver(driver_config)
 drivers['telium'] = telium_driver
 
 
