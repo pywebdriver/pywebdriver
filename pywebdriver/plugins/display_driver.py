@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ###############################################################################
 #
-#   Copyright (C) 2014 Akretion (http://www.akretion.com).
+#   Copyright (C) 2014-2015 Akretion (http://www.akretion.com).
 #   @author Sébastien BEAU <sebastien.beau@akretion.com>
 #
 #   This program is free software: you can redistribute it and/or modify
@@ -27,7 +27,7 @@ meta = {
     'require_debian': ['python-pyposdisplay'],
 }
 
-from pywebdriver import app, drivers
+from pywebdriver import app, config, drivers
 from flask_cors import cross_origin
 from flask import request, jsonify, render_template
 from base_driver import ThreadDriver, check
@@ -68,7 +68,10 @@ else:
         def get_status(self):
             try:
                 self.set_status('connected')
-                display_driver.push_task('send_text', [_(u'PyWebDriver'), _(u'PosBox Status')])
+                # When I use the POS, it regularly displays
+                # "PyWebDriver / PosBox Status" on the LCD !!!
+                # So I comment this line -- Alexis de Lattre
+                # display_driver.push_task('send_text', [_(u'PyWebDriver'), _(u'PosBox Status')])
             except Exception as e:
                 pass
                 # TODO Improve Me
@@ -77,7 +80,18 @@ else:
                 # Maybe could be possible, improving pyposdisplay library.
             return self.status
 
-    display_driver = DisplayDriver(app.config)
+    driver_config = {}
+    if config.get('display_driver', 'device_name'):
+        driver_config['customer_display_device_name'] =\
+            config.get('display_driver', 'device_name')
+    if config.getint('display_driver', 'device_rate'):
+        driver_config['customer_display_device_rate'] =\
+            config.getint('display_driver', 'device_rate')
+    if config.getint('display_driver', 'device_timeout'):
+        driver_config['customer_display_device_timeout'] =\
+            config.getint('display_driver', 'device_timeout')
+
+    display_driver = DisplayDriver(driver_config)
     drivers['display_driver'] = display_driver
 
 @app.route(
