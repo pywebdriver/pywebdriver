@@ -103,5 +103,6 @@ def send_text_customer_display():
     app.logger.debug('LCD: Call send_text')
     text_to_display = request.json['params']['text_to_display']
     lines = simplejson.loads(text_to_display)
+    app.logger.debug('LCD: lines=%s', lines)
     display_driver.push_task('send_text', lines)
     return jsonify(jsonrpc='2.0', result=True)

@@ -75,8 +75,10 @@ drivers['telium'] = telium_driver
     '/hw_proxy/payment_terminal_transaction_start',
     methods=['POST', 'GET', 'PUT', 'OPTIONS'])
 @cross_origin(headers=['Content-Type'])
-def payment_terminal_transaction_start(self, payment_info):
+def payment_terminal_transaction_start():
     app.logger.debug('Telium: Call payment_terminal_transaction_start')
+    payment_info = request.json['params']['payment_info']
+    app.logger.debug('Telium: payment_info=%s', payment_info)
     telium_driver.push_task('transaction_start', payment_info)
     return jsonify(jsonrpc='2.0', result=True)
 
