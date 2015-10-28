@@ -47,8 +47,11 @@ class TeliumDriver(ThreadDriver, pypostelium.Driver):
     def get_status(self):
         self.status = {'status': 'connected', 'messages': []}
 
-        telium_driver.push_task('transaction_start', json.dumps(
-            self.get_payment_info_from_price(999.99), sort_keys=True))
+        # When I use the POS, it regularly goes through that code
+        # and sends 999.99 to the credit card reader !!!
+        # Si I comment this line -- Alexis
+        # telium_driver.push_task('transaction_start', json.dumps(
+        #    self.get_payment_info_from_price(999.99), sort_keys=True))
         if self.status['status'] == 'connected':
             # TODO Improve : Get the real modele connected
             self.vendor_product = 'telium_image'
