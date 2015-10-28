@@ -37,10 +37,10 @@ class TeliumDriver(ThreadDriver, pypostelium.Driver):
         # TODO : FIXME : Remove once 'status-posdisplay' branch is merged
         self.vendor_product = None
 
-    def get_payment_info_from_price(self, price):
+    def get_payment_info_from_price(self, price, payment_mode):
         return {
             'amount': price,
-            'payment_mode': 'card',
+            'payment_mode': payment_mode,
             'currency_iso': 'EUR',
         }
 
@@ -51,7 +51,7 @@ class TeliumDriver(ThreadDriver, pypostelium.Driver):
         # and sends 999.99 to the credit card reader !!!
         # Si I comment this line -- Alexis
         # telium_driver.push_task('transaction_start', json.dumps(
-        #    self.get_payment_info_from_price(999.99), sort_keys=True))
+        #    self.get_payment_info_from_price(999.99, 'card'), sort_keys=True))
         if self.status['status'] == 'connected':
             # TODO Improve : Get the real modele connected
             self.vendor_product = 'telium_image'
@@ -87,7 +87,9 @@ def payment_terminal_transaction_start():
 @cross_origin()
 def telium_status():
     info = telium_driver.get_payment_info_from_price(
-        float(request.values['price']))
+        float(request.values['price']),
+        request.values['payment_mode'])
+    app.logger.debug('Telium status info=%s', info)
     telium_driver.push_task('transaction_start', json.dumps(
         info, sort_keys=True))
     return render_template('telium_status.html')
