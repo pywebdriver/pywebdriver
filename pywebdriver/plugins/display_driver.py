@@ -68,7 +68,10 @@ else:
         def get_status(self):
             try:
                 self.set_status('connected')
-                display_driver.push_task('send_text', [_(u'PyWebDriver'), _(u'PosBox Status')])
+                # When I use the POS, it regularly displays
+                # "PyWebDriver / PosBox Status" on the LCD !!!
+                # So I comment this line -- Alexis de Lattre
+                # display_driver.push_task('send_text', [_(u'PyWebDriver'), _(u'PosBox Status')])
             except Exception as e:
                 pass
                 # TODO Improve Me
