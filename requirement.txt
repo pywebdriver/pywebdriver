@@ -8,5 +8,10 @@ pif
 netifaces
 pycups
 pymtp
+# jcconv and Pillow are NOT required by pywebdriver, but are required by xmlescpos
+# and xmlescpos doesn't properly handle dependencies !
+# TODO : make a PR to xmlescpos to add support for dependencies
+jcconv
+Pillow
 # temporary desactivate because of a xmlescpos pip issue
 #xmlescpos
