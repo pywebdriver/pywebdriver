@@ -1,3 +1,9 @@
+pywebdriver (0.4.1-0ubuntu1) trusty; urgency=medium
+
+  * Add missing pip dependency
+
+ -- Sylvain Calador <sylvain.calador@gmail.com>  Tue, 10 Nov 2015 18:18:56 +0100
+
 pywebdriver (0.4.0-0ubuntu1) trusty; urgency=medium
 
   * Bump version

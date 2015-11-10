@@ -9,6 +9,7 @@ echo "Installing python dependencies via pip"
 pip install jcconv pif Flask-Babel Flask-cors Pillow pymtp
 pip install --pre pyusb
 pip install git+https://github.com/akretion/py-xml-escpos.git@8.0-slip-support
+pip install git+https://github.com/akretion/pypostelium.git@master
 
 echo "Configure pywebdriver user and group"
 groupadd -f $GROUP
