@@ -25,7 +25,12 @@ import os
 
 from flask_cors import cross_origin
 from flask import request, make_response, jsonify
-import pymtp
+
+try:
+    import pymtp
+except ImportError:
+    pass
+
 
 from pywebdriver import app, config, drivers
 
@@ -37,8 +42,10 @@ def get_signature_http():
     file_ = None
     data = None
 
-    download_path = config.get('signature', 'download_path') or '/tmp'
-    signature_file = config.get('signature', 'signature_file') or 'signature.svg'
+    download_path = config.get('signature_driver', 'download_path') or \
+        '/tmp'
+    signature_file = config.get('signature_driver', 'signature_file') or \
+        'signature.svg'
 
     try:
         mtp = pymtp.MTP()
