@@ -16,8 +16,9 @@ Table of Content
 * [End-Users / Customers Section](#customers)
 * [Contributors](#contributors) 
 * [Developers Section](#developers)
-  * [Installation](#installation)
-  * [Development](#devlopment)
+  * [Installation on Debian/Ubuntu](#install-debian)
+  * [Installation on Mac OS X](#install-osx)
+  * [Development](#development)
   * [Contribute](#contribute)
   * [Localization](#localization)
   * [Other Projects](#other-projects)
@@ -63,23 +64,27 @@ The main contributors of this project are :
 * Arthur Vuillard <arthur@hashbang.fr>
 * Sylvain Calador <sylvain.calador@akretion.com>
 
-A lot of the code come from other projects. Licences and copyright are mentionned in each file or in a readme file of the folder. The main other contributors are: 
+A lot of the code come from other projects. Licences and copyright are mentionned in each file or in a readme file of the folder. The main other contributors are:
 * Odoo Part: **Odoo S.A.** <http://odoo.com>
 * Cros Decorator for Flask: **Armin Ronacher** <http://flask.pocoo.org/snippets/56/>
 * ESCPOS driver: **Manuel F Martinez** <manpaz@bashlinux.com>
 
 # <a name="developers"></a>Developers Section
 
-## <a name="installation"></a>Installation
+## <a name="install-debian"></a>Installation on Debian/Ubuntu
 ```
 sudo add-apt-repository ppa:akretion-team/pywebdriver
 sudo apt-get update
 sudo apt-get install pywebdriver
 ```
 
-## <a name="devlopment"></a>Devlopement
+## <a name="install-osx"></a>Installation on Mac OS X
 
-To test this module, do the following steps: 
+Pywebdriver can be installed on Mac OS X and is successfully used in production on a Mac OS X computer with Bixolon customer display, Ingenico credit card reader and check printer. TODO: write installation instructions.
+
+## <a name="development"></a>Development
+
+To test this module, do the following steps:
 * download it from git;
 ```
 git clone https://github.com/akretion/pywebdriver.git
