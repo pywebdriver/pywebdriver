@@ -37,12 +37,12 @@ LOCAL_CONFIG_PATH = '%s/../config/config.ini' % os.path.dirname(
     os.path.realpath(__file__))
 PACKAGE_CONFIG_PATH = '/etc/pywebdriver/config.ini'
 
-config_file = LOCAL_CONFIG_PATH
+config_file = PACKAGE_CONFIG_PATH
 if not os.path.isfile(config_file):
-    config_file = PACKAGE_CONFIG_PATH
+    config_file = LOCAL_CONFIG_PATH
 assert os.path.isfile(config_file), (
-    'Could not find config file (looking at %s and %s )' % (
-        LOCAL_CONFIG_PATH, PACKAGE_CONFIG_PATH))
+    'Could not find config file (looking at %s and then %s )' % (
+        PACKAGE_CONFIG_PATH, LOCAL_CONFIG_PATH))
 config = ConfigParser()
 config.read(config_file)
 
