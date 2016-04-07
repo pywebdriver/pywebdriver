@@ -33,7 +33,6 @@ _logger = logging.getLogger(__name__)
 try:
     import cups
 except ImportError:
-    installed = False
     print 'CUPS: CUPS not available'
 else:
     class ExtendedCups(cups.Connection):
@@ -64,61 +63,61 @@ else:
             return super(ExtendedCups, self).printFiles(
                 printer, filenames, title, string_options)
 
-
-class CupsDriver(AbstractDriver):
-
-    def getConnection(self):
-        try:
-            return ExtendedCups()
-        except:
-            return False
-
-    def get_vendor_product(self):
-        return 'cups-icon'
-
-    def get_status(self):
-        messages = []
-        mapstate = {
-            3: 'Idle',
-            4: 'Printing',
-            5: 'Stopped',
-            }
-        conn = self.getConnection()
-        if not conn:
-            return {
-                'status': 'disconnected',
-                'messages': ['Cups Sever is not running'],
+    
+    class CupsDriver(AbstractDriver):
+    
+        def getConnection(self):
+            try:
+                return ExtendedCups()
+            except:
+                return False
+    
+        def get_vendor_product(self):
+            return 'cups-icon'
+    
+        def get_status(self):
+            messages = []
+            mapstate = {
+                3: 'Idle',
+                4: 'Printing',
+                5: 'Stopped',
                 }
-        for printer, value in self.getConnection().getPrinters().items():
-            messages.append(
-                "%s : %s" % (printer, mapstate[value['printer-state']]))
-        state = {
-            'status': 'connected',
-            'messages': messages,
-        }
-        return state
-
-@app.route('/cups/<method>', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
-@cross_origin(headers=['Content-Type'])
-def cupsapi(method):
-    args = []
-    kwargs = {}
-    if request.json:
-        args = request.json.get('args', [])
-        kwargs = request.json.get('kwargs', {})
-    if request.args:
-        kwargs = request.args.to_dict()
-    conn = drivers['cups'].getConnection()
-    try:
-        result = getattr(conn, method)(*args, **kwargs)
-    # TODO we should implement all cups error
-    except cups.IPPError as (status, description):
-        return make_response(
-            jsonify({
-                'cups_error': 'IPPError',
-                'cups_error_status': status,
-                'cups_error_description': description,
-                }), 400)
-    return jsonify(jsonrpc='2.0', result=result)
-
-drivers['cups'] = CupsDriver()
+            conn = self.getConnection()
+            if not conn:
+                return {
+                    'status': 'disconnected',
+                    'messages': ['Cups Sever is not running'],
+                    }
+            for printer, value in self.getConnection().getPrinters().items():
+                messages.append(
+                    "%s : %s" % (printer, mapstate[value['printer-state']]))
+            state = {
+                'status': 'connected',
+                'messages': messages,
+            }
+            return state
+    
+    @app.route('/cups/<method>', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
+    @cross_origin(headers=['Content-Type'])
+    def cupsapi(method):
+        args = []
+        kwargs = {}
+        if request.json:
+            args = request.json.get('args', [])
+            kwargs = request.json.get('kwargs', {})
+        if request.args:
+            kwargs = request.args.to_dict()
+        conn = drivers['cups'].getConnection()
+        try:
+            result = getattr(conn, method)(*args, **kwargs)
+        # TODO we should implement all cups error
+        except cups.IPPError as (status, description):
+            return make_response(
+                jsonify({
+                    'cups_error': 'IPPError',
+                    'cups_error_status': status,
+                    'cups_error_description': description,
+                    }), 400)
+        return jsonify(jsonrpc='2.0', result=result)
+    
+    drivers['cups'] = CupsDriver()
