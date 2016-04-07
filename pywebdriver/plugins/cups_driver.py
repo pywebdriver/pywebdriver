@@ -20,7 +20,6 @@
 #
 ###############################################################################
 
-import cups
 import tempfile
 
 from flask_cors import cross_origin
@@ -31,34 +30,39 @@ from .base_driver import AbstractDriver
 import logging
 _logger = logging.getLogger(__name__)
 
-
-class ExtendedCups(cups.Connection):
-
-    def printData(self, printer, data, title='Pywebdriver', options=None):
-        with tempfile.NamedTemporaryFile() as f:
-            f.write(data.decode('base64'))
-            f.flush()
-            res = self.printFile(printer, f.name, title, options)
-        return res
-
-    def printFile(self, printer, filename, title='Pywebdriver', options=None):
-        if options is None:
-            options = {}
-        string_options = {}
-        for key, value in options.items():
-            string_options[str(key)] = str(value)
-        return super(ExtendedCups, self).printFile(
-            printer, filename, title, string_options)
-
-    def printFiles(self, printer, filenames,
-                   title='Pywebdriver', options=None):
-        if options is None:
-            options = {}
-        string_options = {}
-        for key, value in options.items():
-            string_options[str(key)] = str(value)
-        return super(ExtendedCups, self).printFiles(
-            printer, filenames, title, string_options)
+try:
+    import cups
+except ImportError:
+    installed = False
+    print 'CUPS: CUPS not available'
+else:
+    class ExtendedCups(cups.Connection):
+    
+        def printData(self, printer, data, title='Pywebdriver', options=None):
+            with tempfile.NamedTemporaryFile() as f:
+                f.write(data.decode('base64'))
+                f.flush()
+                res = self.printFile(printer, f.name, title, options)
+            return res
+    
+        def printFile(self, printer, filename, title='Pywebdriver', options=None):
+            if options is None:
+                options = {}
+            string_options = {}
+            for key, value in options.items():
+                string_options[str(key)] = str(value)
+            return super(ExtendedCups, self).printFile(
+                printer, filename, title, string_options)
+    
+        def printFiles(self, printer, filenames,
+                       title='Pywebdriver', options=None):
+            if options is None:
+                options = {}
+            string_options = {}
+            for key, value in options.items():
+                string_options[str(key)] = str(value)
+            return super(ExtendedCups, self).printFiles(
+                printer, filenames, title, string_options)
 
 
 class CupsDriver(AbstractDriver):
