@@ -10,12 +10,13 @@ netifaces==0.10.4
 pif==0.7.3
 Pillow==3.2.0
 pycountry==1.20
-pycups==1.9.73
-pypostelium==0.0.1
+# Temporary disable for support windows
+#pycups==1.9.73
 pyserial==3.0.1
 pytz==2016.3
 pyusb==1.0.0rc1
 git+https://github.com/fvdsn/py-xml-escpos.git
+git+https://github.com/akretion/pypostelium.git
 requests==2.9.1
 simplejson==3.8.2
 six==1.10.0
