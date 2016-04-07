@@ -15,4 +15,11 @@ setup(
     scripts = ['pywebdriverd'],
     include_package_data=True,
     zip_safe=False
+    dependecy_links = [
+        'https://github.com/akretion/pypostelium/archive/master.zip#egg=pypostelium-0.0.1',
+    ]
+    extras_require = {
+        'cups':        ["pycups>=1.9.73"],
+        'pypostelium': ["pypostelium>=0.0.1"],
+    }
 )
