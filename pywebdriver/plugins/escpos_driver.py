@@ -38,13 +38,12 @@ meta = {
 }
 
 try:
-    from xmlescpos.printer import Usb
+    from xmlescpos.printer import Usb, Network
     from xmlescpos.supported_devices import device_list
 except ImportError:
-    installed = False
     print 'ESCPOS: xmlescpos python library not installed'
 else:
-    class ESCPOSDriver(ThreadDriver, Usb):
+    class USBPOSDriver(ThreadDriver, Usb):
         """ ESCPOS Printer Driver class for pywebdriver """
 
         def __init__(self, *args, **kwargs):
@@ -156,7 +155,52 @@ else:
                 )
                 self.receipt(msg)
 
-    driver = ESCPOSDriver(app.config)
+    class NTWPOSDriver(ThreadDriver, Network):
+        """ ESCPOS Network Printer Driver class for pywebdriver """
+
+        def __init__(self, *args, **kwargs):
+            ThreadDriver.__init__(self, args, kwargs)
+            
+        def open_printer(self):
+            try:
+                self.host = config.get('escpos_driver', 'device_host')
+                self.port = config.get('escpos_driver', 'device_port')
+                self.open()
+            except Exception as e:
+                self.set_status('error',str(e))
+                
+        def get_status(self):
+            messages = []
+            self.open_printer()
+
+            if not self.device:
+                status = 'disconnected'
+            else:
+                try:
+                    res = self.get_printer_status()
+                    if res['printer']['online']:
+                        status = 'connected'
+                    else:
+                        status = 'connecting'
+
+                    if res['printer']['status_error']:
+                        status = 'error'
+                        messages.append('Error code: %i' % res['printer']['status_error'])
+
+                except Exception, err:
+                    status = 'error'
+                    self.device = False
+                    messages.append('Error: %s' % err)
+
+            return {
+                'status': status,
+                'messages': messages,
+            }
+    
+    if config.get('escpos_driver', 'device_type') == 'usb':
+        driver = USBPOSDriver(app.config)
+    elif config.get('escpos_driver', 'device_type') == 'network':
+        driver = NTWPOSDriver(app.config)
     drivers['escpos'] = driver
     installed=True
 
