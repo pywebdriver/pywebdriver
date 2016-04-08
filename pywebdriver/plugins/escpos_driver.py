@@ -155,17 +155,28 @@ else:
                 )
                 self.receipt(msg)
 
+
     class NTWPOSDriver(ThreadDriver, Network):
         """ ESCPOS Network Printer Driver class for pywebdriver """
 
         def __init__(self, *args, **kwargs):
             ThreadDriver.__init__(self, args, kwargs)
+            self.host = config.get('escpos_driver', 'device_host')
+            self.port = int(config.get('escpos_driver', 'device_port'))
             
         def open_printer(self):
+            """ Network printer uses sockets that fails on thread
+            so we wait to open the printer until the moment its is
+            necessary, means when sending raw commands """
+            pass
+        
+        def _raw(self, msg):
+            """ Each command we send to printer must open and close
+            connection for prevent Broken pipes """
             try:
-                self.host = config.get('escpos_driver', 'device_host')
-                self.port = config.get('escpos_driver', 'device_port')
                 self.open()
+                self.device.send(msg)
+                self.device.close()
             except Exception as e:
                 self.set_status('error',str(e))
                 
