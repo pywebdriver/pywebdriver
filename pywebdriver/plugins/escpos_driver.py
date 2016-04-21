@@ -25,9 +25,9 @@ from pywebdriver import app, config, drivers
 from netifaces import interfaces, ifaddresses, AF_INET
 from flask_cors import cross_origin
 from flask import request, jsonify, render_template
-from base_driver import ThreadDriver, check
-import simplejson
+from base_driver import ThreadDriver
 import usb.core
+
 
 meta = {
     'name': "ESCPOS Printer",
@@ -58,7 +58,9 @@ else:
             connected = []
 
             for device in self.supported_devices():
-                if usb.core.find(idVendor=device['vendor'], idProduct=device['product']) != None:
+                if usb.core.find(
+                        idVendor=device['vendor'],
+                        idProduct=device['product']) is not None:
                     connected.append(device)
 
             return connected
@@ -83,9 +85,9 @@ else:
                     )
 
             except Exception as e:
-                self.set_status('error',str(e))
+                self.set_status('error', str(e))
 
-        def open_cashbox(self,printer):
+        def open_cashbox(self, printer):
             self.open_printer()
             self.cashdraw(2)
             self.cashdraw(5)
@@ -105,7 +107,8 @@ else:
 
                     if res['printer']['status_error']:
                         status = 'error'
-                        messages.append('Error code: %i' % res['printer']['status_error'])
+                        messages.append(
+                            'Error code: %i' % res['printer']['status_error'])
 
                 except Exception, err:
                     status = 'error'
@@ -117,8 +120,8 @@ else:
                 'messages': messages,
             }
 
-        def printstatus(self,eprint):
-            #<PyWebDriver> Full refactoring of the function to allow
+        def printstatus(self, eprint):
+            # <PyWebDriver> Full refactoring of the function to allow
             # localisation and to make more easy the search of the ip
 
             self.open_printer()
@@ -136,10 +139,12 @@ else:
             else:
                 addr_lines = []
                 for ifaceName in interfaces():
-                    addresses = [i['addr'] for i in ifaddresses(ifaceName).setdefault(AF_INET, [{'addr':'No IP addr'}] )]
+                    addresses = [
+                        i['addr'] for i in ifaddresses(ifaceName).setdefault(
+                            AF_INET, [{'addr': 'No IP addr'}])]
                     addr_lines.append(
-                        '<p>'+','.join(addresses) + ' (' + ifaceName + ')' + '</p>'
-                    )
+                        '<p>'+','.join(addresses) + ' (' + ifaceName + ')' +
+                        '</p>')
                 msg = _("""
                        <div align="center">
                             <h4>PyWebDriver Software Status</h4>
@@ -158,7 +163,7 @@ else:
 
     driver = ESCPOSDriver(app.config)
     drivers['escpos'] = driver
-    installed=True
+    installed = True
 
     @app.route(
             '/hw_proxy/print_xml_receipt',
@@ -179,9 +184,10 @@ else:
         driver.push_task('printstatus')
         return render_template('print_status.html')
 
-    @app.route('/hw_proxy/open_cashbox', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
+    @app.route(
+        '/hw_proxy/open_cashbox',
+        methods=['POST', 'GET', 'PUT', 'OPTIONS'])
     @cross_origin(headers=['Content-Type'])
     def open_cashbox():
         driver.push_task('open_cashbox')
         return jsonify(jsonrpc='2.0', result=True)
-
