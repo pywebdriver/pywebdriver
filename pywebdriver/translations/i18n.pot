@@ -1,21 +1,21 @@
 # Translations template for PROJECT.
-# Copyright (C) 2015 ORGANIZATION
+# Copyright (C) 2016 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2016.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-08-19 21:58+0200\n"
+"POT-Creation-Date: 2016-04-21 17:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 1.3\n"
+"Generated-By: Babel 2.3.3\n"
 
 #: views.py:80
 msgid "OS - System"
@@ -41,14 +41,14 @@ msgstr ""
 msgid "Python Version"
 msgstr ""
 
-#: plugins/escpos_driver.py:128
+#: plugins/escpos_driver.py:134
 msgid ""
 "ERROR: Could not connect to LAN<br/><br/>Please check that your system is"
 " correc-<br/>tly connected with a network cable,<br/> that the LAN is "
 "setup with DHCP, and<br/>that network addresses are available"
 msgstr ""
 
-#: plugins/escpos_driver.py:143
+#: plugins/escpos_driver.py:151
 #, python-format
 msgid ""
 "\n"
@@ -63,8 +63,53 @@ msgid ""
 "                "
 msgstr ""
 
-#: plugins/escpos_driver.py:153
+#: plugins/escpos_driver.py:161
 msgid "Public"
+msgstr ""
+
+#: plugins/escpos_driver.py:238
+msgid "Tel: "
+msgstr ""
+
+#: plugins/escpos_driver.py:240
+msgid "VAT: "
+msgstr ""
+
+#: plugins/escpos_driver.py:249
+msgid "Served by "
+msgstr ""
+
+#: plugins/escpos_driver.py:269
+msgid "Discount: "
+msgstr ""
+
+#: plugins/escpos_driver.py:287
+msgid "Subtotal"
+msgstr ""
+
+#: plugins/escpos_driver.py:291 plugins/escpos_driver.py:325
+msgid "Taxes"
+msgstr ""
+
+#: plugins/escpos_driver.py:299
+msgid "         TOTAL"
+msgstr ""
+
+#: plugins/escpos_driver.py:312
+msgid "        CHANGE"
+msgstr ""
+
+#: plugins/escpos_driver.py:320
+msgid "Discounts"
+msgstr ""
+
+#: templates/display_status.html:23 templates/status.html:72
+msgid "Display Status"
+msgstr ""
+
+#: templates/display_status.html:25 templates/print_status.html:25
+#: templates/telium_status.html:25
+msgid "Please close this page"
 msgstr ""
 
 #: templates/index.html:23
@@ -95,12 +140,8 @@ msgstr ""
 msgid "System"
 msgstr ""
 
-#: templates/print_status.html:23
+#: templates/print_status.html:23 templates/telium_status.html:23
 msgid "Print Status"
-msgstr ""
-
-#: templates/print_status.html:25
-msgid "Please close this page"
 msgstr ""
 
 #: templates/status.html:25
@@ -131,7 +172,11 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: templates/status.html:46
+#: templates/status.html:61
+msgid "Test Communication"
+msgstr ""
+
+#: templates/status.html:67
 msgid "Print Status Receipt"
 msgstr ""
 
