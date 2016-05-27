@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-04-21 17:19+0200\n"
+"POT-Creation-Date: 2016-05-27 14:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.3.3\n"
+"Generated-By: Babel 2.3.2\n"
 
 #: views.py:80
 msgid "OS - System"
@@ -41,14 +41,14 @@ msgstr ""
 msgid "Python Version"
 msgstr ""
 
-#: plugins/escpos_driver.py:134
+#: plugins/escpos_driver.py:133
 msgid ""
 "ERROR: Could not connect to LAN<br/><br/>Please check that your system is"
 " correc-<br/>tly connected with a network cable,<br/> that the LAN is "
 "setup with DHCP, and<br/>that network addresses are available"
 msgstr ""
 
-#: plugins/escpos_driver.py:151
+#: plugins/escpos_driver.py:150
 #, python-format
 msgid ""
 "\n"
@@ -63,43 +63,43 @@ msgid ""
 "                "
 msgstr ""
 
-#: plugins/escpos_driver.py:161
+#: plugins/escpos_driver.py:160
 msgid "Public"
 msgstr ""
 
-#: plugins/escpos_driver.py:238
+#: plugins/escpos_driver.py:237
 msgid "Tel: "
 msgstr ""
 
-#: plugins/escpos_driver.py:240
+#: plugins/escpos_driver.py:239
 msgid "VAT: "
 msgstr ""
 
-#: plugins/escpos_driver.py:249
+#: plugins/escpos_driver.py:248
 msgid "Served by "
 msgstr ""
 
-#: plugins/escpos_driver.py:269
+#: plugins/escpos_driver.py:268
 msgid "Discount: "
 msgstr ""
 
-#: plugins/escpos_driver.py:287
+#: plugins/escpos_driver.py:286
 msgid "Subtotal"
 msgstr ""
 
-#: plugins/escpos_driver.py:291 plugins/escpos_driver.py:325
+#: plugins/escpos_driver.py:290 plugins/escpos_driver.py:324
 msgid "Taxes"
 msgstr ""
 
-#: plugins/escpos_driver.py:299
+#: plugins/escpos_driver.py:298
 msgid "         TOTAL"
 msgstr ""
 
-#: plugins/escpos_driver.py:312
+#: plugins/escpos_driver.py:311
 msgid "        CHANGE"
 msgstr ""
 
-#: plugins/escpos_driver.py:320
+#: plugins/escpos_driver.py:319
 msgid "Discounts"
 msgstr ""
 
