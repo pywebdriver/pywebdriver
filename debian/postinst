@@ -30,6 +30,7 @@ echo "Restarting udev"
 service udev restart
 
 echo "Starting pywebdriver supervisor service"
+service supervisor start
 supervisorctl reread
 supervisorctl add pywebdriver
 
