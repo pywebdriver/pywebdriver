@@ -30,7 +30,8 @@ echo "Restarting udev"
 service udev restart
 
 echo "Starting pywebdriver supervisor service"
-service supervisor start
+pidof systemd && systemctl enable supervisor && systemctl start supervisor || true
+
 supervisorctl reread
 supervisorctl add pywebdriver
 
