@@ -1,15 +1,24 @@
 #!/bin/bash
 set -e
 
+VERSION=$(lsb_release -sc)
 USERNAME=pywebdriver
 GROUP=usbusers
 
+# Xenial specific
+if [[ $VERSION == xenial ]]; then
+    systemctl enable supervisor
+    systemctl start supervisor
+    PARAMS="--no-cache-dir"
+fi
+
 # TODO create deb packages for these dependencies
 echo "Installing python dependencies via pip"
-pip install jcconv pif Flask-Babel Flask-cors Pillow pymtp
-pip install --pre pyusb
-pip install git+https://github.com/akretion/py-xml-escpos.git@8.0-slip-support
-pip install git+https://github.com/akretion/pypostelium.git@master
+pip $PARAMS install --upgrade pip
+pip $PARAMS install jcconv pif Flask-Babel Flask-cors Pillow pymtp
+pip $PARAMS install --pre pyusb
+pip $PARAMS install git+https://github.com/akretion/py-xml-escpos.git@8.0-slip-support
+pip $PARAMS install git+https://github.com/akretion/pypostelium.git@master
 
 echo "Configure pywebdriver user and group"
 groupadd -f $GROUP
@@ -17,9 +26,9 @@ if id -u $USERNAME &>/dev/null; then
     echo "$USERNAME already exists"
 else
     adduser --no-create-home --system $USERNAME
+    adduser $USERNAME $GROUP
+    adduser $USERNAME dialout
 fi
-adduser $USERNAME $GROUP
-adduser $USERNAME dialout
 
 echo "Signature gsettings"
 gsettings set org.gnome.desktop.media-handling automount false
@@ -30,10 +39,8 @@ echo "Restarting udev"
 service udev restart
 
 echo "Starting pywebdriver supervisor service"
-pidof systemd && systemctl enable supervisor && systemctl start supervisor || true
-
 supervisorctl reread
-supervisorctl add pywebdriver
+supervisorctl add pywebdriver > /dev/null
 
 echo "Reload Nginx"
 service nginx reload
