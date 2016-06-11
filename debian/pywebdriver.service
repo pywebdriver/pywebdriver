@@ -1,0 +1,11 @@
+[Unit]
+Description=Pywebdriver
+After=network.target
+
+[Service]
+PIDFile=/var/run/pywebdriver.pid
+ExecStart=/usr/bin/python /usr/bin/pywebdriverd
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

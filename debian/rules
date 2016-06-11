@@ -17,3 +17,5 @@ override_dh_install:
 	install -d debian/tmp/etc/nginx/sites-available
 	install -m 644 debian/pywebdriver.nginx debian/tmp/etc/nginx/sites-available/pywebdriver
 	dh_install --fail-missing
+override_dh_systemd_enable:
+	dh_systemd_enable --name=pywebdriver

@@ -2,13 +2,12 @@
 set -e
 
 VERSION=$(lsb_release -sc)
+SERVICE=pywebdriver
 USERNAME=pywebdriver
 GROUP=usbusers
 
 # Xenial specific
 if [[ $VERSION == xenial ]]; then
-    systemctl enable supervisor
-    systemctl start supervisor
     PARAMS="--no-cache-dir"
 fi
 
@@ -20,7 +19,7 @@ pip $PARAMS install --pre pyusb
 pip $PARAMS install git+https://github.com/akretion/py-xml-escpos.git@8.0-slip-support
 pip $PARAMS install git+https://github.com/akretion/pypostelium.git@master
 
-echo "Configure pywebdriver user and group"
+echo "Configure $SERVICE user and group"
 groupadd -f $GROUP
 if id -u $USERNAME &>/dev/null; then
     echo "$USERNAME already exists"
@@ -38,9 +37,15 @@ gsettings set org.gnome.desktop.media-handling autorun-never true
 echo "Restarting udev"
 service udev restart
 
-echo "Starting pywebdriver supervisor service"
-supervisorctl reread
-supervisorctl add pywebdriver > /dev/null
+echo "Starting $SERVICE service"
+# Trusty specific
+if [[ $VERSION == trusty ]]; then
+    supervisorctl reread
+    supervisorctl add $SERVICE > /dev/null
+else
+    # Xenial specific
+    systemctl start $SERVICE
+fi
 
 echo "Reload Nginx"
 service nginx reload

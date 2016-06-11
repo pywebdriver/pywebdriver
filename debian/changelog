@@ -1,3 +1,9 @@
+pywebdriver (0.4.6-0ubuntu1) xenial; urgency=medium
+
+  * xenial: switch to systemd supervisor
+
+ -- Sylvain Calador <sylvain.calador@gmail.com>  Sun, 12 Jun 2016 01:07:50 +0200
+
 pywebdriver (0.4.5-0ubuntu1) xenial; urgency=medium
 
   * clean postinst script

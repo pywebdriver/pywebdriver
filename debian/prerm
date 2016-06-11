@@ -1,6 +1,12 @@
 #!/bin/bash
 set -e
 
-echo "Stoping pywebdriver supervisor service"
-supervisorctl stop pywebdriver
-supervisorctl remove pywebdriver
+VERSION=$(lsb_release -sc)
+SERVICE=pywebdriver
+
+# Trusty specific
+if [[ $VERSION == trusty ]]; then
+    echo "Stoping $SERVICE supervisor service"
+    supervisorctl stop $SERVICE
+    supervisorctl remove $SERVICE
+fi

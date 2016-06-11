@@ -2,11 +2,11 @@ Source: pywebdriver
 Section: admin
 Priority: extra
 Maintainer: Sylvain Calador <sylvain.calador@akretion.com>
-Build-Depends: debhelper (>= 9), python-setuptools, python-all
+Build-Depends: debhelper (>= 9), dh-systemd (>= 1.5), python-setuptools, python-all
 X-Python-Version: >= 2.4
 VCS-Git: git://github.com/akretion/pywebdriver.git
 VCS-Browser: https://github.com/akretion/pywebdriver
-Standards-Version: 3.9.5
+Standards-Version: 3.9.7
 Homepage: https://github.com/akretion/pywebdriver
 
 Package: pywebdriver
