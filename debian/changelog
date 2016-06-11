@@ -1,3 +1,9 @@
+pywebdriver (0.4.5-0ubuntu1) xenial; urgency=medium
+
+  * clean postinst script
+
+ -- Sylvain Calador <sylvain.calador@gmail.com>  Sat, 11 Jun 2016 18:41:05 +0200
+
 pywebdriver (0.4.5-0ubuntu1) trusty; urgency=medium
 
   * clean debian postinst script
