@@ -11,7 +11,7 @@ Homepage: https://github.com/akretion/pywebdriver
 
 Package: pywebdriver
 Architecture: all
-Depends: adduser, git, supervisor, nginx, ssl-cert, python, python-dev, python-pyposdisplay, python-pip, python-flask, python-simplejson, python-netifaces, cups, python-cups, git, libjpeg-dev, zlib1g-dev, ${misc:Depends},
+Depends: adduser, git, nginx, ssl-cert, python, python-dev, python-pyposdisplay, python-pip, python-flask, python-simplejson, python-netifaces, cups, python-cups, git, libjpeg-dev, zlib1g-dev, ${misc:Depends},
 Description: Python Web Services to communicate wih Devices
  This Software installs Web Services to allow easy communications with some
  devices. It provides Web Pages to see the status of the devices.

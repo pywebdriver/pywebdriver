@@ -1,3 +1,9 @@
+pywebdriver (0.4.7-0ubuntu1) xenial; urgency=medium
+
+  * drop trusty debian suport
+
+ -- Sylvain Calador <sylvain.calador@gmail.com>  Sun, 12 Jun 2016 18:58:47 +0200
+
 pywebdriver (0.4.6-0ubuntu1) xenial; urgency=medium
 
   * xenial: switch to systemd supervisor

@@ -1,18 +1,13 @@
 #!/bin/bash
 set -e
 
-VERSION=$(lsb_release -sc)
 SERVICE=pywebdriver
 USERNAME=pywebdriver
 GROUP=usbusers
 
-# Xenial specific
-if [[ $VERSION == xenial ]]; then
-    PARAMS="--no-cache-dir"
-fi
-
 # TODO create deb packages for these dependencies
 echo "Installing python dependencies via pip"
+PARAMS="--no-cache-dir"
 pip $PARAMS install --upgrade pip
 pip $PARAMS install jcconv pif Flask-Babel Flask-cors Pillow pymtp
 pip $PARAMS install --pre pyusb
@@ -38,14 +33,8 @@ echo "Restarting udev"
 service udev restart
 
 echo "Starting $SERVICE service"
-# Trusty specific
-if [[ $VERSION == trusty ]]; then
-    supervisorctl reread
-    supervisorctl add $SERVICE > /dev/null
-else
-    # Xenial specific
-    systemctl start $SERVICE
-fi
+systemctl enable $SERVICE
+systemctl start $SERVICE
 
 echo "Reload Nginx"
 service nginx reload
