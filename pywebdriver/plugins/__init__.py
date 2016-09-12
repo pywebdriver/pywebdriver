@@ -4,5 +4,6 @@ from . import escpos_driver
 from . import serial_driver
 from . import signature_driver
 from . import telium_driver
+from . import opcua_driver
 from . import odoo7
 from . import odoo8
