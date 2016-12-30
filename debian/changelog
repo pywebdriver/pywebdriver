@@ -1,3 +1,9 @@
+pywebdriver (0.4.9-0ubuntu1) xenial; urgency=medium
+
+  * Add ability to configure driver_name of display_driver
+
+ -- Alexis de Lattre <alexis@via.ecp.fr>  Fri, 30 Dec 2016 12:31:48 +0100
+
 pywebdriver (0.4.8-0ubuntu1) xenial; urgency=medium
 
   * Bump version
