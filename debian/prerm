@@ -1,6 +1,0 @@
-#!/bin/bash
-set -e
-
-echo "Stoping pywebdriver supervisor service"
-supervisorctl stop pywebdriver
-supervisorctl remove pywebdriver

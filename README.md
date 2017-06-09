@@ -18,6 +18,7 @@ Table of Content
 * [Developers Section](#developers)
   * [Installation on Debian/Ubuntu](#install-debian)
   * [Installation on Mac OS X](#install-osx)
+  * [Browser settings](#browser-settings)
   * [Development](#development)
   * [Contribute](#contribute)
   * [Localization](#localization)
@@ -81,6 +82,13 @@ sudo apt-get install pywebdriver
 ## <a name="install-osx"></a>Installation on Mac OS X
 
 Pywebdriver can be installed on Mac OS X and is successfully used in production on a Mac OS X computer with Bixolon customer display, Ingenico credit card reader and check printer. TODO: write installation instructions.
+
+
+## <a name="browser-settings"></a>Browser settings
+
+You need to confirmed security exception on your browers for the following paths: http://localhost and https://localhost
+
+see <a href="https://support.mozilla.org/en-US/kb/what-does-your-connection-is-not-secure-mean">here</a> and click on 'Advanced' and 'confirm security exception'
 
 ## <a name="development"></a>Development
 

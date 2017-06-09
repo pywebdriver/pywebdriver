@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ###############################################################################
 #
-#   Copyright (C) 2014-2015 Akretion (http://www.akretion.com).
+#   Copyright (C) 2014-2016 Akretion (http://www.akretion.com).
 #   @author Sébastien BEAU <sebastien.beau@akretion.com>
 #
 #   This program is free software: you can redistribute it and/or modify
@@ -19,6 +19,13 @@
 #
 ###############################################################################
 
+from pywebdriver import app, config, drivers
+from flask_cors import cross_origin
+from flask import request, jsonify, render_template
+from base_driver import ThreadDriver, check
+import simplejson
+import time
+
 meta = {
     'name': "POS Display",
     'description': """This plugin add the support of customer display for your
@@ -27,17 +34,10 @@ meta = {
     'require_debian': ['python-pyposdisplay'],
 }
 
-from pywebdriver import app, config, drivers
-from flask_cors import cross_origin
-from flask import request, jsonify, render_template
-from base_driver import ThreadDriver, check
-import simplejson
-import time
-
 try:
     import pyposdisplay
 except:
-    installed=False
+    installed = False
 else:
     AUTHOR = [
         ([u'PyWebDriver', u'By'], 2),
@@ -46,7 +46,8 @@ else:
         ([u'Sylvain LE GAL', u'@ GRAP'], 1.5),
         ([u'Status:', u'OK'], 5),
     ]
-    installed=True
+    installed = True
+
     class DisplayDriver(ThreadDriver, pyposdisplay.Driver):
         """ Display Driver class for pywebdriver """
 
@@ -77,7 +78,7 @@ else:
                 # For the time being, it's not possible to know if the display
                 # is 'disconnected' in 'error' state
                 # Maybe could be possible, improving pyposdisplay library.
-            except Exception as e:
+            except Exception:
                 pass
             return self.status
 
@@ -88,12 +89,16 @@ else:
     if config.getint('display_driver', 'device_rate'):
         driver_config['customer_display_device_rate'] =\
             config.getint('display_driver', 'device_rate')
-    if config.getint('display_driver', 'device_timeout'):
+    if config.getfloat('display_driver', 'device_timeout'):
         driver_config['customer_display_device_timeout'] =\
-            config.getint('display_driver', 'device_timeout')
+            config.getfloat('display_driver', 'device_timeout')
+    driver_name = 'bixolon'
+    if config.has_option('display_driver', 'driver_name'):
+        driver_name = config.get('display_driver', 'driver_name')
 
-    display_driver = DisplayDriver(driver_config)
+    display_driver = DisplayDriver(driver_config, use_driver_name=driver_name)
     drivers['display_driver'] = display_driver
+
 
 @app.route(
     '/hw_proxy/send_text_customer_display',

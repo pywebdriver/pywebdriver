@@ -25,9 +25,10 @@ from pywebdriver import app, config, drivers
 from netifaces import interfaces, ifaddresses, AF_INET
 from flask_cors import cross_origin
 from flask import request, jsonify, render_template
-from base_driver import ThreadDriver, check
-import simplejson
+from base_driver import ThreadDriver
 import usb.core
+import math
+
 
 meta = {
     'name': "ESCPOS Printer",
@@ -38,15 +39,17 @@ meta = {
 }
 
 try:
-    from xmlescpos.printer import Usb, Network
+    from xmlescpos.printer import Usb
     from xmlescpos.supported_devices import device_list
 except ImportError:
+    installed = False
     print 'ESCPOS: xmlescpos python library not installed'
 else:
-    class USBPOSDriver(ThreadDriver, Usb):
+    class ESCPOSDriver(ThreadDriver, Usb):
         """ ESCPOS Printer Driver class for pywebdriver """
 
         def __init__(self, *args, **kwargs):
+            self.eprint = None
             self.vendor_product = None
             ThreadDriver.__init__(self, args, kwargs)
 
@@ -57,7 +60,9 @@ else:
             connected = []
 
             for device in self.supported_devices():
-                if usb.core.find(idVendor=device['vendor'], idProduct=device['product']) != None:
+                if usb.core.find(
+                        idVendor=device['vendor'],
+                        idProduct=device['product']) is not None:
                     connected.append(device)
 
             return connected
@@ -82,9 +87,9 @@ else:
                     )
 
             except Exception as e:
-                self.set_status('error',str(e))
+                self.set_status('error', str(e))
 
-        def open_cashbox(self,printer):
+        def open_cashbox(self, printer):
             self.open_printer()
             self.cashdraw(2)
             self.cashdraw(5)
@@ -104,7 +109,8 @@ else:
 
                     if res['printer']['status_error']:
                         status = 'error'
-                        messages.append('Error code: %i' % res['printer']['status_error'])
+                        messages.append(
+                            'Error code: %i' % res['printer']['status_error'])
 
                 except Exception, err:
                     status = 'error'
@@ -116,8 +122,8 @@ else:
                 'messages': messages,
             }
 
-        def printstatus(self,eprint):
-            #<PyWebDriver> Full refactoring of the function to allow
+        def printstatus(self, eprint):
+            # <PyWebDriver> Full refactoring of the function to allow
             # localisation and to make more easy the search of the ip
 
             self.open_printer()
@@ -135,10 +141,12 @@ else:
             else:
                 addr_lines = []
                 for ifaceName in interfaces():
-                    addresses = [i['addr'] for i in ifaddresses(ifaceName).setdefault(AF_INET, [{'addr':'No IP addr'}] )]
+                    addresses = [
+                        i['addr'] for i in ifaddresses(ifaceName).setdefault(
+                            AF_INET, [{'addr': 'No IP addr'}])]
                     addr_lines.append(
-                        '<p>'+','.join(addresses) + ' (' + ifaceName + ')' + '</p>'
-                    )
+                        '<p>'+','.join(addresses) + ' (' + ifaceName + ')' +
+                        '</p>')
                 msg = _("""
                        <div align="center">
                             <h4>PyWebDriver Software Status</h4>
@@ -155,65 +163,186 @@ else:
                 )
                 self.receipt(msg)
 
+        # #####################################################################
+        # <Odoo Version 7>
+        def print_receipt_7(self, receipt):
 
-    class NTWPOSDriver(ThreadDriver, Network):
-        """ ESCPOS Network Printer Driver class for pywebdriver """
+            def check(string):
+                return string is not True and bool(string) and string.strip()
 
-        def __init__(self, *args, **kwargs):
-            ThreadDriver.__init__(self, args, kwargs)
-            self.host = config.get('escpos_driver', 'device_host')
-            self.port = int(config.get('escpos_driver', 'device_port'))
-            
-        def open_printer(self):
-            """ Network printer uses sockets that fails on thread
-            so we wait to open the printer until the moment its is
-            necessary, means when sending raw commands """
-            pass
-        
-        def _raw(self, msg):
-            """ Each command we send to printer must open and close
-            connection for prevent Broken pipes """
-            try:
-                self.open()
-                self.device.send(msg)
-                self.device.close()
-            except Exception as e:
-                self.set_status('error',str(e))
-                
-        def get_status(self):
-            messages = []
-            self.open_printer()
+            def price(amount):
+                return (
+                    "{0:." +
+                    str(receipt['precision']['price']) + "f}").format(amount)
 
-            if not self.device:
-                status = 'disconnected'
+            def money(amount):
+                return (
+                    "{0:." +
+                    str(receipt['precision']['money']) + "f}").format(amount)
+
+            def quantity(amount):
+                if math.floor(amount) != amount:
+                    return (
+                        "{0:." +
+                        str(receipt['precision']['quantity']) +
+                        "f}").format(amount)
+                else:
+                    return str(amount)
+
+            def printline(left, right='', width=40, ratio=0.5, indent=0):
+                lwidth = int(width * ratio)
+                rwidth = width - lwidth
+                lwidth = lwidth - indent
+
+                left = left[:lwidth]
+                if len(left) != lwidth:
+                    left = left + ' ' * (lwidth - len(left))
+
+                right = right[-rwidth:]
+                if len(right) != rwidth:
+                    right = ' ' * (rwidth - len(right)) + right
+
+                return ' ' * indent + left + right + '\n'
+
+            def print_taxes():
+                taxes = receipt.get('tax_details', [])
+                for tax in taxes:
+                    eprint.text(printline(
+                        tax['tax']['name'], price(tax['amount']), width=40,
+                        ratio=0.6))
+
+            if not self.eprint:
+                printers = self.connected_usb_devices()
+                if len(printers) > 0:
+                    self.eprint = Usb(
+                        printers[0]['vendor'], printers[0]['product'])
+                else:
+                    return
+
+            eprint = self.eprint
+
+            # Receipt Header
+            if receipt['company'].get('logo', False):
+                eprint.set(align='center')
+                eprint.print_base64_image(receipt['company']['logo'])
+                eprint.text('\n')
             else:
-                try:
-                    res = self.get_printer_status()
-                    if res['printer']['online']:
-                        status = 'connected'
+                eprint.set(align='center', type='b', height=2, width=2)
+                eprint.text(receipt['company']['name'] + '\n')
+
+            eprint.set(align='center', type='b')
+            if check(receipt['company'].get('contact_address', False)):
+                eprint.text(receipt['company']['contact_address'] + '\n')
+            if check(receipt['company'].get('phone', False)):
+                eprint.text(_(u'Tel: ') + receipt['company']['phone'] + '\n')
+            if check(receipt['company'].get('vat', False)):
+                eprint.text(_(u'VAT: ') + receipt['company']['vat'] + '\n')
+            if check(receipt['company'].get('email', False)):
+                eprint.text(receipt['company']['email'] + '\n')
+            if check(receipt['company'].get('website', False)):
+                eprint.text(receipt['company']['website'] + '\n')
+            if check(receipt.get('header')):
+                eprint.text(receipt['header'] + '\n')
+            if check(receipt.get('cashier')):
+                eprint.text('-' * 32 + '\n')
+                eprint.text(_(u'Served by ') + receipt['cashier'] + '\n')
+
+            # Orderlines
+            if config.getboolean('odoo', 'orderline_price_with_tax'):
+                orderline_price_field = 'price_with_tax'
+            else:
+                orderline_price_field = 'price_without_tax'
+            eprint.text('\n\n')
+            eprint.set(align='center')
+            for line in receipt['orderlines']:
+                pricestr = price(line[orderline_price_field])
+                if line['discount'] == 0\
+                        and line['unit_name'] == 'Unit(s)'\
+                        and line['quantity'] == 1:
+                    eprint.text(printline(
+                        line['product_name'], pricestr, ratio=0.6))
+                else:
+                    eprint.text(printline(line['product_name'], ratio=0.6))
+                    if line['discount'] != 0:
+                        eprint.text(printline(
+                            _(u'Discount: ') + str(line['discount'])+'%',
+                            ratio=0.6, indent=2))
+                    if line['unit_name'] == 'Unit(s)':
+                        eprint.text(printline(
+                            quantity(line['quantity']) + ' x ' +
+                            price(line['price']), pricestr, ratio=0.6,
+                            indent=2))
                     else:
-                        status = 'connecting'
+                        eprint.text(printline(
+                            quantity(line['quantity']) + ' ' +
+                            line['unit_name'] + ' x ' + price(line['price']),
+                            pricestr, ratio=0.6, indent=2))
 
-                    if res['printer']['status_error']:
-                        status = 'error'
-                        messages.append('Error code: %i' % res['printer']['status_error'])
+            # Subtotal if the taxes are not included
+            taxincluded = True
+            if money(receipt['subtotal']) != money(receipt['total_with_tax']):
+                eprint.text(printline('', '-------'))
+                eprint.text(printline(
+                    _(u'Subtotal'), money(receipt['subtotal']), width=40,
+                    ratio=0.6))
+                print_taxes()
+                eprint.text(printline(
+                    _(u'Taxes'), money(receipt['total_tax']), width=40,
+                    ratio=0.6))
+                taxincluded = False
 
-                except Exception, err:
-                    status = 'error'
-                    self.device = False
-                    messages.append('Error: %s' % err)
+            # Total
+            eprint.text(printline('', '-------'))
+            eprint.set(align='center', height=2)
+            eprint.text(printline(
+                _(u'         TOTAL'), money(receipt['total_with_tax']),
+                width=40, ratio=0.6))
+            eprint.text('\n\n')
 
-            return {
-                'status': status,
-                'messages': messages,
-            }
-    
-    if config.get('escpos_driver', 'device_type') == 'usb':
-        driver = USBPOSDriver(app.config)
-    elif config.get('escpos_driver', 'device_type') == 'network':
-        driver = NTWPOSDriver(app.config)
+            # Paymentlines
+            eprint.set(align='center')
+            for line in receipt['paymentlines']:
+                eprint.text(printline(
+                    line['journal'], money(line['amount']), ratio=0.6))
+
+            eprint.text('\n')
+            eprint.set(align='center', height=2)
+            eprint.text(printline(
+                _(u'        CHANGE'), money(receipt['change']), width=40,
+                ratio=0.6))
+            eprint.set(align='center')
+            eprint.text('\n')
+
+            # Extra Payment info
+            if receipt['total_discount'] != 0:
+                eprint.text(printline(
+                    _(u'Discounts'), money(receipt['total_discount']),
+                    width=40, ratio=0.6))
+            if taxincluded:
+                print_taxes()
+                eprint.text(printline(
+                    _(u'Taxes'), money(receipt['total_tax']), width=40,
+                    ratio=0.6))
+
+            # Footer
+            if check(receipt.get('footer')):
+                eprint.text('\n'+receipt['footer']+'\n\n')
+            eprint.text(receipt['name']+'\n')
+            eprint.text(
+                str(receipt['date']['date']).zfill(2) +
+                '/' + str(receipt['date']['month']+1).zfill(2) +
+                '/' + str(receipt['date']['year']).zfill(4) +
+                ' ' + str(receipt['date']['hour']).zfill(2) +
+                ':' + str(receipt['date']['minute']).zfill(2))
+
+            eprint.cut()
+
+        # </Odoo Version 7>
+        # #####################################################################
+
+    driver = ESCPOSDriver(app.config)
     drivers['escpos'] = driver
-    installed=True
+    installed = True
 
     @app.route(
             '/hw_proxy/print_xml_receipt',
@@ -234,9 +363,10 @@ else:
         driver.push_task('printstatus')
         return render_template('print_status.html')
 
-    @app.route('/hw_proxy/open_cashbox', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
+    @app.route(
+        '/hw_proxy/open_cashbox',
+        methods=['POST', 'GET', 'PUT', 'OPTIONS'])
     @cross_origin(headers=['Content-Type'])
     def open_cashbox():
         driver.push_task('open_cashbox')
         return jsonify(jsonrpc='2.0', result=True)
-
