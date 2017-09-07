@@ -1,3 +1,9 @@
+pywebdriver (0.4.16-0ubuntu1) xenial; urgency=medium
+
+  * Bump version
+
+ -- Sylvain Calador <sylvain.calador@gmail.com>  Thu, 07 Sep 2017 12:02:23 +0200
+
 pywebdriver (0.4.15-0ubuntu1) xenial; urgency=medium
 
   * Bump version
