@@ -94,9 +94,9 @@ class CupsDriver(AbstractDriver):
         }
         return state
 
-@app.route('/cups/<method>', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
+@app.route('/cups/printData', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
 @cross_origin(headers=['Content-Type'])
-def cupsapi(method):
+def cupsapi():
     args = []
     kwargs = {}
     if request.json:
@@ -106,7 +106,7 @@ def cupsapi(method):
         kwargs = request.args.to_dict()
     conn = drivers['cups'].getConnection()
     try:
-        result = getattr(conn, method)(*args, **kwargs)
+        result = conn.printData(*args, **kwargs)
     # TODO we should implement all cups error
     except cups.IPPError as (status, description):
         return make_response(
@@ -115,6 +115,7 @@ def cupsapi(method):
                 'cups_error_status': status,
                 'cups_error_description': description,
                 }), 400)
+
     return jsonify(jsonrpc='2.0', result=result)
 
 drivers['cups'] = CupsDriver()
