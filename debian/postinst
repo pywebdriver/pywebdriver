@@ -34,7 +34,7 @@ service udev restart
 
 echo "Starting $SERVICE service"
 systemctl enable $SERVICE
-systemctl start $SERVICE
+systemctl restart $SERVICE
 
 echo "Reload Nginx"
 service nginx reload

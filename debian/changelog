@@ -1,3 +1,9 @@
+pywebdriver (0.4.17-0ubuntu1) xenial; urgency=medium
+
+  * postinst: restart service
+
+ -- Sylvain Calador <sylvain.calador@gmail.com>  Thu, 07 Sep 2017 12:53:05 +0200
+
 pywebdriver (0.4.16-0ubuntu1) xenial; urgency=medium
 
   * Bump version
