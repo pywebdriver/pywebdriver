@@ -93,6 +93,29 @@ sudo apt install pywebdriver
 
 Pywebdriver can be installed on Mac OS X and is successfully used in production on a Mac OS X computer with Bixolon customer display, Ingenico credit card reader and check printer. TODO: write installation instructions.
 
+## <a name="install-windows"></a>Installation on Windows
+It is possible to make an installation on windows although all funcionalities are not working at the moment. It has been sucessfully used with credit card reader.
+Steps to install : 
+* Install python 2.7 : https://www.python.org/download/releases/2.7.2/
+* Check environnment Variables : (C:\Python27\ and C:\Python27\Scripts\  must be present in Path variable)
+* Install pip with the script available here : https://bootstrap.pypa.io/get-pip.py
+* Install git
+* Clone pywebdriver
+* Install requirements (without pycups as it is not available for windows)
+* Install pypostelium https://github.com/akretion/pypostelium
+* Install Curses for windows downloading it from https://www.lfd.uci.edu/~gohlke/pythonlibs/ as it is needed for pypostelium
+```
+pip install downloaded_file_name
+```
+* Install unidecode
+```
+pip install unidecode
+```
+
+Then you can launch and use pywebdriver running ```python pywebdriverd``` from the pywebdriver directory
+
+Note that you probably will need to change the configuration file. For instance, for telium driver, you need to replace 
+device_name=/dev/ttyACM0 by device_name=COM* depending on the usb port used by the card reader (could be COM4, COM5...)
 
 ## <a name="browser-settings"></a>Browser settings
 

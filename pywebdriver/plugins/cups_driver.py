@@ -20,7 +20,6 @@
 #
 ###############################################################################
 
-import cups
 import tempfile
 
 from flask import request, jsonify, make_response
@@ -29,6 +28,14 @@ from pywebdriver import app, drivers
 from .base_driver import AbstractDriver
 import logging
 _logger = logging.getLogger(__name__)
+
+try:
+    import cups
+except:
+    _logger.debug('Cannot `import cups`.')
+    from mock import MagicMock, patch
+    cups = MagicMock()
+    patch.dict("sys.modules", cups=cups).start()
 
 
 class ExtendedCups(cups.Connection):
