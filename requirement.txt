@@ -1,0 +1,14 @@
+jcconv
+simplejson
+Flask
+Flask-Babel
+Flask-cors
+pyusb>=1.0.0b2
+pyserial
+pif
+Pillow
+netifaces
+#pycups
+mock
+# temporary desactivate because of a xmlescpos pip issue
+#xmlescpos
