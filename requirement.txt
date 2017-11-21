@@ -9,6 +9,6 @@ pif
 Pillow
 netifaces
 #pycups
-mock
+#mock
 # temporary desactivate because of a xmlescpos pip issue
 #xmlescpos

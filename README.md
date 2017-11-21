@@ -124,6 +124,8 @@ device_name=/dev/ttyACM0 by device_name=COM* depending on the usb port used by t
 TODO
 It would be betterto have a special directory named pynsist with all files relative to pynsist (pywebdriverd.py and pynsist_installer.cfg)
 
+mock does not seem compatible with pynsist without a patch. For now we just ignore the cups parts to avoid the problem, but this should be improved.
+
 
 ## <a name="browser-settings"></a>Browser settings
 
