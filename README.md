@@ -1,4 +1,4 @@
-pywebdriver
+﻿pywebdriver
 ===========
 
 Summary
@@ -116,6 +116,14 @@ Then you can launch and use pywebdriver running ```python pywebdriverd``` from t
 
 Note that you probably will need to change the configuration file. For instance, for telium driver, you need to replace 
 device_name=/dev/ttyACM0 by device_name=COM* depending on the usb port used by the card reader (could be COM4, COM5...)
+
+## <a name="installer-pynsist"></a>Create an installer for windows with pynsist
+* Install pynsist
+* Run ```pynsist pynsist_installer.cfg```
+
+TODO
+It would be betterto have a special directory named pynsist with all files relative to pynsist (pywebdriverd.py and pynsist_installer.cfg)
+
 
 ## <a name="browser-settings"></a>Browser settings
 
