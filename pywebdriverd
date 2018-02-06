@@ -9,7 +9,7 @@ def main():
     if config.getboolean('application', 'print_status_start'):
         if 'escpos' in drivers:
             drivers['escpos'].push_task('printstatus')
-    app.run(host=host, port=port, debug=debug)
+    app.run(host=host, port=port, debug=debug, processes=0, threaded=True)
 
 # Run application
 if __name__ == '__main__':

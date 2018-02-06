@@ -50,6 +50,18 @@
         {% endif %}
         <div style="height:80px;">
                 <ul class="list-group">
+        {% if driver =='adyen' %}
+                {% if drivers_info[driver]['state']['status']  == 'connected' %}
+               <li class="list-group-item">
+                    <input type="text" class="form-control" id="adyen_price" placeholder="6543.21"/>
+                    <select id="adyen_payment_mode">
+                        <option value="card">Credit Card</option>
+                        <option value="check">Check</option>
+                    </select>
+                    <button type="button" onclick="adyen_status()" class="btn btn-link btn-xs">{{_('Test Communication')}}</button>
+                </li>
+                {% endif %}
+        {% endif %}
         {% if driver =='telium' %}
                 {% if drivers_info[driver]['state']['status']  == 'connected' %}
                <li class="list-group-item">
@@ -80,6 +92,17 @@
     </div>
     {% endfor %}
     <script>
+        function adyen_status(){
+            $.ajax({
+                url: "adyen_status.html",
+                type: "POST",
+                data: {
+                    'price': $('#adyen_price').val(),
+                    'payment_mode': $('#adyen_payment_mode').val(),
+                },
+                timeout: 1000,
+            })
+        }
         function telium_status(){
             $.ajax({
                 url: "telium_status.html",
