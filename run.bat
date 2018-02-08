@@ -1,0 +1,1 @@
+"%WINDIR%/py.exe" "%~dp0\pywebdriver.launch.pyw"

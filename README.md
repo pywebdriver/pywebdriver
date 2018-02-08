@@ -18,6 +18,8 @@ Table of Content
 * [Developers Section](#developers)
   * [Installation on Debian/Ubuntu](#install-debian)
   * [Installation on Mac OS X](#install-osx)
+  * [Installation on Windows](#install-windows)
+  * [Create an installer for Windows](#installer-pynsist)
   * [Browser settings](#browser-settings)
   * [Specific configuration](#specific-configuration)
   * [Development](#development)
@@ -118,7 +120,12 @@ Note that you probably will need to change the configuration file. For instance,
 device_name=/dev/ttyACM0 by device_name=COM* depending on the usb port used by the card reader (could be COM4, COM5...)
 
 ## <a name="installer-pynsist"></a>Create an installer for windows with pynsist
-* Install pynsist
+* Install flit (```python3 -m pip install flit```)
+* Clone pynsist (https://github.com/andreparames/pynsist.git)
+* Checkout the ```post-inst-commands``` branch
+* Build using flit (```flit build```)
+* Install pynsist (```python3 -m pip install dist/*.whl```)
+* Switch to the pywebdriver repository
 * Run ```pynsist pynsist_installer.cfg```
 
 TODO
