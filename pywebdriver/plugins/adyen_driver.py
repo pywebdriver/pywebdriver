@@ -34,6 +34,7 @@ from .adyen_c_link import ADYPEDResultUnfinishedTender,\
                           ADYCreateTenderStatusCreated,\
                           ADYboolTrue,\
                           ADYEnvironmentTest,\
+                          ADYEnvironmentLive,\
                           ADYLibraryResultOk,\
                           ADYPSPResultCodeOk,\
                           ADYPSPResultCodeRegistered,\
@@ -177,6 +178,13 @@ class AdyenDriver(ThreadDriver):
     def __init__(self, cfg, *a, **kw):
         super(AdyenDriver, self).__init__(*a, **kw)
         self.cfg = cfg
+        if cfg['environment'] == 'test':
+            self.environment = ADYEnvironmentTest
+        elif cfg['environment'] == 'production':
+            self.environment = ADYEnvironmentLive
+        else:
+            raise Exception('adyen_driver: environment not recognized: %s'
+                            % cfg['environment'])
         self.terminal_id = None
         self.transactions_count = 0
         self.orders_mapping = LimitedDict()
@@ -215,7 +223,7 @@ class AdyenDriver(ThreadDriver):
         mylib.library_log = app_logger
         mylib.libraryRetainsVariables = ADYboolTrue
         mylib.logArea = 0x7fff
-        mylib.environment = ADYEnvironmentTest
+        mylib.environment = self.environment
         mylib.pos_name = String(self.cfg['pos_name'])
         mylib.app_name = String(self.cfg['app_name'])
         mylib.app_id = String(self.cfg['app_id'])
@@ -393,7 +401,7 @@ class AdyenDriver(ThreadDriver):
 def load_driver_config():
     driver_config = {}
     for key in ('pos_name', 'app_name', 'app_id', 'username', 'password',
-                'merchant_account', 'device_ip'):
+                'merchant_account', 'device_ip', 'environment'):
         try:
             driver_config[key] = config.get('adyen_driver', key)
         except NoOptionError:
