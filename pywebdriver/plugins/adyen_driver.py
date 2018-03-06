@@ -185,6 +185,13 @@ class AdyenDriver(ThreadDriver):
         else:
             raise Exception('adyen_driver: environment not recognized: %s'
                             % cfg['environment'])
+        if cfg['print_receipt'] == 'yes':
+            self.print_receipt = True
+        elif cfg['print_receipt'] == 'no':
+            self.print_receipt = False
+        else:
+            raise Exception('adyen_driver: print_receipt must '
+                            'be "yes" or "no"')
         self.terminal_id = None
         self.transactions_count = 0
         self.orders_mapping = LimitedDict()
@@ -353,8 +360,9 @@ class AdyenDriver(ThreadDriver):
         tender_req.terminal_id = String(self.terminal_id)
         tender_req.reference = String(order_id)
         tender_req.transaction_type = ADYTransactionTypeGoodsServices
-        add_tender_option(
-            tender_req.tender_options_obj, ADYTenderOptionReceiptHandler)
+        if not self.print_receipt:
+            add_tender_option(
+                tender_req.tender_options_obj, ADYTenderOptionReceiptHandler)
         tender_req.amount_currency = String(b"EUR")
         tender_req.amount_value = amount
 
@@ -406,6 +414,11 @@ def load_driver_config():
             driver_config[key] = config.get('adyen_driver', key)
         except NoOptionError:
             raise Exception("Missing configuration for adyen driver: %s" % key)
+    for key, default in (('print_receipt', 'yes'),):
+        if config.has_option('adyen_driver', key):
+            driver_config[key] = config.get('adyen_driver', key)
+        else:
+            driver_config[key] = default
     return driver_config
 
 adyen_driver = AdyenDriver(load_driver_config())
