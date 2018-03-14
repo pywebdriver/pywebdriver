@@ -193,6 +193,7 @@ class AdyenDriver(ThreadDriver):
             raise Exception('adyen_driver: print_receipt must '
                             'be "yes" or "no"')
         self.terminal_id = None
+        self.in_transaction = False
         self.transactions_count = 0
         self.orders_mapping = LimitedDict()
         self.transactions_cache = LimitedDict()
@@ -202,6 +203,7 @@ class AdyenDriver(ThreadDriver):
     def get_status(self):
         status = {
             'status': 'connected' if self.terminal_id else 'disconnected',
+            'in_transaction': self.in_transaction,
             'transactions_count': self.transactions_count,
             'latest_transactions': self.transactions_cache,
         }
@@ -286,23 +288,26 @@ class AdyenDriver(ThreadDriver):
         @tx_store_query_CB
         def tx_store_CB(p_response, p_unknown):  # pylint: disable=unused-argument
             response = p_response.contents
-            try:
-                self._validate_adyen_result(response.parsed_result)
-            except ValidationError as error:
-                logger.error("Problem fetching the PSP reference:")
-                logger.error(error.message)
-                return
-            psp_reference = str(response.report.contents.psp_reference)
-            amount = int(response.report.contents.amount_value)
             order_id = self.orders_mapping.get(transaction_ref)
             if not order_id:
                 logger.error("Order for transaction %s not found!",
                              transaction_ref)
+                self.in_transaction = False
                 return
-            self.transactions_cache.setdefault(order_id, []).append({
-                'reference': psp_reference,
-                'amount_cents': amount
-            })
+
+            try:
+                self._validate_adyen_result(response.parsed_result)
+                psp_reference = str(response.report.contents.psp_reference)
+                amount = int(response.report.contents.amount_value)
+                self.transactions_cache.setdefault(order_id, []).append({
+                    'reference': psp_reference,
+                    'amount_cents': amount
+                })
+            except ValidationError as error:
+                logger.error("Problem fetching the PSP reference:")
+                logger.error(error.message)
+            finally:
+                self.in_transaction = False
         self._callbacks['tx_store_CB'] = tx_store_CB
 
         tx_store_query(p_query, tx_store_CB, None)
@@ -346,6 +351,7 @@ class AdyenDriver(ThreadDriver):
             raise Exception("ERR in Registering PED: %s" % res)
 
     def transaction_start(self, info):
+        self.in_transaction = True
         self.transactions_count += 1
         info = json.loads(info)
         order_id = info['order_id']
