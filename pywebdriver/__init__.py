@@ -23,6 +23,7 @@
 
 
 # Core Imports
+import platform
 import gettext
 import os
 
@@ -36,7 +37,11 @@ from flask_cors import CORS
 # Config Section
 LOCAL_CONFIG_PATH = '%s/config/config.ini' % os.path.dirname(
     os.path.realpath(__file__))
-PACKAGE_CONFIG_PATH = '/etc/pywebdriver/config.ini'
+
+if platform.system() == 'Windows':
+    PACKAGE_CONFIG_PATH = os.path.expandvars('%programfiles%\pywebdriver\config.ini')
+else:
+    PACKAGE_CONFIG_PATH = '/etc/pywebdriver/config.ini'
 
 config_file = PACKAGE_CONFIG_PATH
 if not os.path.isfile(config_file):
