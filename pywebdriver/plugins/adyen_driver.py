@@ -42,6 +42,7 @@ from .adyen_c_link import ADYPEDResultUnfinishedTender,\
                           ADYPEDResultOk,\
                           ADYTransactionTypeGoodsServices,\
                           ADYTenderOptionReceiptHandler,\
+                          ADYTenderStateApproved,\
                           String,\
                           UNCHECKED,\
                           get_ped_result_code_text,\
@@ -297,6 +298,9 @@ class AdyenDriver(ThreadDriver):
 
             try:
                 self._validate_adyen_result(response.parsed_result)
+                tender_state = response.report.contents.state
+                if tender_state != ADYTenderStateApproved:
+                    raise ValidationError("Invalid state: %s" % tender_state)
                 psp_reference = str(response.report.contents.psp_reference)
                 amount = int(response.report.contents.amount_value)
                 self.transactions_cache.setdefault(order_id, []).append({
