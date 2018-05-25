@@ -19,6 +19,7 @@ Table of Content
   * [Installation on Debian/Ubuntu](#install-debian)
   * [Installation on Mac OS X](#install-osx)
   * [Browser settings](#browser-settings)
+  * [Specific configuration](#specific-configuration)
   * [Development](#development)
   * [Contribute](#contribute)
   * [Localization](#localization)
@@ -45,6 +46,7 @@ The aim of this sub project is to provide WebServices and Web Page to simulate t
   * **Customer Display**:
     * Bixolon BCD-1100
     * Bixolon BCD-1000
+    * [Epson OCD300](http://www.aures-support.fr/NEWSITE/ocd300/)
   * **Scale**:
     * TODO : planned by GRAP (Any help welcome);
   * **Barcode Reader**, **Cash Box** :
@@ -89,6 +91,15 @@ Pywebdriver can be installed on Mac OS X and is successfully used in production 
 You need to confirmed security exception on your browers for the following paths: http://localhost and https://localhost
 
 see <a href="https://support.mozilla.org/en-US/kb/what-does-your-connection-is-not-secure-mean">here</a> and click on 'Advanced' and 'confirm security exception'
+
+## <a name="browser-settings"></a>Specific configuration
+
+For the customer display **Epson OCD300**, you need to change the config file (config/config.ini).
+
+Change line device_name in category [display_driver] with this :
+```
+device_name=/dev/ttyACM0
+```
 
 ## <a name="development"></a>Development
 
