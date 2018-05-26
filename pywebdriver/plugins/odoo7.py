@@ -22,22 +22,18 @@
 import simplejson
 import json
 
-from flask_cors import cross_origin
 from flask import request, make_response, jsonify
 
 from pywebdriver import app, config, drivers
 
 
 @app.route('/pos/print_receipt', methods=['POST'])
-@cross_origin(headers=['Content-Type'])
 def print_receipt_http_post():
     receipt = json.loads(request.form['r'])['params']['receipt']
-    print_receipt(receipt)
     return jsonify(jsonrpc='2.0', result=True)
 
 
 @app.route('/pos/print_receipt', methods=['GET'])
-@cross_origin()
 def print_receipt_http_get():
     params = dict(request.args)
     if not params.get('r'):

@@ -26,6 +26,23 @@
 
 
 {% block content %}
+<h2>{{ _('Pywebdriver')}}</h2>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>{{ _('Name') }}</th>
+            <th>{{ _('Value') }}</th>
+        <tr>
+    </thead>
+    <tbody>
+    {% for info in pywebdriver_info %}
+        <tr>
+            <td>{{info['name']}}</td>
+            <td>{{info['value']}}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
 <h2>{{ _('System')}}</h2>
 <table class="table table-hover">
     <thead>

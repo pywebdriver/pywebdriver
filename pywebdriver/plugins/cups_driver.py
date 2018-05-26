@@ -23,7 +23,6 @@
 import cups
 import tempfile
 
-from flask_cors import cross_origin
 from flask import request, jsonify, make_response
 
 from pywebdriver import app, drivers
@@ -95,7 +94,6 @@ class CupsDriver(AbstractDriver):
         return state
 
 @app.route('/cups/printData', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
-@cross_origin(headers=['Content-Type'])
 def cupsapi():
     args = []
     kwargs = {}

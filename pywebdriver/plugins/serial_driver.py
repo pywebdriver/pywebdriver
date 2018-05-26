@@ -24,7 +24,6 @@ import os
 import sys
 
 import serial
-from flask_cors import cross_origin
 from flask import request, make_response, jsonify
 import simplejson as json
 
@@ -132,14 +131,12 @@ def serial_do_operation(operation, params):
 
 
 @app.route('/hw_proxy/serial_read', methods=['POST'])
-@cross_origin()
 def serial_read_http():
     result = serial_do_operation('read', request.json)
     return jsonify(jsonrpc='2.0', result=result)
 
 
 @app.route('/hw_proxy/serial_write', methods=['POST'])
-@cross_origin()
 def serial_write_http():
     result = serial_do_operation('write', request.json)
     return jsonify(jsonrpc='2.0', result=result)

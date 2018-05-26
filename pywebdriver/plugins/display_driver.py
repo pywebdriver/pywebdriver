@@ -20,7 +20,6 @@
 ###############################################################################
 
 from pywebdriver import app, config, drivers
-from flask_cors import cross_origin
 from flask import request, jsonify, render_template
 from base_driver import ThreadDriver, check
 import simplejson
@@ -103,7 +102,6 @@ else:
 @app.route(
     '/hw_proxy/send_text_customer_display',
     methods=['POST', 'GET', 'PUT', 'OPTIONS'])
-@cross_origin(headers=['Content-Type'])
 @check(installed, meta)
 def send_text_customer_display():
     app.logger.debug('LCD: Call send_text')

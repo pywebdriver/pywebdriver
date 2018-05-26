@@ -1,13 +1,17 @@
+[Install]
+WantedBy=multi-user.target
+
 [Unit]
 Description=Pywebdriver
 After=network.target
 
 [Service]
-PIDFile=/var/run/pywebdriver.pid
-ExecStart=/usr/bin/python /usr/bin/pywebdriverd
 User=pywebdriver
-Group=nogroup
-Restart=always
+Group=ssl-cert
+ExecStart=/opt/venvs/pywebdriver/bin/gunicorn -c /opt/venvs/pywebdriver/lib/python2.7/site-packages/pywebdriver/wsgi.py pywebdriver.wsgi
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStop=/bin/kill -TERM $MAINPID
+PrivateTmp=true
 
 [Install]
 WantedBy=multi-user.target
