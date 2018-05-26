@@ -30,7 +30,8 @@ from ConfigParser import ConfigParser
 
 # Librairies Imports
 from flask import Flask
-from flask.ext.babel import Babel
+from flask_babel import Babel
+from flask_cors import CORS
 
 # Config Section
 LOCAL_CONFIG_PATH = '%s/../config/config.ini' % os.path.dirname(
@@ -51,6 +52,8 @@ drivers = {}
 # Project Import
 # Application
 app = Flask(__name__)
+cors_origins = config.get('flask', 'cors_origins')
+cors = CORS(app, resources={r"/*": {"origins": cors_origins, "headers":['Content-Type']}})
 
 from . import views
 from . import plugins

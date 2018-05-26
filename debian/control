@@ -1,17 +1,16 @@
 Source: pywebdriver
-Section: admin
+Section: python
 Priority: extra
-Maintainer: Sylvain Calador <sylvain.calador@akretion.com>
-Build-Depends: debhelper (>= 9), dh-systemd (>= 1.5), python-setuptools, python-all
-X-Python-Version: >= 2.4
-VCS-Git: git://github.com/akretion/pywebdriver.git
-VCS-Browser: https://github.com/akretion/pywebdriver
+Maintainer: Sylvain Calador <sylvain.calador@gmail.com>
+XSBC-Original-Maintainer: Sylvain Calador <sylvain.calador@gmail.com>
+Build-Depends: debhelper (>= 11), python, python-wheel, virtualenv, dh-virtualenv(>= 1.0), dh-systemd(>= 11)
 Standards-Version: 3.9.7
-Homepage: https://github.com/akretion/pywebdriver
 
 Package: pywebdriver
-Architecture: all
-Depends: adduser, git, nginx, ssl-cert, python, python-dev, python-pyposdisplay, python-pip, python-flask, python-simplejson, python-netifaces, cups, python-cups, git, libjpeg-dev, zlib1g-dev, ${misc:Depends},
+Architecture: amd64
+Pre-Depends: dpkg (>= 1.16.1), python2.7, adduser, git-core, ssl-cert, cups, ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Homepage: https://github.com/akretion/pywebdriver
 Description: Python Web Services to communicate wih Devices
  This Software installs Web Services to allow easy communications with some
  devices. It provides Web Pages to see the status of the devices.

@@ -1,40 +1,19 @@
 #!/bin/bash
 set -e
 
-SERVICE=pywebdriver
 USERNAME=pywebdriver
-GROUP=usbusers
-
-# TODO create deb packages for these dependencies
-echo "Installing python dependencies via pip"
-PARAMS="--no-cache-dir"
-pip $PARAMS install --upgrade pip
-pip $PARAMS install jcconv pif Flask-Babel Flask-cors Pillow pymtp
-pip $PARAMS install --pre pyusb
-pip $PARAMS install git+https://github.com/akretion/py-xml-escpos.git@8.0-slip-support
-pip $PARAMS install git+https://github.com/akretion/pypostelium.git@master
-
 echo "Configure $SERVICE user and group"
-groupadd -f $GROUP
 if id -u $USERNAME &>/dev/null; then
     echo "$USERNAME already exists"
 else
-    adduser --no-create-home --system $USERNAME
-    adduser $USERNAME $GROUP
-    adduser $USERNAME dialout
+    adduser --quiet --no-create-home --system $USERNAME --quiet
+    groupadd -f usbusers
+    adduser $USERNAME usbusers --quiet
+    adduser $USERNAME dialout --quiet
+    adduser $USERNAME ssl-cert --quiet
 fi
-
-echo "Signature gsettings"
-gsettings set org.gnome.desktop.media-handling automount false
-gsettings set org.gnome.desktop.media-handling automount-open false
-gsettings set org.gnome.desktop.media-handling autorun-never true
 
 echo "Restarting udev"
 service udev restart
 
-echo "Starting $SERVICE service"
-systemctl enable $SERVICE
-systemctl restart $SERVICE
-
-echo "Reload Nginx"
-service nginx reload
+#DEBHELPER#

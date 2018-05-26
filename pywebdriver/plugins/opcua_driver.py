@@ -24,7 +24,6 @@ import os
 import sys
 
 from flask import app, request, make_response, jsonify
-from flask_cors import cross_origin
 import simplejson as json
 from pywebdriver import app, config, drivers
 

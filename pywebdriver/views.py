@@ -25,22 +25,24 @@ import platform
 import pip
 import os
 
-from flask import render_template
-from flask_cors import cross_origin
-from flask.ext.babel import gettext as _
+try:
+    from pip._internal.utils.misc import get_installed_distributions
+except ImportError:  # pip<10
+    from pip import get_installed_distributions
 
-from pywebdriver import app, drivers
+from flask import render_template
+from flask_babel import gettext as _
+
+from pywebdriver import app, config, drivers
 
 
 @app.route("/", methods=['GET'])
 @app.route('/index.html', methods=['GET'])
-@cross_origin()
 def index():
     return render_template('index.html')
 
 
 @app.route('/status.html', methods=['GET'])
-@cross_origin()
 def status():
     drivers_info = {}
 
@@ -58,7 +60,6 @@ def status():
 
 
 @app.route('/usb_devices.html', methods=['GET'])
-@cross_origin()
 def usb_devices():
     str_devices = commands.getoutput("lsusb").split('\n')
     devices = []
@@ -73,8 +74,12 @@ def usb_devices():
 
 
 @app.route('/system.html', methods=['GET'])
-@cross_origin()
 def system():
+    pywebdriver_info = []
+    pywebdriver_info.append({
+        'name': _('CORS allowed origins'),
+        'value': config.get('flask','cors_origins')
+    })
     system_info = []
     system_info.append({
         'name': _('OS - System'), 'value': platform.system()})
@@ -89,13 +94,15 @@ def system():
         'name': _('Machine'), 'value': platform.machine()})
     system_info.append({
         'name': _('Python Version'), 'value': platform.python_version()})
-    installed_python_packages = pip.get_installed_distributions()
+    installed_python_packages = get_installed_distributions()
     installed_python_packages = sorted(
         installed_python_packages, key=lambda package: package.key)
     return render_template(
         'system.html',
+        pywebdriver_info=pywebdriver_info,
         system_info=system_info,
-        installed_python_packages=installed_python_packages)
+        installed_python_packages=installed_python_packages
+    )
 
 
 @app.route(
