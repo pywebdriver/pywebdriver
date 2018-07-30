@@ -27,7 +27,7 @@ import os
 
 from flask import render_template
 from flask_cors import cross_origin
-from flask.ext.babel import gettext as _
+from flask_babel import gettext as _
 
 from pywebdriver import app, drivers
 

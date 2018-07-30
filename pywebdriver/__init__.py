@@ -30,7 +30,7 @@ from ConfigParser import ConfigParser
 
 # Librairies Imports
 from flask import Flask
-from flask.ext.babel import Babel
+from flask_babel import Babel
 
 # Config Section
 LOCAL_CONFIG_PATH = '%s/../config/config.ini' % os.path.dirname(
