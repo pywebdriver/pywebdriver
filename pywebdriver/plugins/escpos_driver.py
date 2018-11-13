@@ -116,6 +116,9 @@ else:
             self.open_printer()
             if not self.device:
                 status = 'disconnected'
+            elif device_type == 'serial':
+                # Maybe we could do something here to start serial
+                status = 'connected'
             else:
                 try:
                     res = self.get_printer_status()
