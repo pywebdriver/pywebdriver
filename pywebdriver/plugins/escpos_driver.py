@@ -38,14 +38,24 @@ meta = {
     'require_debian': [],
 }
 
+if (
+        config.has_option('escpos_driver', 'device_type') and
+        config.get('escpos_driver', 'device_type') == 'serial'):
+    device_type = 'serial'
+else:
+    device_type = 'usb'
+
 try:
-    from xmlescpos.printer import Usb
-    from xmlescpos.supported_devices import device_list
+    if device_type == 'serial':
+        from xmlescpos.printer import Serial as POSDriver
+    else:
+        from xmlescpos.printer import Usb as POSDriver
+        from xmlescpos.supported_devices import device_list
 except ImportError:
     installed = False
     print 'ESCPOS: xmlescpos python library not installed'
 else:
-    class ESCPOSDriver(ThreadDriver, Usb):
+    class ESCPOSDriver(ThreadDriver, POSDriver):
         """ ESCPOS Printer Driver class for pywebdriver """
 
         def __init__(self, *args, **kwargs):
@@ -73,18 +83,25 @@ else:
                 return
 
             try:
-                printers = self.connected_usb_devices()
-                if printers:
-                    printer = printers[0]
-                    self.idVendor = printer.get('vendor')
-                    self.idProduct = printer.get('product')
-                    self.interface = printer.get('interface', 0)
-                    self.in_ep = printer.get('in_ep', 0x82)
-                    self.out_ep = printer.get('out_ep', 0x01)
+                if device_type == 'usb':
+                    printers = self.connected_usb_devices()
+                    if printers:
+                        printer = printers[0]
+                        self.idVendor = printer.get('vendor')
+                        self.idProduct = printer.get('product')
+                        self.interface = printer.get('interface', 0)
+                        self.in_ep = printer.get('in_ep', 0x82)
+                        self.out_ep = printer.get('out_ep', 0x01)
+                        self.open()
+                        self.vendor_product = '%s_%s' % (
+                            self.idVendor, self.idProduct
+                        )
+                elif device_type == 'serial':
+                    self.devfile = config.get('escpos_driver', 'serial_device_name')
+                    self.baudrate = config.getint('escpos_driver', 'serial_baudrate')
+                    self.bytesize = config.getint('escpos_driver', 'serial_bytesize')
+                    self.timeout = config.getint('escpos_driver', 'serial_timeout')
                     self.open()
-                    self.vendor_product = '%s_%s' % (
-                        self.idVendor, self.idProduct
-                    )
 
             except Exception as e:
                 self.set_status('error', str(e))
@@ -99,6 +116,9 @@ else:
             self.open_printer()
             if not self.device:
                 status = 'disconnected'
+            elif device_type == 'serial':
+                # Maybe we could do something here to start serial
+                status = 'connected'
             else:
                 try:
                     res = self.get_printer_status()
@@ -214,7 +234,7 @@ else:
             if not self.eprint:
                 printers = self.connected_usb_devices()
                 if len(printers) > 0:
-                    self.eprint = Usb(
+                    self.eprint = POSDriver(
                         printers[0]['vendor'], printers[0]['product'])
                 else:
                     return
