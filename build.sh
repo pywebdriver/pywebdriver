@@ -18,7 +18,7 @@ cat <<DOCKERFILE > Dockerfile
 FROM ubuntu:18.04
 COPY . /pywebdriver
 WORKDIR /pywebdriver
-RUN apt-get update && apt-get install -y debhelper dh-virtualenv dh-systemd devscripts python-wheel libcups2-dev python-dev
+RUN apt-get update && apt-get install -y debhelper dh-virtualenv dh-systemd devscripts python-wheel libcups2-dev python-dev libmtp-dev
 DOCKERFILE
 
 docker build -t pywebdriver_build .

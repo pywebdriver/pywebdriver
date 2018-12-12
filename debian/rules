@@ -8,7 +8,7 @@ include_binaries = ${source_dir}/include-binaries
 	dh $@ --with python-virtualenv --python=python2.7 --with systemd
 
 override_dh_virtualenv:
-	dh_virtualenv --preinstall pip --preinstall setuptools
+	dh_virtualenv --preinstall pip --preinstall setuptools --extra-pip-arg='--no-binary=:all:'
 
 override_dh_install:
 	install -d debian/tmp/etc/pywebdriver
@@ -17,7 +17,14 @@ override_dh_install:
 	install -m 644 debian/99-pywebdriver.rules debian/tmp/lib/udev/rules.d/99-pywebdriver.rules
 	dh_install
 
+override_dh_strip:
+	dh_strip --exclude=PIL
+
+override_dh_shlibdeps:
+	dh_shlibdeps --exclude=PIL
+
 override_dh_missing:
 	dh_missing --list-missing
+
 override_dh_shlibdeps:
 	dh_shlibdeps -l${CURDIR}/debian/pywebdriver/opt/venvs/pywebdriver/lib/python2.7/site-packages/PIL/.libs
