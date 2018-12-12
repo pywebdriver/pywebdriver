@@ -365,7 +365,7 @@ else:
 
     @app.route(
             '/hw_proxy/print_xml_receipt',
-            methods=['POST', 'GET', 'PUT', 'OPTIONS'])
+            methods=['POST', 'GET', 'PUT'])
     def print_xml_receipt_json():
         """ For Odoo 8.0+"""
 
@@ -382,7 +382,7 @@ else:
 
     @app.route(
         '/hw_proxy/open_cashbox',
-        methods=['POST', 'GET', 'PUT', 'OPTIONS'])
+        methods=['POST', 'GET', 'PUT'])
     def open_cashbox():
         driver.push_task('open_cashbox')
         return jsonify(jsonrpc='2.0', result=True)

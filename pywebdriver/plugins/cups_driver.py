@@ -93,7 +93,7 @@ class CupsDriver(AbstractDriver):
         }
         return state
 
-@app.route('/cups/printData', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
+@app.route('/cups/printData', methods=['POST', 'GET', 'PUT'])
 def cupsapi():
     args = []
     kwargs = {}

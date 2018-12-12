@@ -58,7 +58,6 @@ else:
             self.vendor_product = '1504_11'
 
         @app.route('/display_status.html', methods=['GET'])
-        @cross_origin()
         def display_status_http():
             for line, duration in AUTHOR:
                 display_driver.push_task('send_text', line)
@@ -101,7 +100,7 @@ else:
 
 @app.route(
     '/hw_proxy/send_text_customer_display',
-    methods=['POST', 'GET', 'PUT', 'OPTIONS'])
+    methods=['POST', 'GET', 'PUT'])
 @check(installed, meta)
 def send_text_customer_display():
     app.logger.debug('LCD: Call send_text')

@@ -115,7 +115,6 @@ try:
         }
 
     @app.route('/hw_proxy/opcua_write', methods=['POST'])
-    @cross_origin()
     def opcua_write_http():
         result = opcua_write(request.json)
         return jsonify(jsonrpc='2.0', result=result)

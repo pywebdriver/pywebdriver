@@ -71,7 +71,7 @@ drivers['telium'] = telium_driver
 
 @app.route(
     '/hw_proxy/payment_terminal_transaction_start',
-    methods=['POST', 'GET', 'PUT', 'OPTIONS'])
+    methods=['POST', 'GET', 'PUT'])
 def payment_terminal_transaction_start():
     app.logger.debug('Telium: Call payment_terminal_transaction_start')
     payment_info = request.json['params']['payment_info']
