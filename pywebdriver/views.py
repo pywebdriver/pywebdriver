@@ -22,7 +22,7 @@
 
 import commands
 import platform
-import pip
+import pkg_resources
 import os
 
 from flask import render_template
@@ -89,7 +89,7 @@ def system():
         'name': _('Machine'), 'value': platform.machine()})
     system_info.append({
         'name': _('Python Version'), 'value': platform.python_version()})
-    installed_python_packages = pip.get_installed_distributions()
+    installed_python_packages = [d for d in pkg_resources.working_set]
     installed_python_packages = sorted(
         installed_python_packages, key=lambda package: package.key)
     return render_template(
