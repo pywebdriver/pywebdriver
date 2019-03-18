@@ -11,3 +11,4 @@ netifaces
 pycups
 # temporary desactivate because of a xmlescpos pip issue
 #xmlescpos
+git+https://github.com/akretion/pypostelium.git
