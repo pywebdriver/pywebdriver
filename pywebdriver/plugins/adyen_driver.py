@@ -215,6 +215,9 @@ class AdyenDriver(ThreadDriver):
                     self, self.terminal_id)
         return status
 
+    def get_vendor_product(self):
+        return 'adyen'
+
     def get_payment_info_from_price(self, price, payment_mode):
         logger.info("Payment mode: %s", payment_mode)
         if isinstance(price, float):
