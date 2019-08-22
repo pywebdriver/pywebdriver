@@ -125,6 +125,24 @@ If not, default drivers will be loaded:
 
 ## <a name="browser-settings"></a>Specific configuration
 
+#### <a name="browser-settings"></a>SSL support
+
+It is possible to enable SSL on Flask level to avoid mixed content on browsers.
+
+Generate private and public key (e.g.: self-signed with openssl <https://www.openssl.org/docs/manmaster/man1/openssl.html>) and place
+them at the root.
+
+Add entries in config file like:
+
+```
+[flask]
+sslcert=cert.pem
+sslkey=privkey.pem
+
+```
+
+#### <a name="browser-settings"></a>Epson OCD300
+
 For the customer display **Epson OCD300**, you need to change the config file (config/config.ini).
 
 Change line device_name in category [display_driver] with this :
