@@ -13,5 +13,6 @@ pymtp
 gunicorn>=19.8
 setuptools>=34
 pip>=10
-git+https://github.com/akretion/py-xml-escpos.git@8.0-slip-support
+git+https://github.com/akretion/py-xml-escpos.git@master
 git+https://github.com/akretion/pypostelium.git@master
+git+https://github.com/akretion/pyposdisplay.git@master
