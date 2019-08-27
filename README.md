@@ -92,6 +92,29 @@ You need to confirmed security exception on your browers for the following paths
 
 see <a href="https://support.mozilla.org/en-US/kb/what-does-your-connection-is-not-secure-mean">here</a> and click on 'Advanced' and 'confirm security exception'
 
+## <a name="browser-settings"></a>Base configuration
+
+#### config.ini file
+It is possible to load selectively drivers you need as some are incompatible.
+
+Add a line in config.ini file like :
+```
+[application]
+drivers=odoo8,cups_driver
+```
+
+If not, default drivers will be loaded:
+
+* cups_driver
+* display_driver
+* escpos_driver
+* serial_driver
+* signature_driver
+* telium_driver
+* opcua_driver
+* odoo7
+* odoo8
+
 ## <a name="browser-settings"></a>Specific configuration
 
 For the customer display **Epson OCD300**, you need to change the config file (config/config.ini).

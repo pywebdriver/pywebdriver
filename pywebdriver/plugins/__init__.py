@@ -1,9 +1,24 @@
-from . import cups_driver
-from . import display_driver
-from . import escpos_driver
-from . import serial_driver
-from . import signature_driver
-from . import telium_driver
-from . import opcua_driver
-from . import odoo7
-from . import odoo8
+from pywebdriver import config
+
+from ConfigParser import NoOptionError
+from importlib import import_module
+
+DEFAULT_DRIVERS = [
+    'cups_driver',
+    'display_driver',
+    'escpos_driver',
+    'serial_driver',
+    'signature_driver',
+    'telium_driver',
+    'opcua_driver',
+    'odoo7',
+    'odoo8',
+]
+
+try:
+    drivers = config.get('application', 'drivers').split(',')
+except NoOptionError:
+    drivers = DEFAULT_DRIVERS
+
+for driver in drivers:
+    globals()[driver] = import_module('.'+driver, __package__)
