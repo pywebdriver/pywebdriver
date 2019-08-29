@@ -106,12 +106,13 @@ def cupsapi():
     try:
         result = conn.printData(*args, **kwargs)
     # TODO we should implement all cups error
-    except cups.IPPError as (status, description):
+    except cups.IPPError as e:
+        err = str(e)
         return make_response(
             jsonify({
                 'cups_error': 'IPPError',
-                'cups_error_status': status,
-                'cups_error_description': description,
+                'cups_error_status': err,
+                'cups_error_description': err,
                 }), 400)
 
     return jsonify(jsonrpc='2.0', result=result)

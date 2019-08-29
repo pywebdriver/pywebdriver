@@ -24,7 +24,7 @@ from pif import get_public_ip
 from pywebdriver import app, config, drivers
 from netifaces import interfaces, ifaddresses, AF_INET
 from flask import request, jsonify, render_template
-from base_driver import ThreadDriver
+from .base_driver import ThreadDriver
 import usb.core
 import math
 
@@ -52,7 +52,7 @@ try:
         from xmlescpos.supported_devices import device_list
 except ImportError:
     installed = False
-    print 'ESCPOS: xmlescpos python library not installed'
+    print('ESCPOS: xmlescpos python library not installed')
 else:
     class ESCPOSDriver(ThreadDriver, POSDriver):
         """ ESCPOS Printer Driver class for pywebdriver """
@@ -131,7 +131,7 @@ else:
                         messages.append(
                             'Error code: %i' % res['printer']['status_error'])
 
-                except Exception, err:
+                except Exception as err:
                     status = 'error'
                     self.device = False
                     messages.append('Error: %s' % err)

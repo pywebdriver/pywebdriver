@@ -26,7 +26,7 @@
 import gettext
 import os
 
-from ConfigParser import ConfigParser
+from configparser import ConfigParser
 
 # Librairies Imports
 from flask import Flask
@@ -72,4 +72,4 @@ language = gettext.translation(
     'messages',
     path,
     [localization])
-language.install(unicode=True)
+language.install()

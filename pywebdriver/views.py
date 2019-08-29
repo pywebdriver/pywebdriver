@@ -20,7 +20,7 @@
 #
 ###############################################################################
 
-import commands
+import subprocess
 import platform
 import pip
 import os
@@ -61,7 +61,7 @@ def status():
 
 @app.route('/usb_devices.html', methods=['GET'])
 def usb_devices():
-    str_devices = commands.getoutput("lsusb").split('\n')
+    str_devices = subprocess.getoutput("lsusb").split('\n')
     devices = []
     for device in str_devices:
         devices.append({
