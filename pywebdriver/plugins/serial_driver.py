@@ -121,7 +121,7 @@ def serial_do_operation(operation, params):
                 )
             result['status'] = 'ok'
 
-    except serial.SerialException, message:
+    except serial.SerialException as message:
         result['status'] = 'error'
         result['message'] = str(message)
 

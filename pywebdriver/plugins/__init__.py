@@ -1,6 +1,6 @@
 from pywebdriver import config
 
-from ConfigParser import NoOptionError
+from configparser import NoOptionError
 from importlib import import_module
 
 DEFAULT_DRIVERS = [

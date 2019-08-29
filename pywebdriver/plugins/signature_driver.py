@@ -48,7 +48,7 @@ def get_signature_http():
     try:
         mtp = pymtp.MTP()
         mtp.connect()
-    except Exception, err:
+    except Exception as err:
         app.logger.error('Unable to connect device %s' % str(err))
         return jsonify(jsonrpc='2.0', result=data)
 
@@ -65,7 +65,7 @@ def get_signature_http():
                 data = f.read()
             app.logger.debug(data)
             mtp.delete_object(file_.item_id)
-        except Exception, err:
+        except Exception as err:
             app.logger.error('error during file transfer %s' % str(err))
     else:
         app.logger.error('file not found on the device: %s' % signature_file)

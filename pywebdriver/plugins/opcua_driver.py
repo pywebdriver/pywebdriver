@@ -73,7 +73,7 @@ try:
                 node.set_value(value, variant_type)
                 commands_ok.append(
                     {'nodeid': nodeid, 'value': node.get_value()})
-            except Exception, err:
+            except Exception as err:
                 error = code_to_name_doc.get(err.message, ('', 'N/A'))
                 commands_ko.append({'nodeid': nodeid, 'error': error[1]})
         return commands_ok, commands_ko
@@ -100,7 +100,7 @@ try:
                 client,
                 request.get('commands', []),
             )
-        except Exception, error:
+        except Exception as error:
             global_error = error.message
         finally:
             try:

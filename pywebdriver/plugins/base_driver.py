@@ -23,7 +23,7 @@
 
 from pywebdriver import app
 from threading import Thread, Lock
-from Queue import Queue, Empty
+from queue import Queue, Empty
 from flask import jsonify
 import traceback
 import functools
