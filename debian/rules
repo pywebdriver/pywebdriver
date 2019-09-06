@@ -1,17 +1,33 @@
 #!/usr/bin/make -f
+pypi_dir= debian/pypi
+pypi = ${CURDIR}/${pypi_dir}
+source_dir = ${CURDIR}/debian/source
+include_binaries = ${source_dir}/include-binaries
 
 %:
-	dh $@ --with python2
+	dh $@ --with python-virtualenv --python=python2.7 --with systemd
 
-override_dh_auto_install:
-	python setup.py install --root=debian/pywebdriver --install-layout=deb --no-compile
-override_dh_auto_build:
+override_dh_virtualenv:
+	dh_virtualenv --preinstall pip --preinstall setuptools --extra-pip-arg='--no-binary=:all:'
 
 override_dh_install:
 	install -d debian/tmp/etc/pywebdriver
 	install -m 644 debian/config.ini debian/tmp/etc/pywebdriver/config.ini
 	install -d debian/tmp/lib/udev/rules.d
 	install -m 644 debian/99-pywebdriver.rules debian/tmp/lib/udev/rules.d/99-pywebdriver.rules
-	install -d debian/tmp/etc/nginx/sites-available
-	install -m 644 debian/pywebdriver.nginx debian/tmp/etc/nginx/sites-available/pywebdriver
-	dh_install --fail-missing
+	dh_install
+
+override_dh_strip:
+	dh_strip --exclude=PIL
+
+override_dh_shlibdeps:
+	dh_shlibdeps --exclude=PIL
+
+override_dh_missing:
+	dh_missing --list-missing
+
+override_dh_builddeb:
+	dh_builddeb -- -Zgzip
+
+override_dh_shlibdeps:
+	dh_shlibdeps -l${CURDIR}/debian/pywebdriver/opt/venvs/pywebdriver/lib/python2.7/site-packages/PIL/.libs

@@ -11,7 +11,6 @@ setup(
     license="AGPLv3+",
     long_description=open('README.md').read(),
     packages=find_packages(),
-    install_requires=[ r.strip() for r in open('requirement.txt').read().splitlines() ],
     scripts = ['pywebdriverd'],
     include_package_data=True,
     zip_safe=False

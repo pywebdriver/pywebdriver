@@ -23,7 +23,6 @@
 from pif import get_public_ip
 from pywebdriver import app, config, drivers
 from netifaces import interfaces, ifaddresses, AF_INET
-from flask_cors import cross_origin
 from flask import request, jsonify, render_template
 from base_driver import ThreadDriver
 import usb.core
@@ -366,8 +365,7 @@ else:
 
     @app.route(
             '/hw_proxy/print_xml_receipt',
-            methods=['POST', 'GET', 'PUT', 'OPTIONS'])
-    @cross_origin(headers=['Content-Type'])
+            methods=['POST', 'GET', 'PUT'])
     def print_xml_receipt_json():
         """ For Odoo 8.0+"""
 
@@ -378,15 +376,13 @@ else:
         return jsonify(jsonrpc='2.0', result=True)
 
     @app.route('/print_status.html', methods=['GET'])
-    @cross_origin()
     def print_status_http():
         driver.push_task('printstatus')
         return render_template('print_status.html')
 
     @app.route(
         '/hw_proxy/open_cashbox',
-        methods=['POST', 'GET', 'PUT', 'OPTIONS'])
-    @cross_origin(headers=['Content-Type'])
+        methods=['POST', 'GET', 'PUT'])
     def open_cashbox():
         driver.push_task('open_cashbox')
         return jsonify(jsonrpc='2.0', result=True)

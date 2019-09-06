@@ -20,34 +20,29 @@
 #
 ###############################################################################
 
-from flask_cors import cross_origin
 from flask import request, make_response, jsonify
 
 from pywebdriver import app, config, drivers
 
 
 @app.route('/hw_proxy/hello', methods=['GET'])
-@cross_origin()
 def hello_http():
     return make_response('ping')
 
 
-@app.route('/hw_proxy/handshake', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
-@cross_origin(headers=['Content-Type'])
+@app.route('/hw_proxy/handshake', methods=['POST', 'GET', 'PUT'])
 def handshake_json():
     return jsonify(jsonrpc='2.0', result=True)
 
 
-@app.route('/hw_proxy/status_json', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
-@cross_origin(headers=['Content-Type'])
+@app.route('/hw_proxy/status_json', methods=['POST', 'GET', 'PUT'])
 def status_json():
     statuses = {}
     for driver in drivers:
         statuses[driver] = drivers[driver].get_status()
     return jsonify(jsonrpc='2.0', result=statuses)
 
-@app.route('/hw_proxy/log', methods=['POST', 'GET', 'PUT', 'OPTIONS'])
-@cross_origin(headers=['Content-Type'])
+@app.route('/hw_proxy/log', methods=['POST', 'GET', 'PUT'])
 def log_json():
     arguments = request.json['params']['arguments']
     print (' '.join(str(v) for v in arguments))

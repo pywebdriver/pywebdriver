@@ -23,7 +23,6 @@
 import logging
 import os
 
-from flask_cors import cross_origin
 from flask import request, make_response, jsonify
 
 try:
@@ -36,7 +35,6 @@ from pywebdriver import app, config, drivers
 
 
 @app.route('/hw_proxy/get_signature', methods=['GET'])
-@cross_origin()
 def get_signature_http():
 
     file_ = None

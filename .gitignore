@@ -2,6 +2,14 @@
 debian/pywebdriver/
 debian/pywebdriver.debhelper.log
 debian/pywebdriver.substvars
+debian/.debhelper/
+debian/files
+debian/changelog
+debian/pywebdriver.prerm.debhelper
+debian/pywebdriver.postrm.debhelper
+debian/pywebdriver.postinst.debhelper
+debian/pywebdriver.triggers
+debian/tmp/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -22,6 +30,7 @@ lib/
 lib64/
 parts/
 sdist/
+local/
 var/
 *.egg-info/
 .installed.cfg
@@ -52,3 +61,8 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
+
+# automatic build
+Dockerfile
+debuild.sh
+debian/changelog

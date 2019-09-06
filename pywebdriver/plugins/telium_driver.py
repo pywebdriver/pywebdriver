@@ -20,7 +20,6 @@
 ###############################################################################
 
 from pywebdriver import app, config, drivers
-from flask_cors import cross_origin
 from flask import request, jsonify, render_template
 from base_driver import ThreadDriver, check
 import simplejson
@@ -72,8 +71,7 @@ drivers['telium'] = telium_driver
 
 @app.route(
     '/hw_proxy/payment_terminal_transaction_start',
-    methods=['POST', 'GET', 'PUT', 'OPTIONS'])
-@cross_origin(headers=['Content-Type'])
+    methods=['POST', 'GET', 'PUT'])
 def payment_terminal_transaction_start():
     app.logger.debug('Telium: Call payment_terminal_transaction_start')
     payment_info = request.json['params']['payment_info']
@@ -83,10 +81,10 @@ def payment_terminal_transaction_start():
 
 
 @app.route('/telium_status.html', methods=['POST'])
-@cross_origin()
 def telium_status():
+    values = request.form.to_dict()
     info = telium_driver.get_payment_info_from_price(
-        float(request.values['price']),
+        float(values.get('price') or 0.00),
         request.values['payment_mode'])
     app.logger.debug('Telium status info=%s', info)
     telium_driver.push_task('transaction_start', json.dumps(
