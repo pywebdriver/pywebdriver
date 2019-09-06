@@ -66,3 +66,6 @@ docs/_build/
 Dockerfile
 debuild.sh
 debian/changelog
+
+# Config file
+config/config.ini
