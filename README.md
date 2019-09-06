@@ -103,6 +103,10 @@ see <a href="https://support.mozilla.org/en-US/kb/what-does-your-connection-is-n
 ## <a name="browser-settings"></a>Base configuration
 
 #### config.ini file
+
+Copy the config.ini.tmpl file to config.ini and make modifications
+as wished.
+
 It is possible to load selectively drivers you need as some are incompatible.
 
 Add a line in config.ini file like :
