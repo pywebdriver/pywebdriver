@@ -74,11 +74,19 @@ A lot of the code come from other projects. Licences and copyright are mentionne
 
 # <a name="developers"></a>Developers Section
 
-## <a name="install-debian"></a>Installation on Debian/Ubuntu
+## <a name="install-debian"></a>Installation on Debian/Ubuntu [OLD]
 ```
 sudo add-apt-repository ppa:akretion-team/pywebdriver
 sudo apt-get update
 sudo apt-get install pywebdriver
+```
+
+## <a name="install-bionic"></a>Installation on Ubuntu 18.04 [NEW]
+```
+sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 305CB544DDFC7A97
+sudo apt-add-repository 'deb [arch=amd64] http://apt.akretion.com/ pywebdriver-nightly main'
+sudo apt update
+sudo apt install pywebdriver
 ```
 
 ## <a name="install-osx"></a>Installation on Mac OS X
