@@ -110,7 +110,7 @@ else:
             self.cashdraw(2)
             self.cashdraw(5)
 
-        def get_status(self):
+        def get_status(self, **params):
             messages = []
             self.open_printer()
             if not self.device:

@@ -21,7 +21,6 @@
 ###############################################################################
 
 from flask import request, make_response, jsonify
-
 from pywebdriver import app, config, drivers
 
 
@@ -38,9 +37,11 @@ def handshake_json():
 @app.route('/hw_proxy/status_json', methods=['POST', 'GET', 'PUT'])
 def status_json():
     statuses = {}
+    params = request.json['params']
     for driver in drivers:
-        statuses[driver] = drivers[driver].get_status()
+        statuses[driver] = drivers[driver].get_status(**params)
     return jsonify(jsonrpc='2.0', result=statuses)
+
 
 @app.route('/hw_proxy/log', methods=['POST', 'GET', 'PUT'])
 def log_json():
