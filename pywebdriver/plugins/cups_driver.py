@@ -71,7 +71,7 @@ class CupsDriver(AbstractDriver):
     def get_vendor_product(self):
         return 'cups-icon'
 
-    def get_status(self):
+    def get_status(self, **params):
         messages = []
         mapstate = {
             3: 'Idle',

@@ -64,7 +64,7 @@ else:
                 time.sleep(duration)
             return render_template('display_status.html')
 
-        def get_status(self):
+        def get_status(self, **params):
             try:
                 self.set_status('connected')
                 # When I use Odoo POS v8, it regularly displays

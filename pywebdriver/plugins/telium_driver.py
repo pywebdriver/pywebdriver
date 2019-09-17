@@ -43,7 +43,7 @@ class TeliumDriver(ThreadDriver, pypostelium.Driver):
             'currency_iso': 'EUR',
         }
 
-    def get_status(self):
+    def get_status(self, **kwargs):
         self.status = {'status': 'connected', 'messages': []}
         # When I use Odoo POS v8, it regularly goes through that code
         # and sends 999.99 to the credit card reader !!!
