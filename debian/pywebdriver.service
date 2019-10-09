@@ -6,6 +6,8 @@ Description=Pywebdriver
 After=network.target
 
 [Service]
+Restart=always
+RestartSec=5
 User=pywebdriver
 Group=ssl-cert
 ExecStart=/opt/venvs/pywebdriver/bin/gunicorn -c /opt/venvs/pywebdriver/lib/python2.7/site-packages/pywebdriver/wsgi.py pywebdriver.wsgi
