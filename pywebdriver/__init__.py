@@ -33,16 +33,18 @@ from flask import Flask
 from flask.ext.babel import Babel
 
 # Config Section
-LOCAL_CONFIG_PATH = '%s/../config/config.ini' % os.path.dirname(
-    os.path.realpath(__file__))
-PACKAGE_CONFIG_PATH = '/etc/pywebdriver/config.ini'
+CONFIG_PATHS = (
+    'config.ini',
+    '%s/../config/config.ini' % os.path.dirname(os.path.realpath(__file__)),
+    '/etc/pywebdriver/config.ini',
+)
 
-config_file = PACKAGE_CONFIG_PATH
-if not os.path.isfile(config_file):
-    config_file = LOCAL_CONFIG_PATH
-assert os.path.isfile(config_file), (
-    'Could not find config file (looking at %s and then %s )' % (
-        PACKAGE_CONFIG_PATH, LOCAL_CONFIG_PATH))
+for config_file in CONFIG_PATHS:
+    if os.path.isfile(config_file):
+        break
+else:
+    assert "Could not find config file (looking at %s)." % (CONFIG_PATHS,)
+
 config = ConfigParser()
 config.read(config_file)
 
