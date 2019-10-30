@@ -23,9 +23,11 @@ host=0.0.0.0
 port=8069
 ; Set the origins allow to commuicate with pywebdriver, default all (*)
 cors_origins=*
-
 ; Enable this value for debug works
 debug=true
+; Set this to false to disable the automatic reloader
+; in Flask's autoreload mechanism conflicts with some driver code
+use_reloader=false
 
 [application]
 ; Set to True if you want that the PyWebDriver Software print a status receipt

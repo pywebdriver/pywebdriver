@@ -85,9 +85,10 @@ if config.getboolean("application", "print_status_start"):
     if "escpos" in drivers:
         drivers["escpos"].push_task("printstatus")
 flask_args = dict(
-    host=config.get("flask", "host"),
-    port=config.getint("flask", "port"),
-    debug=config.getboolean("flask", "debug"),
+    host=config.get("flask", "host", fallback="0.0.0.0"),
+    port=config.getint("flask", "port", fallback=3000),
+    debug=config.getboolean("flask", "debug", fallback=False),
+    use_reloader=config.getboolean("flask", "use_reloader", fallback=False),
     processes=0,
     threaded=True,
 )
