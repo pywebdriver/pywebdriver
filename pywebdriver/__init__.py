@@ -24,6 +24,7 @@
 
 # Core Imports
 import gettext
+import logging.config
 import os
 
 from ConfigParser import ConfigParser
@@ -48,6 +49,13 @@ else:
 
 config = ConfigParser()
 config.read(config_file)
+
+if (
+    config.has_section("loggers")
+    and config.has_section("handlers")
+    and config.has_section("formatters")
+):
+    logging.config.fileConfig(config)
 
 drivers = {}
 

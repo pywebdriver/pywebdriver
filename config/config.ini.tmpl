@@ -73,3 +73,31 @@ xonxoff=false
 timeout=5
 eol_cr=true
 eol_lf=true
+
+; if sections loggers, handlers and formatters are present
+; configure the logging module using logging.config.fileConfig
+; see https://docs.python.org/3/library/logging.config.html#logging-config-fileformat
+
+[loggers]
+keys=root
+
+[logger_root]
+level=DEBUG
+handlers=hand01
+
+[handlers]
+keys=hand01
+
+[handler_hand01]
+class=StreamHandler
+level=NOTSET
+formatter=form01
+args=(sys.stdout,)
+
+[formatters]
+keys=form01
+
+[formatter_form01]
+format=%(asctime)s %(levelname)8s %(message)s
+datefmt=
+class=logging.Formatter
