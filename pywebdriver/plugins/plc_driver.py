@@ -31,42 +31,13 @@ try:
 
     from pylogix import PLC
 
-    def get_variant_type(datatype):
-
-        if datatype == 'bool':
-            variant = ua.VariantType.Boolean
-        elif datatype == 'sbyte':
-            variant = ua.VariantType.SByte
-        elif datatype == 'byte':
-            variant = ua.VariantType.Byte
-        elif datatype == 'uint16':
-            variant = ua.VariantType.UInt16
-        elif datatype == 'unint32':
-            variant = ua.VariantType.UInt32
-        elif datatype == 'uint64':
-            variant = ua.VariantType.UInt64
-        elif datatype == 'int16':
-            variant = ua.VariantType.Int16
-        elif datatype == 'int32':
-            variant = ua.VariantType.Int32
-        elif datatype == 'int64':
-            variant = ua.VariantType.Int64
-        elif datatype == 'float':
-            variant = ua.VariantType.Float
-        elif datatype == 'double':
-            variant = ua.VariantType.Double
-        elif datatype == 'string':
-            variant = ua.VariantType.String
-        else:
-            raise ValueError('"%s" datatype not implemented' % datatype)
-
-        return variant
-
     def do_write(client, commands):
         commands_ok = []
         commands_ko = []
         for tag_name, datatype, value in commands:
             try:
+                # TODO: For this mement we only use INT datatype
+                # this is for improve in future
                 client.Write(tag_name, int(value))
             except Exception, err:
                 error = code_to_name_doc.get(err.message, ('', 'N/A'))
