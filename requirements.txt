@@ -13,6 +13,7 @@ pymtp
 gunicorn>=19.8
 setuptools>=34
 pip>=10
+git+https://github.com/dmroeder/pylogix@master
 git+https://github.com/akretion/py-xml-escpos.git@master
 git+https://github.com/akretion/pypostelium.git@master
 git+https://github.com/akretion/pyposdisplay.git@master
