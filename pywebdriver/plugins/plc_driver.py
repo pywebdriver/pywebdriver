@@ -75,7 +75,7 @@ try:
 
     def plc_init(request):
         client = PLC()
-        client.Micro800 = True
+        client.Micro800 = config.get('plc', 'micro800') or False
         client.IPAddress = request.get('url', '')
 
         return client
