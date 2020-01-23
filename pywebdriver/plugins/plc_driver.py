@@ -36,7 +36,7 @@ try:
         commands_ko = []
         for tag_name, datatype, value in commands:
             try:
-                # TODO: For this mement we only use INT datatype
+                # TODO: For this moment we only use INT datatype
                 # this is for improve in future
                 client.Write(tag_name, int(value))
             except Exception, err:
