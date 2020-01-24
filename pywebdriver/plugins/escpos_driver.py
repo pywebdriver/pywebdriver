@@ -25,6 +25,9 @@ from pywebdriver import app, config, drivers
 from netifaces import interfaces, ifaddresses, AF_INET
 from flask import request, jsonify, render_template
 from .base_driver import ThreadDriver
+from xmlescpos import Layout
+from escpos import capabilities
+from escpos.magicencode import MagicEncode
 import usb.core
 import math
 
@@ -44,12 +47,17 @@ if (
 else:
     device_type = 'usb'
 
+SUPPORTED_DEVICES = [
+    { 'vendor' : 0x04b8, 'product' : 0x0e03, 'name' : 'Epson TM-T20' },
+    { 'vendor' : 0x04b8, 'product' : 0x0202, 'name' : 'Epson TM-T70' },
+    { 'vendor' : 0x04b8, 'product' : 0x0e15, 'name' : 'Epson TM-T20II' },
+]
+
 try:
     if device_type == 'serial':
-        from xmlescpos.printer import Serial as POSDriver
+        from escpos.printer import Serial as POSDriver
     else:
-        from xmlescpos.printer import Usb as POSDriver
-        from xmlescpos.supported_devices import device_list
+        from escpos.printer import Usb as POSDriver
 except ImportError:
     installed = False
     print('ESCPOS: xmlescpos python library not installed')
@@ -62,36 +70,31 @@ else:
             self.vendor_product = None
             ThreadDriver.__init__(self, args, kwargs)
 
-        def supported_devices(self):
-            return device_list
-
         def connected_usb_devices(self):
             connected = []
 
-            for device in self.supported_devices():
+            for device in SUPPORTED_DEVICES:
                 if usb.core.find(
                         idVendor=device['vendor'],
                         idProduct=device['product']) is not None:
                     connected.append(device)
-
             return connected
 
         def open_printer(self):
-
             if self.device:
                 return
-
             try:
                 if device_type == 'usb':
                     printers = self.connected_usb_devices()
                     if printers:
                         printer = printers[0]
-                        self.idVendor = printer.get('vendor')
-                        self.idProduct = printer.get('product')
                         self.interface = printer.get('interface', 0)
                         self.in_ep = printer.get('in_ep', 0x82)
                         self.out_ep = printer.get('out_ep', 0x01)
-                        self.open()
+                        self.timeout = 0
+                        self.profile = capabilities.get_profile(None)
+                        self.magic = MagicEncode(self, {})
+                        self.open({"idVendor": printer.get('vendor'), "idProduct": printer.get('product')})
                         self.vendor_product = '%s_%s' % (
                             self.idVendor, self.idProduct
                         )
@@ -120,17 +123,15 @@ else:
                 status = 'connected'
             else:
                 try:
-                    res = self.get_printer_status()
-                    if res['printer']['online']:
+                    if self.is_online():
                         status = 'connected'
+                        print("CONNECTED")
                     else:
                         status = 'connecting'
-
-                    if res['printer']['status_error']:
-                        status = 'error'
-                        messages.append(
-                            'Error code: %i' % res['printer']['status_error'])
-
+                    # if res['printer']['status_error']:
+                    #     status = 'error'
+                    #     messages.append(
+                    #         'Error code: %i' % res['printer']['status_error'])
                 except Exception as err:
                     status = 'error'
                     self.device = False
@@ -159,7 +160,7 @@ else:
                     """tly connected with a network cable,<br/>"""
                     """ that the LAN is setup with DHCP, and<br/>"""
                     """that network addresses are available""")
-                self.receipt('<div>'+msg+'</div>')
+                Layout('<div>'+msg+'</div>').format(self)
                 self.cut()
             else:
                 addr_lines = []
@@ -184,7 +185,7 @@ else:
                     ''.join(addr_lines),
                     config.getint('flask', 'port'),
                 )
-                self.receipt(msg)
+                Layout('<div>'+msg+'</div>').format(self)
 
         # #####################################################################
         # <Odoo Version 7>
