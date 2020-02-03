@@ -141,6 +141,10 @@ else:
                 'messages': messages,
             }
 
+        def receipt(self, content):
+            Layout(content).format(self)
+            self.cut()
+
         def printstatus(self, eprint):
             # <PyWebDriver> Full refactoring of the function to allow
             # localisation and to make more easy the search of the ip
