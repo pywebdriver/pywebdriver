@@ -89,12 +89,14 @@ else:
                     if printers:
                         printer = printers[0]
                         self.interface = printer.get('interface', 0)
+                        self.idVendor = printer.get('vendor')
+                        self.idProduct = printer.get('product')
                         self.in_ep = printer.get('in_ep', 0x82)
                         self.out_ep = printer.get('out_ep', 0x01)
                         self.timeout = 0
                         self.profile = capabilities.get_profile(None)
                         self.magic = MagicEncode(self, {})
-                        self.open({"idVendor": printer.get('vendor'), "idProduct": printer.get('product')})
+                        self.open()
                         self.vendor_product = '%s_%s' % (
                             self.idVendor, self.idProduct
                         )

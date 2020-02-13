@@ -37,6 +37,7 @@ try:
     import pyposdisplay
 except:
     installed = False
+    print('DISPLAY: pyposdisplay python library not installed')
 else:
     AUTHOR = [
         ([u'PyWebDriver', u'By'], 2),
