@@ -5,10 +5,10 @@ source_dir = ${CURDIR}/debian/source
 include_binaries = ${source_dir}/include-binaries
 
 %:
-	dh $@ --with python-virtualenv --python=python2.7 --with systemd
+	dh $@ --with python-virtualenv --with systemd
 
 override_dh_virtualenv:
-	dh_virtualenv --preinstall pip --preinstall setuptools --extra-pip-arg='--no-binary=:all:'
+	dh_virtualenv --python=python3 --preinstall pip --preinstall setuptools --extra-pip-arg='--no-binary=:all:'
 
 override_dh_install:
 	install -d debian/tmp/etc/pywebdriver

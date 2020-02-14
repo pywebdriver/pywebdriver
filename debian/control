@@ -3,12 +3,12 @@ Section: python
 Priority: extra
 Maintainer: Sylvain Calador <sylvain.calador@gmail.com>
 XSBC-Original-Maintainer: Sylvain Calador <sylvain.calador@gmail.com>
-Build-Depends: debhelper (>= 11), python, python-wheel, virtualenv, dh-virtualenv(>= 1.0), dh-systemd(>= 11)
+Build-Depends: debhelper (>= 11), python3, python3-wheel, python3-setuptools, python3-pip, libffi-dev, dh-virtualenv(>= 1.0), dh-systemd(>= 11)
 Standards-Version: 3.9.7
 
 Package: pywebdriver
 Architecture: amd64
-Pre-Depends: dpkg (>= 1.16.1), python2.7, adduser, git-core, ssl-cert, cups, libcups2-dev, libmtp-dev, ${misc:Pre-Depends}
+Pre-Depends: dpkg (>= 1.16.1), python3 (>= 3.6), adduser, git-core, ssl-cert, cups, libcups2-dev, libmtp-dev, ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Homepage: https://github.com/akretion/pywebdriver
 Description: Python Web Services to communicate wih Devices
