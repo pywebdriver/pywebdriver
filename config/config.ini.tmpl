@@ -13,6 +13,10 @@ accesslog = -
 certfile=/etc/ssl/certs/ssl-cert-snakeoil.pem
 keyfile=/etc/ssl/private/ssl-cert-snakeoil.key
 
+[waitress]
+; parameters for configuring waitress, which replaces gunicorn on windows
+listen=0.0.0.0:8069
+
 [flask]
 ; Set The port of the webserver 'dev' mode
 host=0.0.0.0

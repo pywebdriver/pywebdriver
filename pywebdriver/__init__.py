@@ -36,7 +36,7 @@ from flask_cors import CORS
 # Config Section
 CONFIG_PATHS = (
     'config.ini',
-    '%s/../config/config.ini' % os.path.dirname(os.path.realpath(__file__)),
+    os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', 'config', 'config.ini'),
     '/etc/pywebdriver/config.ini',
 )
 
