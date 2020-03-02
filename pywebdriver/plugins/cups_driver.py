@@ -22,6 +22,7 @@
 
 import cups
 import tempfile
+import base64
 
 from flask import request, jsonify, make_response
 
@@ -35,7 +36,7 @@ class ExtendedCups(cups.Connection):
 
     def printData(self, printer, data, title='Pywebdriver', options=None):
         with tempfile.NamedTemporaryFile() as f:
-            f.write(data.decode('base64'))
+            f.write(base64.b64decode(data))
             f.flush()
             res = self.printFile(printer, f.name, title, options)
         return res
