@@ -5,6 +5,7 @@ from importlib import import_module
 
 DEFAULT_DRIVERS = [
     'cups_driver',
+    'win32print_driver',
     'display_driver',
     'escpos_driver',
     'serial_driver',
