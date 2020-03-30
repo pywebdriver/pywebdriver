@@ -95,7 +95,8 @@ class CupsDriver(AbstractDriver):
         return state
 
 @app.route('/cups/printData', methods=['POST', 'GET', 'PUT'])
-def cupsapi():
+@app.route("/printers/printData", methods=["POST", "GET", "PUT"])
+def printersapi():
     args = []
     kwargs = {}
     if request.json:

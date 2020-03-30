@@ -38,7 +38,7 @@ else:
             return state
 
         def printData(self, printer, data, title="Pywebdriver", options=None):
-            if printer.startswith("zebra"):
+            if options and options.get("raw"):
                 return self.printRaw(printer, data, title)
             else:
                 return self.printPdf(printer, data)
@@ -72,7 +72,8 @@ else:
     drivers["win32print"] = Win32printDriver()
 
     @app.route("/cups/printData", methods=["POST", "GET", "PUT"])
-    def cupsapi():
+    @app.route("/printers/printData", methods=["POST", "GET", "PUT"])
+    def printersapi():
         args = []
         kwargs = {}
         if request.json:
