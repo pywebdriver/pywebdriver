@@ -1,7 +1,7 @@
 # -*- mode: python ; coding: utf-8 -*-
 
-import os
-VENV = os.environ["HOME"] + "\\pywebdriver-venv"
+import os.path
+VENV = os.path.expanduser('~') + "\\pywebdriver-venv"
 
 block_cipher = None
 
@@ -9,7 +9,7 @@ block_cipher = None
 a = Analysis(['..\\pywebdriverd'],
              # ['waitress_server.py'], # if you want waitress
              pathex=[VENV],
-             binaries=[('libusb0.dll', '.'),],
+             binaries=[('C:\\Windows\\System32\\libusb0.dll', '.'),],
              datas=[('config.ini', 'config'),
              ('capabilities.json', 'escpos'),
              # ('..\\privkey.pem', '.'),
