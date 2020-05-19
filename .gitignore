@@ -69,3 +69,6 @@ debian/changelog
 
 # Config file
 config/config.ini
+
+# Cert files
+*.pem

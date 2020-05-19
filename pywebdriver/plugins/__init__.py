@@ -1,10 +1,11 @@
 from pywebdriver import config
 
-from ConfigParser import NoOptionError
+from configparser import NoOptionError
 from importlib import import_module
 
 DEFAULT_DRIVERS = [
     'cups_driver',
+    'win32print_driver',
     'display_driver',
     'escpos_driver',
     'serial_driver',

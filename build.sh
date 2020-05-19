@@ -22,9 +22,9 @@ chmod +x debuild.sh
 
 cat <<DOCKERFILE > Dockerfile
 FROM $BASE_IMAGE
+RUN apt-get update && apt-get install -y debhelper dh-virtualenv dh-systemd devscripts python3-wheel libcups2-dev python3-setuptools libmtp-dev python3-pip libffi-dev
 COPY . /$PACKAGE
 WORKDIR /$PACKAGE
-RUN apt-get update && apt-get install -y debhelper dh-virtualenv dh-systemd devscripts python-wheel libcups2-dev python-dev libmtp-dev
 DOCKERFILE
 
 read -p "Buid $PACKAGE package? (y/n) " -n 1 -r

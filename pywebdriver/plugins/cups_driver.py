@@ -22,6 +22,7 @@
 
 import cups
 import tempfile
+import base64
 
 from flask import request, jsonify, make_response
 
@@ -35,7 +36,7 @@ class ExtendedCups(cups.Connection):
 
     def printData(self, printer, data, title='Pywebdriver', options=None):
         with tempfile.NamedTemporaryFile() as f:
-            f.write(data.decode('base64'))
+            f.write(base64.b64decode(data))
             f.flush()
             res = self.printFile(printer, f.name, title, options)
         return res
@@ -94,7 +95,8 @@ class CupsDriver(AbstractDriver):
         return state
 
 @app.route('/cups/printData', methods=['POST', 'GET', 'PUT'])
-def cupsapi():
+@app.route("/printers/printData", methods=["POST", "GET", "PUT"])
+def printersapi():
     args = []
     kwargs = {}
     if request.json:
@@ -106,12 +108,13 @@ def cupsapi():
     try:
         result = conn.printData(*args, **kwargs)
     # TODO we should implement all cups error
-    except cups.IPPError as (status, description):
+    except cups.IPPError as e:
+        err = str(e)
         return make_response(
             jsonify({
                 'cups_error': 'IPPError',
-                'cups_error_status': status,
-                'cups_error_description': description,
+                'cups_error_status': err,
+                'cups_error_description': err,
                 }), 400)
 
     return jsonify(jsonrpc='2.0', result=result)

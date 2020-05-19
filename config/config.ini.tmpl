@@ -13,6 +13,10 @@ accesslog = -
 certfile=/etc/ssl/certs/ssl-cert-snakeoil.pem
 keyfile=/etc/ssl/private/ssl-cert-snakeoil.key
 
+[waitress]
+; parameters for configuring waitress, which replaces gunicorn on windows
+listen=0.0.0.0:8069
+
 [flask]
 ; Set The port of the webserver 'dev' mode
 host=0.0.0.0
@@ -43,7 +47,8 @@ device_type=usb
 ; If your POS printer has a serial interface, comment the line above
 ; and uncomment the lines below
 ;device_type=serial
-;serial_device_name=/dev/ttyS1
+;serial_device_name=/dev/ttyS1 # If you are on linux
+;serial_device_name=COM1 # If you are on windows
 ;serial_baudrate=9600
 ;serial_bytesize=8
 ;serial_timeout=1

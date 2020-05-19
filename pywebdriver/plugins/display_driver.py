@@ -21,7 +21,7 @@
 
 from pywebdriver import app, config, drivers
 from flask import request, jsonify, render_template
-from base_driver import ThreadDriver, check
+from .base_driver import ThreadDriver, check
 import simplejson
 import time
 
@@ -37,6 +37,7 @@ try:
     import pyposdisplay
 except:
     installed = False
+    print('DISPLAY: pyposdisplay python library not installed')
 else:
     AUTHOR = [
         ([u'PyWebDriver', u'By'], 2),

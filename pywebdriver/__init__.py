@@ -26,7 +26,7 @@
 import gettext
 import os
 
-from ConfigParser import ConfigParser
+from configparser import ConfigParser
 
 # Librairies Imports
 from flask import Flask
@@ -36,7 +36,7 @@ from flask_cors import CORS
 # Config Section
 CONFIG_PATHS = (
     'config.ini',
-    '%s/../config/config.ini' % os.path.dirname(os.path.realpath(__file__)),
+    os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', 'config', 'config.ini'),
     '/etc/pywebdriver/config.ini',
 )
 
@@ -72,4 +72,4 @@ language = gettext.translation(
     'messages',
     path,
     [localization])
-language.install(unicode=True)
+language.install()

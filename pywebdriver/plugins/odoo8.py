@@ -46,5 +46,5 @@ def status_json():
 @app.route('/hw_proxy/log', methods=['POST', 'GET', 'PUT'])
 def log_json():
     arguments = request.json['params']['arguments']
-    print (' '.join(str(v) for v in arguments))
+    print(' '.join(str(v) for v in arguments))
     return jsonify(jsonrpc='2.0', result=True)
