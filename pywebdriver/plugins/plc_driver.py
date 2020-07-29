@@ -72,7 +72,7 @@ try:
         }
 
     @app.route('/hw_proxy/plc_write', methods=['POST'])
-    def opcua_write_http():
+    def plc_write_http():
         result = plc_write(request.json)
         return jsonify(jsonrpc='2.0', result=result)
 
