@@ -9,7 +9,10 @@ block_cipher = None
 a = Analysis(['..\\pywebdriverd'],
              # ['waitress_server.py'], # if you want waitress
              pathex=[VENV],
-             binaries=[('C:\\Windows\\System32\\libusb0.dll', '.'),],
+             binaries=[
+			 ('libusb0.dll', '.'),
+			 ('libusbK.dll', '.'),
+			 ],
              datas=[('config.ini', 'config'),
              ('capabilities.json', 'escpos'),
              # ('..\\privkey.pem', '.'),

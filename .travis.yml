@@ -1,11 +1,12 @@
 language: shell
 
+os: linux
+dist:
+  - bionic
+  - focal
+
 jobs:
   include:
-  - name: Bionic beaver
-    dist: bionic
-  - name: Focal fossa
-    dist: focal
   - name: Python 3.7.6 on Windows
     os: windows
     before_install:
@@ -55,8 +56,8 @@ before_deploy:
 deploy:
   provider: releases
   draft: true
-  skip_cleanup: true
-  api_key:
+  cleanup: false
+  token:
     secure: dziz0l3Q8sg8k1c3SphkFz0fqSLWU2XijE564UTSzpRhqNaG7TRe5h8seZrQH66dDtPWWlZ4rgBkDO0UP3G3c0XRdVMpUTmxlwzWv6J9Zo37F7WJOFkEMJU2Rj1ESgHaZvasdiJdOgQhodfyXB7URa0nK6sy/kBka/CufGb2NvE=
   file_glob: true
   file: "$HOME/releases/*"
