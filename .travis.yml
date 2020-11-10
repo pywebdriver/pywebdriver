@@ -23,11 +23,12 @@ jobs:
           - libffi-dev
           - fakeroot
           - python3-pip
+    before_install:
+      - pip install -U pip virtualenv
   - name: Python 3.7.6 on Windows
     os: windows
     before_install:
       - choco install python --version 3.7.6
-      - choco install 7zip
       - pip install virtualenv
       - virtualenv $HOME/pywebdriver-venv
       - source $HOME/pywebdriver-venv/Scripts/activate
@@ -46,17 +47,20 @@ script:
 
 before_deploy:
   - mkdir $HOME/releases
-  - if [ "$TRAVIS_OS_NAME" = "windows" ]; then cd $HOME/build/akretion/pywebdriver/dist; 7z a pywebdriver_win64.zip pywebdriver ; mv pywebdriver_win64.zip $HOME/releases ; fi
+  - if [ "$TRAVIS_OS_NAME" = "windows" ]; then cd $HOME/build/akretion/pywebdriver/dist; 7z a pywebdriver_$(< ../VERSION)_win64.zip pywebdriver ; fi
+  - if [ "$TRAVIS_OS_NAME" = "windows" ]; then mv pywebdriver_$(< ../VERSION)_win64.zip $HOME/releases ; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then mv $HOME/build/akretion/pywebdriver_$(< VERSION)_amd64.deb $HOME/releases ; fi
+  - ls -alh $HOME/releases
 
 deploy:
   provider: releases
   draft: true
   cleanup: false
+  skip_cleanup: true
   token:
     secure: dziz0l3Q8sg8k1c3SphkFz0fqSLWU2XijE564UTSzpRhqNaG7TRe5h8seZrQH66dDtPWWlZ4rgBkDO0UP3G3c0XRdVMpUTmxlwzWv6J9Zo37F7WJOFkEMJU2Rj1ESgHaZvasdiJdOgQhodfyXB7URa0nK6sy/kBka/CufGb2NvE=
   file_glob: true
-  file: "$HOME/releases/*"
+  file: /home/pywebdriver/releases/*
   overwrite: true
   on:
     repo: akretion/pywebdriver
