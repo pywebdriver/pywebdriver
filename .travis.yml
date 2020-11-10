@@ -1,12 +1,28 @@
 language: shell
 
-os: linux
-dist:
-  - bionic
-  - focal
-
 jobs:
   include:
+  - name: Bionic Beaver
+    dist: bionic
+    addons:
+      apt:
+        update: true
+        packages:
+          - libnss3-tools
+          - cups
+          - libcups2-dev
+          - debhelper
+          - dh-virtualenv
+          - dh-systemd
+          - devscripts
+          - python3-wheel
+          - libcups2-dev
+          - python3-setuptools
+          - python3-venv
+          - libmtp-dev
+          - libffi-dev
+          - fakeroot
+          - python3-pip
   - name: Python 3.7.6 on Windows
     os: windows
     before_install:
@@ -18,26 +34,6 @@ jobs:
       - pip install -r windows/requirements.txt
       - pip install pyinstaller
     env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
-
-addons:
-  apt:
-    update: true
-    packages:
-      - libnss3-tools
-      - cups
-      - libcups2-dev
-      - debhelper
-      - dh-virtualenv
-      - dh-systemd
-      - devscripts
-      - python3-wheel
-      - libcups2-dev
-      - python3-setuptools
-      - python3-venv
-      - libmtp-dev
-      - libffi-dev
-      - fakeroot
-      - python3-pip
 
 script:
   - if [ "$TRAVIS_OS_NAME" = "windows" ]; then pyinstaller.exe windows/pywebdriver.spec ; fi
