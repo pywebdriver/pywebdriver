@@ -38,8 +38,8 @@ jobs:
 script:
   - if [ "$TRAVIS_OS_NAME" = "windows" ]; then pyinstaller.exe windows/pywebdriver.spec ; fi
   - if [ "$TRAVIS_OS_NAME" = "windows" ]; then cd dist/pywebdriver ; timeout 3s ./pywebdriver.exe ; test "$?" = 124 && return 0 ; fi
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then mkdir -p build; dch --package pywebdriver --newversion $(date +%Y%m%d) --create -m "Created by travis"; debuild ; fi
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo dpkg -i $HOME/build/akretion/pywebdriver_$(date +%Y%m%d)_amd64.deb ; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then mkdir -p build; dch --package pywebdriver --newversion $(< VERSION) --create -m "Created by travis"; debuild ; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo dpkg -i $HOME/build/akretion/pywebdriver_$(< VERSION)_amd64.deb ; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sh $HOME/build/akretion/pywebdriver/debian/replace_snakeoil_mkcert.sh ; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo journalctl -u pywebdriver ; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo service pywebdriver status ; fi
@@ -47,7 +47,7 @@ script:
 before_deploy:
   - mkdir $HOME/releases
   - if [ "$TRAVIS_OS_NAME" = "windows" ]; then cd $HOME/build/akretion/pywebdriver/dist; 7z a pywebdriver_win64.zip pywebdriver ; mv pywebdriver_win64.zip $HOME/releases ; fi
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then mv $HOME/build/akretion/pywebdriver_$(date +%Y%m%d)_amd64.deb $HOME/releases ; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then mv $HOME/build/akretion/pywebdriver_$(< VERSION)_amd64.deb $HOME/releases ; fi
 
 deploy:
   provider: releases
