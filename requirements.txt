@@ -11,8 +11,6 @@ netifaces
 pycups
 pymtp
 gunicorn>=20.0.4
-setuptools>=34
-pip>=10
 git+https://github.com/akretion/py-xml-escpos.git@py3
 #git+https://github.com/akretion/pypostelium.git@master
 git+https://github.com/akretion/pyposdisplay.git@py3
