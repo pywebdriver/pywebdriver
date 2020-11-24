@@ -89,6 +89,12 @@ sudo apt update
 sudo apt install pywebdriver
 ```
 
+If you update from the OLD version, you will need to uninstall nginx after upgrading or you could face port reservation problems. Also it is not required anymore so there is no reason to have it.
+
+## <a name="install-script"></a>Installation on Ubuntu 18.04 with a signed certificate using mkcert
+Alternatively you can use the script [debian/install.sh](https://github.com/akretion/pywebdriver/tree/master/debian/install.sh).
+It will install pywebdriver and you will not have to accept the self-signed certificate anymore on https.
+
 ## <a name="install-osx"></a>Installation on Mac OS X
 
 Pywebdriver can be installed on Mac OS X and is successfully used in production on a Mac OS X computer with Bixolon customer display, Ingenico credit card reader and check printer. TODO: write installation instructions.
