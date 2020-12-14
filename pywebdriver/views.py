@@ -84,9 +84,6 @@ def system():
     system_info.append({
         'name': _('OS - System'), 'value': platform.system()})
     system_info.append({
-        'name': _('OS - Distribution'),
-        'value': platform.linux_distribution()})
-    system_info.append({
         'name': _('OS - Release'), 'value': platform.release()})
     system_info.append({
         'name': _('OS - Version'), 'value': platform.version()})
