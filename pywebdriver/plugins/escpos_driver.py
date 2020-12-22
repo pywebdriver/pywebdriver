@@ -129,7 +129,6 @@ else:
                 try:
                     if self.is_online():
                         status = 'connected'
-                        print("CONNECTED")
                     else:
                         status = 'connecting'
                     # if res['printer']['status_error']:
@@ -145,6 +144,10 @@ else:
                 'status': status,
                 'messages': messages,
             }
+
+        def receipt_jpeg(self, b64image):
+            content = '<img src="data:image/png;base64, {}" />'.format(b64image)
+            self.receipt(content)
 
         def receipt(self, content):
             Layout(content).format(self)
@@ -371,6 +374,21 @@ else:
     driver = ESCPOSDriver(app.config)
     drivers['escpos'] = driver
     installed = True
+
+    @app.route(
+            '/hw_proxy/default_printer_action',
+            methods=['POST', 'GET', 'PUT'])
+    def default_printer_action():
+        """ For Odoo 13.0+"""
+
+        driver.open_printer()
+        action = request.json['params']['data']['action']
+        if action == "print_receipt":
+            receipt = request.json['params']['data']['receipt']
+            driver.push_task('receipt_jpeg', receipt)
+        if action == "cashbox":
+            driver.push_task('open_cashbox')
+        return jsonify(jsonrpc='2.0', result=True)
 
     @app.route(
             '/hw_proxy/print_xml_receipt',
