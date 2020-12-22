@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ###############################################################################
 #
 #   Copyright (C) 2014 Akretion (http://www.akretion.com).
@@ -20,10 +19,9 @@
 #
 ###############################################################################
 
-import subprocess
-import platform
-import pip
 import os
+import platform
+import subprocess
 
 try:
     from pip._internal.utils.misc import get_installed_distributions
@@ -36,74 +34,74 @@ from flask_babel import gettext as _
 from pywebdriver import app, config, drivers
 
 
-@app.route("/", methods=['GET'])
-@app.route('/index.html', methods=['GET'])
+@app.route("/", methods=["GET"])
+@app.route("/index.html", methods=["GET"])
 def index():
-    return render_template('index.html')
+    return render_template("index.html")
 
 
-@app.route('/status.html', methods=['GET'])
+@app.route("/status.html", methods=["GET"])
 def status():
     drivers_info = {}
 
     for driver in drivers:
         tmp = drivers[driver].get_vendor_product()
         if tmp:
-            image = 'static/images/' + tmp + '.png'
+            image = "static/images/" + tmp + ".png"
         else:
             image = None
         drivers_info[driver] = {
-            'state': drivers[driver].get_status(),
-            'image': image,
+            "state": drivers[driver].get_status(),
+            "image": image,
         }
-    return render_template('status.html', drivers_info=drivers_info)
+    return render_template("status.html", drivers_info=drivers_info)
 
 
-@app.route('/usb_devices.html', methods=['GET'])
+@app.route("/usb_devices.html", methods=["GET"])
 def usb_devices():
-    str_devices = subprocess.getoutput("lsusb").split('\n')
+    str_devices = subprocess.getoutput("lsusb").split("\n")
     devices = []
     for device in str_devices:
-        devices.append({
-            'bus': device.split(": ID ")[0].split(" ")[1],
-            'device': device.split(": ID ")[0].split(" ")[3],
-            'id': device.split(": ID ")[1][:9],
-            'description': device.split(": ID ")[1][10:],
-        })
-    return render_template('usb_devices.html', devices=devices)
+        devices.append(
+            {
+                "bus": device.split(": ID ")[0].split(" ")[1],
+                "device": device.split(": ID ")[0].split(" ")[3],
+                "id": device.split(": ID ")[1][:9],
+                "description": device.split(": ID ")[1][10:],
+            }
+        )
+    return render_template("usb_devices.html", devices=devices)
 
 
-@app.route('/system.html', methods=['GET'])
+@app.route("/system.html", methods=["GET"])
 def system():
     pywebdriver_info = []
-    pywebdriver_info.append({
-        'name': _('CORS allowed origins'),
-        'value': config.get('flask','cors_origins')
-    })
+    pywebdriver_info.append(
+        {
+            "name": _("CORS allowed origins"),
+            "value": config.get("flask", "cors_origins"),
+        }
+    )
     system_info = []
-    system_info.append({
-        'name': _('OS - System'), 'value': platform.system()})
-    system_info.append({
-        'name': _('OS - Release'), 'value': platform.release()})
-    system_info.append({
-        'name': _('OS - Version'), 'value': platform.version()})
-    system_info.append({
-        'name': _('Machine'), 'value': platform.machine()})
-    system_info.append({
-        'name': _('Python Version'), 'value': platform.python_version()})
+    system_info.append({"name": _("OS - System"), "value": platform.system()})
+    system_info.append({"name": _("OS - Release"), "value": platform.release()})
+    system_info.append({"name": _("OS - Version"), "value": platform.version()})
+    system_info.append({"name": _("Machine"), "value": platform.machine()})
+    system_info.append(
+        {"name": _("Python Version"), "value": platform.python_version()}
+    )
     installed_python_packages = get_installed_distributions()
     installed_python_packages = sorted(
-        installed_python_packages, key=lambda package: package.key)
+        installed_python_packages, key=lambda package: package.key
+    )
     return render_template(
-        'system.html',
+        "system.html",
         pywebdriver_info=pywebdriver_info,
         system_info=system_info,
-        installed_python_packages=installed_python_packages
+        installed_python_packages=installed_python_packages,
     )
 
 
-@app.route(
-    '/static/images/<path:path>',
-    methods=['POST', 'GET', 'PUT', 'OPTIONS'])
+@app.route("/static/images/<path:path>", methods=["POST", "GET", "PUT", "OPTIONS"])
 def image_html(path=None):
-    return app.send_static_file(os.path.join('images/', path))
+    return app.send_static_file(os.path.join("images/", path))

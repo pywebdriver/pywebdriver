@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ###############################################################################
 #
 #   Copyright (C) 2014-2016 Akretion (http://www.akretion.com).
@@ -19,32 +18,35 @@
 #
 ###############################################################################
 
-from pywebdriver import app, config, drivers
-from flask import request, jsonify, render_template
-from .base_driver import ThreadDriver, check
-import simplejson
 import time
 
+import simplejson
+from flask import jsonify, render_template, request
+
+from pywebdriver import app, config, drivers
+
+from .base_driver import ThreadDriver, check
+
 meta = {
-    'name': "POS Display",
-    'description': """This plugin add the support of customer display for your
+    "name": "POS Display",
+    "description": """This plugin add the support of customer display for your
         pywebdriver""",
-    'require_pip': ['pyposdisplay'],
-    'require_debian': ['python-pyposdisplay'],
+    "require_pip": ["pyposdisplay"],
+    "require_debian": ["python-pyposdisplay"],
 }
 
 try:
     import pyposdisplay
-except:
+except ImportError:
     installed = False
-    print('DISPLAY: pyposdisplay python library not installed')
+    print("DISPLAY: pyposdisplay python library not installed")
 else:
     AUTHOR = [
-        ([u'PyWebDriver', u'By'], 2),
-        ([u'Sylvain CALADOR', u'@ Akretion'], 1.5),
-        ([u'Sébastien BEAU', u'@ Akretion'], 1.5),
-        ([u'Sylvain LE GAL', u'@ GRAP'], 1.5),
-        ([u'Status:', u'OK'], 5),
+        ([u"PyWebDriver", u"By"], 2),
+        ([u"Sylvain CALADOR", u"@ Akretion"], 1.5),
+        ([u"Sébastien BEAU", u"@ Akretion"], 1.5),
+        ([u"Sylvain LE GAL", u"@ GRAP"], 1.5),
+        ([u"Status:", u"OK"], 5),
     ]
     installed = True
 
@@ -56,18 +58,18 @@ else:
             pyposdisplay.Driver.__init__(self, *args, **kwargs)
             # TODO FIXME (Actually hardcoded, but no possibility to know
             # the model easily
-            self.vendor_product = '1504_11'
+            self.vendor_product = "1504_11"
 
-        @app.route('/display_status.html', methods=['GET'])
-        def display_status_http():
+        @app.route("/display_status.html", methods=["GET"])
+        def display_status_http(self):
             for line, duration in AUTHOR:
-                display_driver.push_task('send_text', line)
+                display_driver.push_task("send_text", line)
                 time.sleep(duration)
-            return render_template('display_status.html')
+            return render_template("display_status.html")
 
         def get_status(self, **params):
             try:
-                self.set_status('connected')
+                self.set_status("connected")
                 # When I use Odoo POS v8, it regularly displays
                 # "PyWebDriver / PosBox Status" on the LCD !!!
                 # So I comment the line below -- Alexis de Lattre
@@ -82,31 +84,32 @@ else:
             return self.status
 
     driver_config = {}
-    if config.get('display_driver', 'device_name'):
-        driver_config['customer_display_device_name'] =\
-            config.get('display_driver', 'device_name')
-    if config.getint('display_driver', 'device_rate'):
-        driver_config['customer_display_device_rate'] =\
-            config.getint('display_driver', 'device_rate')
-    if config.getfloat('display_driver', 'device_timeout'):
-        driver_config['customer_display_device_timeout'] =\
-            config.getfloat('display_driver', 'device_timeout')
-    driver_name = 'bixolon'
-    if config.has_option('display_driver', 'driver_name'):
-        driver_name = config.get('display_driver', 'driver_name')
+    if config.get("display_driver", "device_name"):
+        driver_config["customer_display_device_name"] = config.get(
+            "display_driver", "device_name"
+        )
+    if config.getint("display_driver", "device_rate"):
+        driver_config["customer_display_device_rate"] = config.getint(
+            "display_driver", "device_rate"
+        )
+    if config.getfloat("display_driver", "device_timeout"):
+        driver_config["customer_display_device_timeout"] = config.getfloat(
+            "display_driver", "device_timeout"
+        )
+    driver_name = "bixolon"
+    if config.has_option("display_driver", "driver_name"):
+        driver_name = config.get("display_driver", "driver_name")
 
     display_driver = DisplayDriver(driver_config, use_driver_name=driver_name)
-    drivers['display_driver'] = display_driver
+    drivers["display_driver"] = display_driver
 
 
-@app.route(
-    '/hw_proxy/send_text_customer_display',
-    methods=['POST', 'GET', 'PUT'])
+@app.route("/hw_proxy/send_text_customer_display", methods=["POST", "GET", "PUT"])
 @check(installed, meta)
 def send_text_customer_display():
-    app.logger.debug('LCD: Call send_text')
-    text_to_display = request.json['params']['text_to_display']
+    app.logger.debug("LCD: Call send_text")
+    text_to_display = request.json["params"]["text_to_display"]
     lines = simplejson.loads(text_to_display)
-    app.logger.debug('LCD: lines=%s', lines)
-    display_driver.push_task('send_text', lines)
-    return jsonify(jsonrpc='2.0', result=True)
+    app.logger.debug("LCD: lines=%s", lines)
+    display_driver.push_task("send_text", lines)
+    return jsonify(jsonrpc="2.0", result=True)

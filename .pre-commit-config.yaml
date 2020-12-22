@@ -1,6 +1,7 @@
 exclude: |
-  # Maybe reactivate this when all README files include prettier ignore tags?
-  ^README\.md$|
+  (?x)
+  # Plugins not migrated to py3
+  ^pywebdriver/plugins/opcua_driver\.py
 default_language_version:
   python: python3
 repos:

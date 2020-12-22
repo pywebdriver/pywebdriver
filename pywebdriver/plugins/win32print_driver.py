@@ -3,19 +3,21 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 import base64
-import tempfile
+import logging
 import os
+import tempfile
 
-from flask import request, jsonify, make_response
+from flask import jsonify, make_response, request
 
 from pywebdriver import app, drivers
+
 from .base_driver import AbstractDriver
-import logging
 
 _logger = logging.getLogger(__name__)
 
-try:
-    import win32ui, win32print, win32api
+try:  # noqa: C901
+    import win32api
+    import win32print
 except ImportError:
     installed = False
     print("WIN32: win32print python library not installed")
