@@ -1,4 +1,4 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <!-- ********************************************************************** -->
 <!--    RaspDrive Software                                                  -->
 <!--    Copyright (C) 2014-TODAY Akretion <http://www.akretion.com>         -->
@@ -18,30 +18,30 @@
 <!--along with this program.  If not, see <http://www.gnu.org/licenses/>.   -->
 <!-- ********************************************************************** -->
 
-{% extends "layout.html" %}
-
-{% block page_title %}{{ _('Connected Devices (USB)')}}{% endblock %}
-
-{% block content_title %}{{ _('Connected Devices (USB)')}}{% endblock %}
-
-{% block content %}
+{% extends "layout.html" %} {% block page_title %}{{ _('Connected Devices (USB)')}}{%
+endblock %} {% block content_title %}{{ _('Connected Devices (USB)')}}{% endblock %} {%
+block content %}
 <table class="table table-hover">
-    <thead>
-        <tr>
-            <th>{{ _('Bus') }}</th>
-            <th>{{ _('Device') }}</th>
-            <th>{{ _('ID') }}</th>
-            <th>{{ _('Description') }}</th>
-        <tr>
-    </thead>
-    <tbody>
+  <thead>
+    <tr>
+      <th>{{ _('Bus') }}</th>
+      <th>{{ _('Device') }}</th>
+      <th>{{ _('ID') }}</th>
+      <th>{{ _('Description') }}</th>
+    </tr>
+
+    <tr></tr>
+  </thead>
+
+  <tbody>
     {% for device in devices %}
-        <tr>
-            <td>{{device['bus']}}</td>
-            <td>{{device['device']}}</td>
-            <td>{{device['id']}}</td>
-            <td>{{device['description']}}</td>
-        </tr>
+    <tr>
+      <td>{{device['bus']}}</td>
+      <td>{{device['device']}}</td>
+      <td>{{device['id']}}</td>
+      <td>{{device['description']}}</td>
+    </tr>
     {% endfor %}
-        </div>
+  </tbody>
+</table>
 {% endblock %}
