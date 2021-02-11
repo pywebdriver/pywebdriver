@@ -1,16 +1,10 @@
-# -*- mode: python ; coding: utf-8 -*-
-
-import os
-
 block_cipher = None
 
-
-a = Analysis(['..\\pywebdriverd'],
-             # ['waitress_server.py'], # if you want waitress
+a = Analysis(['windows_service.py'],
              datas=[('config.ini', 'config'),
+             ('mkcert.exe', '.'),
+             ('generate_certificate.bat', '.'),
              ('capabilities.json', 'escpos'),
-             # ('..\\privkey.pem', '.'),
-             # ('..\\cert.pem', '.'),
              ('..\\pywebdriver\\templates\\*', 'pywebdriver\\templates'),
              ('..\\pywebdriver\\static\\css\\*', 'pywebdriver\\static\\css'),
              ('..\\pywebdriver\\static\\images\\*', 'pywebdriver\\static\\images'),

@@ -22,8 +22,6 @@
 import math
 
 import usb.core
-from escpos import capabilities
-from escpos.magicencode import MagicEncode
 from flask import jsonify, render_template, request
 from netifaces import AF_INET, ifaddresses, interfaces
 from pif import get_public_ip
@@ -62,7 +60,7 @@ SUPPORTED_DEVICES = [
     {"vendor": 0x04B8, "product": 0x0202, "name": "Epson TM-P20"},
 ]
 
-try:
+try:  # noqa C901
     if device_type == "serial":
         from escpos.printer import Serial as POSDriver
     elif device_type == "win32":
@@ -85,7 +83,6 @@ else:
                 printers = self.connected_usb_devices()
                 if printers:
                     printer = printers[0]
-                    interface = printer.get("interface", 0)
                     idVendor = printer.get("vendor")
                     idProduct = printer.get("product")
                     kwargs["in_ep"] = printer.get("in_ep", 0x82)
