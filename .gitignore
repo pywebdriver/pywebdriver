@@ -35,6 +35,7 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+venv/
 
 # Installer logs
 pip-log.txt
