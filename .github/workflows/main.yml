@@ -5,6 +5,7 @@ on:
     branches: [master]
   push:
     branches: [master]
+    tags: ["v*.*.*"]
 
 jobs:
   pre-commit:
@@ -36,13 +37,13 @@ jobs:
           timeout 3s ./dist/pywebdriver/pywebdriver.exe debug || test "$?" = 124
       - name: prepare release
         run: |
-          7z a pywebdriver_$(date +%Y%m%d)_win64.zip dist/pywebdriver
+          7z a pywebdriver_win64.zip dist/pywebdriver
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            pywebdriver_$(date +%Y%m%d)_win64.zip
+            pywebdriver_win64.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   build-ubuntu:
@@ -57,11 +58,12 @@ jobs:
       - name: Build
         run: |
           mkdir -p build
-          dch --package pywebdriver --newversion $(date +%Y%m%d) --create -m "Created by travis"
+          dch --package pywebdriver --newversion $(date +%Y%m%d) --create -m "Created by CI"
           debuild
       - name: Test build
         run: |
-          sudo dpkg -i ../pywebdriver_$(date +%Y%m%d)_amd64.deb
+          mv ../pywebdriver_$(date +%Y%m%d)_amd64.deb ../pywebdriver_amd64.deb
+          sudo dpkg -i ../pywebdriver_amd64.deb
           sh debian/replace_snakeoil_mkcert.sh
           sudo journalctl -u pywebdriver
           sudo service pywebdriver status
@@ -70,6 +72,6 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            ../pywebdriver_$(date +%Y%m%d)_amd64.deb
+            ../pywebdriver_amd64.deb
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
