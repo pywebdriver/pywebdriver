@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 #    PyWebDriver Software
@@ -36,16 +35,18 @@ from flask_cors import CORS
 
 # Config Section
 CONFIG_PATHS = (
-    'config.ini',
-    os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', 'config', 'config.ini'),
-    '/etc/pywebdriver/config.ini',
+    "config.ini",
+    os.path.join(
+        os.path.dirname(os.path.realpath(__file__)), "..", "config", "config.ini"
+    ),
+    "/etc/pywebdriver/config.ini",
 )
 
 for config_file in CONFIG_PATHS:
     if os.path.isfile(config_file):
         break
 else:
-    assert "Could not find config file (looking at %s)." % (CONFIG_PATHS,)
+    assert "Could not find config file (looking at {}).".format(CONFIG_PATHS)
 
 config = ConfigParser()
 config.read(config_file)
@@ -62,22 +63,19 @@ drivers = {}
 # Project Import
 # Application
 app = Flask(__name__)
-cors_origins = config.get('flask', 'cors_origins')
-cors = CORS(app, resources={r"/*": {"origins": cors_origins, "headers":['Content-Type']}})
+cors_origins = config.get("flask", "cors_origins")
+cors = CORS(
+    app, resources={r"/*": {"origins": cors_origins, "headers": ["Content-Type"]}}
+)
 
-from . import views
-from . import plugins
+from . import views  # noqa: E402
+from . import plugins  # noqa: E402
 
 # Localization
-app.config['BABEL_DEFAULT_LOCALE'] = config.get('localization', 'locale')
+app.config["BABEL_DEFAULT_LOCALE"] = config.get("localization", "locale")
 babel = Babel(app)
 
-path = os.path.join(
-    os.path.dirname(os.path.realpath(__file__)),
-    'translations')
-localization = config.get('localization', 'locale')
-language = gettext.translation(
-    'messages',
-    path,
-    [localization])
+path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "translations")
+localization = config.get("localization", "locale")
+language = gettext.translation("messages", path, [localization])
 language.install()

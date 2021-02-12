@@ -1,19 +1,17 @@
-To Manage translation
-=====================
+# To Manage translation
 
-Generate template '.pot' file
------------------------------
+## Generate template '.pot' file
+
 pybabel extract -F translations/settings_babel.cfg -o translations/i18n.pot .
 
-First time - Generate '.po' files
----------------------------------
+## First time - Generate '.po' files
+
 pybabel init -i translations/i18n.pot -d translations -l fr
 
-Update time - Generate '.po' files
-----------------------------------
+## Update time - Generate '.po' files
+
 pybabel update -i translations/i18n.pot -d translations
 
+## Generate '.mo' file
 
-Generate '.mo' file
--------------------
 pybabel compile -d translations

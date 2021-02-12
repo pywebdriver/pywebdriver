@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ###############################################################################
 #
 #   Copyright (C) 2014-Today GRAP (http://www.grap.coop).
@@ -19,45 +18,45 @@
 #
 ###############################################################################
 
-import simplejson
 import json
 
-from flask import request, make_response, jsonify
+import simplejson
+from flask import jsonify, make_response, request
 
 from pywebdriver import app, config, drivers
 
 
-@app.route('/pos/print_receipt', methods=['POST'])
+@app.route("/pos/print_receipt", methods=["POST"])
 def print_receipt_http_post():
-    receipt = json.loads(request.form['r'])['params']['receipt']
-    return jsonify(jsonrpc='2.0', result=True)
+    receipt = json.loads(request.form["r"])["params"]["receipt"]  # noqa: F841
+    return jsonify(jsonrpc="2.0", result=True)
 
 
-@app.route('/pos/print_receipt', methods=['GET'])
+@app.route("/pos/print_receipt", methods=["GET"])
 def print_receipt_http_get():
     params = dict(request.args)
-    if not params.get('r'):
-        return make_response('')
-    receipt = simplejson.loads(params['r'][0])['params']['receipt']
+    if not params.get("r"):
+        return make_response("")
+    receipt = simplejson.loads(params["r"][0])["params"]["receipt"]
     print_receipt(receipt)
-    return make_response('')
+    return make_response("")
 
 
 def print_receipt(receipt):
     # Add required information if not provided
-    if not receipt.get('precision', False):
-        receipt['precision'] = {
-            'price': config.getint('odoo', 'precision_price'),
-            'money': config.getint('odoo', 'precision_money'),
-            'quantity': config.getint('odoo', 'precision_quantity')}
+    if not receipt.get("precision", False):
+        receipt["precision"] = {
+            "price": config.getint("odoo", "precision_price"),
+            "money": config.getint("odoo", "precision_money"),
+            "quantity": config.getint("odoo", "precision_quantity"),
+        }
     else:
-        if not receipt['precision'].get('price', False):
-            receipt['precision']['price'] = config.getint(
-                'odoo', 'precision_price')
-        if not receipt['precision'].get('money', False):
-            receipt['precision']['money'] = config.getint(
-                'odoo', 'precision_money')
-        if not receipt['precision'].get('quantity', False):
-            receipt['precision']['quantity'] = config.getint(
-                'odoo', 'precision_quantity')
-    drivers['escpos'].push_task('print_receipt_7', receipt)
+        if not receipt["precision"].get("price", False):
+            receipt["precision"]["price"] = config.getint("odoo", "precision_price")
+        if not receipt["precision"].get("money", False):
+            receipt["precision"]["money"] = config.getint("odoo", "precision_money")
+        if not receipt["precision"].get("quantity", False):
+            receipt["precision"]["quantity"] = config.getint(
+                "odoo", "precision_quantity"
+            )
+    drivers["escpos"].push_task("print_receipt_7", receipt)
