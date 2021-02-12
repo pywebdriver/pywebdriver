@@ -79,3 +79,31 @@ path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "translations")
 localization = config.get("localization", "locale")
 language = gettext.translation("messages", path, [localization])
 language.install()
+
+# To run with flask
+if config.getboolean("application", "print_status_start"):
+    if "escpos" in drivers:
+        drivers["escpos"].push_task("printstatus")
+flask_args = dict(
+    host=config.get("flask", "host"),
+    port=config.getint("flask", "port"),
+    debug=config.getboolean("flask", "debug"),
+    processes=0,
+    threaded=True,
+)
+if config.has_option("flask", "sslcert"):
+    sslcert = config.get("flask", "sslcert")
+    if sslcert:
+        import sys
+
+        if not config.has_option("flask", "sslkey"):
+            print("If you want SSL, you must also provide the sslkey")
+            sys.exit(-1)
+        sslkey = config.get("flask", "sslkey")
+        if not os.path.exists(sslcert):
+            print("SSL cert not found at", sslcert)
+            sys.exit(-1)
+        if not os.path.exists(sslkey):
+            print("SSL key not found at", sslkey)
+            sys.exit(-1)
+        flask_args["ssl_context"] = (sslcert, sslkey)

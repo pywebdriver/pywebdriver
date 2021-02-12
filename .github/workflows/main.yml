@@ -33,7 +33,7 @@ jobs:
       - name: Test build
         shell: bash
         run: |
-          timeout 3s ./dist/pywebdriver/pywebdriver.exe || test "$?" = 124
+          timeout 3s ./dist/pywebdriver/pywebdriver.exe debug || test "$?" = 124
       - name: prepare release
         run: |
           7z a pywebdriver_$(date +%Y%m%d)_win64.zip dist/pywebdriver
@@ -41,7 +41,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: pywebdriver_$(date +%Y%m%d)_win64.zip
+          files: |
+            pywebdriver_$(date +%Y%m%d)_win64.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   build-ubuntu:
@@ -68,6 +69,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: ../pywebdriver_$(date +%Y%m%d)_amd64.deb
+          files: |
+            ../pywebdriver_$(date +%Y%m%d)_amd64.deb
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

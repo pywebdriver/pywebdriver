@@ -41,7 +41,14 @@ else:
 
         def printData(self, printer, data, title="Pywebdriver", options=None):
             if options and options.get("raw"):
-                return self.printRaw(printer, data, title)
+                copies = options.get("copies") or 1
+                i = 0
+                while i < copies:
+                    res = self.printRaw(printer, data, title)
+                    i = i + 1
+                    if res != 0:
+                        return res
+                return 0
             else:
                 return self.printPdf(printer, data)
 
