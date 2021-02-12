@@ -1,13 +1,10 @@
 import json
-import sys
 
-from flask import request, jsonify
+from flask import jsonify, request
 
 from pywebdriver import app, drivers
-from .payment_base_driver import PaymentTerminalDriver
 
-if sys.version_info < (3,):
-    input = raw_input
+from .payment_base_driver import PaymentTerminalDriver
 
 
 class PaymentMockDriver(PaymentTerminalDriver):

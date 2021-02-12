@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ###############################################################################
 #
 #   Copyright (C) 2019 ACSONE SA/NV (https://www.acsone.eu/).
@@ -17,15 +16,15 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ###############################################################################
-from collections import OrderedDict
 import time
+from collections import OrderedDict
 
 from .base_driver import ThreadDriver
 
 
 class LimitedDict(OrderedDict):
-    """ A dictionary that only keeps the last few added keys
-        This serves as a FIFO cache """
+    """A dictionary that only keeps the last few added keys
+    This serves as a FIFO cache"""
 
     def __init__(self, size=20):
         super(LimitedDict, self).__init__()
