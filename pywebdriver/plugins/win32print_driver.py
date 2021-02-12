@@ -45,7 +45,7 @@ else:
                 i = 0
                 while i < copies:
                     res = self.printRaw(printer, data, title)
-                    i = i+1
+                    i = i + 1
                     if res != 0:
                         return res
                 return 0
