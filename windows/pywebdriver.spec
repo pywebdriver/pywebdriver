@@ -1,9 +1,12 @@
 block_cipher = None
 
-a = Analysis(['windows_service.py'],
+a = Analysis(['..\\pywebdriverd'],
              datas=[('config.ini', 'config'),
              ('mkcert.exe', '.'),
              ('generate_certificate.bat', '.'),
+             ('nssm.exe', '.'),
+             ('install.bat', '.'),
+             ('uninstall.bat', '.'),
              ('capabilities.json', 'escpos'),
              ('..\\pywebdriver\\templates\\*', 'pywebdriver\\templates'),
              ('..\\pywebdriver\\static\\css\\*', 'pywebdriver\\static\\css'),
