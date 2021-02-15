@@ -28,7 +28,7 @@ try:
 except ImportError:  # pip<10
     from pip import get_installed_distributions
 
-from flask import render_template, request
+from flask import render_template
 from flask_babel import gettext as _
 
 from pywebdriver import app, config, drivers
@@ -105,12 +105,3 @@ def system():
 @app.route("/static/images/<path:path>", methods=["POST", "GET", "PUT", "OPTIONS"])
 def image_html(path=None):
     return app.send_static_file(os.path.join("images/", path))
-
-
-@app.route("/shutdown", methods=["GET"])
-def shutdown(path=None):
-    shutdown_func = request.environ.get("werkzeug.server.shutdown")
-    if shutdown_func is None:
-        raise RuntimeError("Not running werkzeug")
-    shutdown_func()
-    return "Shutting down..."
