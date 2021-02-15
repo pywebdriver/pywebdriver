@@ -73,7 +73,7 @@ class ThreadDriver(Thread, AbstractDriver):
 
     def lockedstart(self):
         with self.lock:
-            if not self.isAlive():
+            if not self.is_alive():
                 self.daemon = True
                 self.start()
 
