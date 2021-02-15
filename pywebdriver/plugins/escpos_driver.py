@@ -100,6 +100,9 @@ else:
                 POSDriver.__init__(self, **kwargs)
             ThreadDriver.__init__(self, *args, **kwargs)
 
+        def get_vendor_product(self):
+            return "escpos-icon"
+
         def connected_usb_devices(self):
             connected = []
 
