@@ -25,7 +25,7 @@ else:
 
     class Win32printDriver(AbstractDriver):
         def get_vendor_product(self):
-            return "cups-icon"
+            return "windows-icon"
 
         def get_status(self, **params):
             messages = []
