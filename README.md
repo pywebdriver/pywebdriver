@@ -20,6 +20,7 @@ distribution.
 - [Developers Section](#developers)
   - [Installation on Debian/Ubuntu](#install-debian)
   - [Installation on Mac OS X](#install-osx)
+  - [Installation on Windows 10](#install-windows)
   - [Browser settings](#browser-settings)
   - [Specific configuration](#specific-configuration)
   - [Development](#development)
@@ -122,6 +123,67 @@ anymore on https.
 Pywebdriver can be installed on Mac OS X and is successfully used in production on a Mac
 OS X computer with Bixolon customer display, Ingenico credit card reader and check
 printer. TODO: write installation instructions.
+
+## <a name="install-windows"></a>Installation on Windows 10
+
+In Windows 10, pywebdriver works as a Windows service that communicates with printers.
+It doesn't work on Windows 7.
+
+### Install your printer
+
+#### For Epson TM-T20III
+
+- Go there :
+  https://epson.com/Support/Point-of-Sale/Thermal-Printers/Epson-TM-T20III-Series/s/SPT_C31CH51001
+- Download and install :
+  - OPOS ADK v3.00ER6 (might be useless, to be tested)
+  - Advanced Printer Driver v6.01
+
+Launch "Advanced Printer Driver v6.01", select your `Port Type` (e.g USB), save Settings
+and click `Test Print` : it should print something !
+
+### Get Build and install
+
+- In this repo, get the latest build in releases :
+  https://github.com/akretion/pywebdriver/releases
+- Unzip it
+- Run generate_certificates.bat to make https work
+- It will create two files in C:\pywebdriver
+- Move the files you unzipped in this folder (some paths are absolute and would not
+  accept that the folder could be move later on)
+
+### Configuration
+
+- Open config/config.ini with your favorite editor
+- (optional) Add or remove drivers according to your needs (connection to
+  display_driver, bank terminal)
+- (optional) Change host or port number
+- Add two lines in flask option for certificates (under cors_origins=\*)
+
+```
+sslcert=c:/pywebdriver/localhost+2.pem
+sslkey=c:/pywebdriver/localhost+2-key.pem
+```
+
+- You have to fit Windows printer's name (1) and config.ini `printer_name`(2) in
+  `escpos` category. Either you change (1)to fit (2) or otherwise. By default,
+  config.ini variable is `escpos` so you can change (1) in Windows printers
+  configuration.
+
+### Install pywebdriver as a service
+
+- Go to your pywebdriver folder
+- Right click on install.bat file and execute it as administrator (beware, with normal
+  display, file is just named `install`)
+- It will create a Windows service : at Windows start, pywebdriver will be launched
+- Open your browser et go to the host and port you choose. By default
+  https://localhost:8069
+- Try to print and succeed !
+
+### If you change some config
+
+- Go to your pywebdriver folder
+- Execute (as an admin) install.bat file and it will restart the service.
 
 ## <a name="browser-settings"></a>Browser settings
 
