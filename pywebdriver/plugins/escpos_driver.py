@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ###############################################################################
 #
 #   Copyright (C) 2014 Akretion (http://www.akretion.com).
@@ -20,126 +19,165 @@
 #
 ###############################################################################
 
-from pif import get_public_ip
-from pywebdriver import app, config, drivers
-from netifaces import interfaces, ifaddresses, AF_INET
-from flask import request, jsonify, render_template
-from base_driver import ThreadDriver
-import usb.core
 import math
 
+import usb.core
+from flask import jsonify, render_template, request
+from netifaces import AF_INET, ifaddresses, interfaces
+from pif import get_public_ip
+from xmlescpos import Layout
+
+from pywebdriver import app, config, drivers
+
+from .base_driver import ThreadDriver
 
 meta = {
-    'name': "ESCPOS Printer",
-    'description': """This plugin add the support of ESCPOS Printer for your
+    "name": "ESCPOS Printer",
+    "description": """This plugin add the support of ESCPOS Printer for your
         pywebdriver""",
-    'require_pip': ['pyxmlescpos'],
-    'require_debian': [],
+    "require_pip": ["pyxmlescpos"],
+    "require_debian": [],
 }
 
 if (
-        config.has_option('escpos_driver', 'device_type') and
-        config.get('escpos_driver', 'device_type') == 'serial'):
-    device_type = 'serial'
+    config.has_option("escpos_driver", "device_type")
+    and config.get("escpos_driver", "device_type") == "serial"
+):
+    device_type = "serial"
+elif (
+    config.has_option("escpos_driver", "device_type")
+    and config.get("escpos_driver", "device_type") == "win32"
+):
+    device_type = "win32"
 else:
-    device_type = 'usb'
+    device_type = "usb"
 
-try:
-    if device_type == 'serial':
-        from xmlescpos.printer import Serial as POSDriver
+SUPPORTED_DEVICES = [
+    {"vendor": 0x04B8, "product": 0x0E03, "name": "Epson TM-T20"},
+    {"vendor": 0x04B8, "product": 0x0202, "name": "Epson TM-T70"},
+    {"vendor": 0x04B8, "product": 0x0E15, "name": "Epson TM-T20II"},
+    {"vendor": 0x04B8, "product": 0x0E28, "name": "Epson TM-T20III"},
+    {"vendor": 0x04B8, "product": 0x0202, "name": "Epson TM-P20"},
+]
+
+try:  # noqa C901
+    if device_type == "serial":
+        from escpos.printer import Serial as POSDriver
+    elif device_type == "win32":
+        import win32print
+        from escpos.printer import Win32Raw as POSDriver
     else:
-        from xmlescpos.printer import Usb as POSDriver
-        from xmlescpos.supported_devices import device_list
+        from escpos.printer import Usb as POSDriver
 except ImportError:
     installed = False
-    print 'ESCPOS: xmlescpos python library not installed'
+    print("ESCPOS: xmlescpos python library not installed")
 else:
+
     class ESCPOSDriver(ThreadDriver, POSDriver):
         """ ESCPOS Printer Driver class for pywebdriver """
 
         def __init__(self, *args, **kwargs):
             self.eprint = None
             self.vendor_product = None
-            ThreadDriver.__init__(self, args, kwargs)
+            if device_type == "usb":
+                printers = self.connected_usb_devices()
+                if printers:
+                    printer = printers[0]
+                    idVendor = printer.get("vendor")
+                    idProduct = printer.get("product")
+                    kwargs["in_ep"] = printer.get("in_ep", 0x82)
+                    kwargs["out_ep"] = printer.get("out_ep", 0x01)
+                    kwargs["timeout"] = 0
+                    POSDriver.__init__(self, idVendor, idProduct, **kwargs)
+            elif device_type == "serial":
+                kwargs["devfile"] = config.get("escpos_driver", "serial_device_name")
+                kwargs["baudrate"] = config.getint("escpos_driver", "serial_baudrate")
+                kwargs["bytesize"] = config.getint("escpos_driver", "serial_bytesize")
+                kwargs["timeout"] = config.getint("escpos_driver", "serial_timeout")
+                POSDriver.__init__(self, **kwargs)
+            elif device_type == "win32":
+                kwargs["printer_name"] = config.get("escpos_driver", "printer_name")
+                POSDriver.__init__(self, **kwargs)
+            ThreadDriver.__init__(self, *args, **kwargs)
 
-        def supported_devices(self):
-            return device_list
+        def get_vendor_product(self):
+            return "escpos-icon"
 
         def connected_usb_devices(self):
             connected = []
 
-            for device in self.supported_devices():
-                if usb.core.find(
-                        idVendor=device['vendor'],
-                        idProduct=device['product']) is not None:
+            for device in SUPPORTED_DEVICES:
+                if (
+                    usb.core.find(
+                        idVendor=device["vendor"], idProduct=device["product"]
+                    )
+                    is not None
+                ):
                     connected.append(device)
-
             return connected
 
         def open_printer(self):
-
             if self.device:
                 return
-
             try:
-                if device_type == 'usb':
-                    printers = self.connected_usb_devices()
-                    if printers:
-                        printer = printers[0]
-                        self.idVendor = printer.get('vendor')
-                        self.idProduct = printer.get('product')
-                        self.interface = printer.get('interface', 0)
-                        self.in_ep = printer.get('in_ep', 0x82)
-                        self.out_ep = printer.get('out_ep', 0x01)
-                        self.open()
-                        self.vendor_product = '%s_%s' % (
-                            self.idVendor, self.idProduct
-                        )
-                elif device_type == 'serial':
-                    self.devfile = config.get('escpos_driver', 'serial_device_name')
-                    self.baudrate = config.getint('escpos_driver', 'serial_baudrate')
-                    self.bytesize = config.getint('escpos_driver', 'serial_bytesize')
-                    self.timeout = config.getint('escpos_driver', 'serial_timeout')
-                    self.open()
-
+                self.open()
+                if self.hPrinter:
+                    self.device = self.hPrinter
             except Exception as e:
-                self.set_status('error', str(e))
+                self.set_status("error", e)
 
         def open_cashbox(self, printer):
             self.open_printer()
             self.cashdraw(2)
             self.cashdraw(5)
+            self.close()
 
         def get_status(self, **params):
             messages = []
             self.open_printer()
             if not self.device:
-                status = 'disconnected'
-            elif device_type == 'serial':
+                status = "disconnected"
+            elif device_type == "serial":
                 # Maybe we could do something here to start serial
-                status = 'connected'
-            else:
+                status = "connected"
+            elif device_type == "usb":
                 try:
-                    res = self.get_printer_status()
-                    if res['printer']['online']:
-                        status = 'connected'
+                    if self.is_online():
+                        status = "connected"
                     else:
-                        status = 'connecting'
-
-                    if res['printer']['status_error']:
-                        status = 'error'
-                        messages.append(
-                            'Error code: %i' % res['printer']['status_error'])
-
-                except Exception, err:
-                    status = 'error'
+                        status = "connecting"
+                    # if res['printer']['status_error']:
+                    #     status = 'error'
+                    #     messages.append(
+                    #         'Error code: %i' % res['printer']['status_error'])
+                except Exception as err:
+                    status = "error"
                     self.device = False
-                    messages.append('Error: %s' % err)
-
+                    messages.append("Error: %s" % err)
+            else:
+                state = win32print.GetPrinter(self.device, 2)
+                if state["Status"] in [
+                    win32print.PRINTER_STATUS_OFFLINE,
+                    win32print.PRINTER_STATUS_NOT_AVAILABLE,
+                ]:
+                    status = "disconnected"
+                else:
+                    status = "connected"
+            self.close()
             return {
-                'status': status,
-                'messages': messages,
+                "status": status,
+                "messages": messages,
             }
+
+        def receipt_jpeg(self, b64image):
+            content = '<img src="data:image/png;base64, {}" />'.format(b64image)
+            self.receipt(content)
+
+        def receipt(self, content):
+            self.open_printer()
+            Layout(content).format(self)
+            self.cut()
+            self.close()
 
         def printstatus(self, eprint):
             # <PyWebDriver> Full refactoring of the function to allow
@@ -154,19 +192,24 @@ else:
                     """Please check that your system is correc-<br/>"""
                     """tly connected with a network cable,<br/>"""
                     """ that the LAN is setup with DHCP, and<br/>"""
-                    """that network addresses are available""")
-                self.receipt('<div>'+msg+'</div>')
+                    """that network addresses are available"""
+                )
+                Layout("<div>" + msg + "</div>").format(self)
                 self.cut()
             else:
                 addr_lines = []
                 for ifaceName in interfaces():
                     addresses = [
-                        i['addr'] for i in ifaddresses(ifaceName).setdefault(
-                            AF_INET, [{'addr': 'No IP addr'}])]
+                        i["addr"]
+                        for i in ifaddresses(ifaceName).setdefault(
+                            AF_INET, [{"addr": "No IP addr"}]
+                        )
+                    ]
                     addr_lines.append(
-                        '<p>'+','.join(addresses) + ' (' + ifaceName + ')' +
-                        '</p>')
-                msg = _("""
+                        "<p>" + ",".join(addresses) + " (" + ifaceName + ")" + "</p>"
+                    )
+                msg = _(
+                    """
                        <div align="center">
                             <h4>PyWebDriver Software Status</h4>
                             <br/><br/>
@@ -175,184 +218,233 @@ else:
                             %s<br/>
                             Port: %i
                        </div>
-                """) % (
-                    ip + ' (' + _(u'Public') + ')',
-                    ''.join(addr_lines),
-                    config.getint('flask', 'port'),
+                """
+                ) % (
+                    ip + " (" + _(u"Public") + ")",
+                    "".join(addr_lines),
+                    config.getint("flask", "port"),
                 )
-                self.receipt(msg)
+                Layout("<div>" + msg + "</div>").format(self)
+                self.close()
 
         # #####################################################################
         # <Odoo Version 7>
         def print_receipt_7(self, receipt):
-
             def check(string):
                 return string is not True and bool(string) and string.strip()
 
             def price(amount):
-                return (
-                    "{0:." +
-                    str(receipt['precision']['price']) + "f}").format(amount)
+                return ("{0:." + str(receipt["precision"]["price"]) + "f}").format(
+                    amount
+                )
 
             def money(amount):
-                return (
-                    "{0:." +
-                    str(receipt['precision']['money']) + "f}").format(amount)
+                return ("{0:." + str(receipt["precision"]["money"]) + "f}").format(
+                    amount
+                )
 
             def quantity(amount):
                 if math.floor(amount) != amount:
                     return (
-                        "{0:." +
-                        str(receipt['precision']['quantity']) +
-                        "f}").format(amount)
+                        "{0:." + str(receipt["precision"]["quantity"]) + "f}"
+                    ).format(amount)
                 else:
                     return str(amount)
 
-            def printline(left, right='', width=40, ratio=0.5, indent=0):
+            def printline(left, right="", width=40, ratio=0.5, indent=0):
                 lwidth = int(width * ratio)
                 rwidth = width - lwidth
                 lwidth = lwidth - indent
 
                 left = left[:lwidth]
                 if len(left) != lwidth:
-                    left = left + ' ' * (lwidth - len(left))
+                    left = left + " " * (lwidth - len(left))
 
                 right = right[-rwidth:]
                 if len(right) != rwidth:
-                    right = ' ' * (rwidth - len(right)) + right
+                    right = " " * (rwidth - len(right)) + right
 
-                return ' ' * indent + left + right + '\n'
+                return " " * indent + left + right + "\n"
 
             def print_taxes():
-                taxes = receipt.get('tax_details', [])
+                taxes = receipt.get("tax_details", [])
                 for tax in taxes:
-                    eprint.text(printline(
-                        tax['tax']['name'], price(tax['amount']), width=40,
-                        ratio=0.6))
+                    eprint.text(
+                        printline(
+                            tax["tax"]["name"],
+                            price(tax["amount"]),
+                            width=40,
+                            ratio=0.6,
+                        )
+                    )
 
             if not self.eprint:
                 printers = self.connected_usb_devices()
                 if len(printers) > 0:
                     self.eprint = POSDriver(
-                        printers[0]['vendor'], printers[0]['product'])
+                        printers[0]["vendor"], printers[0]["product"]
+                    )
                 else:
                     return
 
             eprint = self.eprint
 
             # Receipt Header
-            if receipt['company'].get('logo', False):
-                eprint.set(align='center')
-                eprint.print_base64_image(receipt['company']['logo'])
-                eprint.text('\n')
+            if receipt["company"].get("logo", False):
+                eprint.set(align="center")
+                eprint.print_base64_image(receipt["company"]["logo"])
+                eprint.text("\n")
             else:
-                eprint.set(align='center', type='b', height=2, width=2)
-                eprint.text(receipt['company']['name'] + '\n')
+                eprint.set(align="center", type="b", height=2, width=2)
+                eprint.text(receipt["company"]["name"] + "\n")
 
-            eprint.set(align='center', type='b')
-            if check(receipt['company'].get('contact_address', False)):
-                eprint.text(receipt['company']['contact_address'] + '\n')
-            if check(receipt['company'].get('phone', False)):
-                eprint.text(_(u'Tel: ') + receipt['company']['phone'] + '\n')
-            if check(receipt['company'].get('vat', False)):
-                eprint.text(_(u'VAT: ') + receipt['company']['vat'] + '\n')
-            if check(receipt['company'].get('email', False)):
-                eprint.text(receipt['company']['email'] + '\n')
-            if check(receipt['company'].get('website', False)):
-                eprint.text(receipt['company']['website'] + '\n')
-            if check(receipt.get('header')):
-                eprint.text(receipt['header'] + '\n')
-            if check(receipt.get('cashier')):
-                eprint.text('-' * 32 + '\n')
-                eprint.text(_(u'Served by ') + receipt['cashier'] + '\n')
+            eprint.set(align="center", type="b")
+            if check(receipt["company"].get("contact_address", False)):
+                eprint.text(receipt["company"]["contact_address"] + "\n")
+            if check(receipt["company"].get("phone", False)):
+                eprint.text(_(u"Tel: ") + receipt["company"]["phone"] + "\n")
+            if check(receipt["company"].get("vat", False)):
+                eprint.text(_(u"VAT: ") + receipt["company"]["vat"] + "\n")
+            if check(receipt["company"].get("email", False)):
+                eprint.text(receipt["company"]["email"] + "\n")
+            if check(receipt["company"].get("website", False)):
+                eprint.text(receipt["company"]["website"] + "\n")
+            if check(receipt.get("header")):
+                eprint.text(receipt["header"] + "\n")
+            if check(receipt.get("cashier")):
+                eprint.text("-" * 32 + "\n")
+                eprint.text(_(u"Served by ") + receipt["cashier"] + "\n")
 
             # Orderlines
-            if config.getboolean('odoo', 'orderline_price_with_tax'):
-                orderline_price_field = 'price_with_tax'
+            if config.getboolean("odoo", "orderline_price_with_tax"):
+                orderline_price_field = "price_with_tax"
             else:
-                orderline_price_field = 'price_without_tax'
-            eprint.text('\n\n')
-            eprint.set(align='center')
-            for line in receipt['orderlines']:
+                orderline_price_field = "price_without_tax"
+            eprint.text("\n\n")
+            eprint.set(align="center")
+            for line in receipt["orderlines"]:
                 pricestr = price(line[orderline_price_field])
-                if line['discount'] == 0\
-                        and line['unit_name'] == 'Unit(s)'\
-                        and line['quantity'] == 1:
-                    eprint.text(printline(
-                        line['product_name'], pricestr, ratio=0.6))
+                if (
+                    line["discount"] == 0
+                    and line["unit_name"] == "Unit(s)"
+                    and line["quantity"] == 1
+                ):
+                    eprint.text(printline(line["product_name"], pricestr, ratio=0.6))
                 else:
-                    eprint.text(printline(line['product_name'], ratio=0.6))
-                    if line['discount'] != 0:
-                        eprint.text(printline(
-                            _(u'Discount: ') + str(line['discount'])+'%',
-                            ratio=0.6, indent=2))
-                    if line['unit_name'] == 'Unit(s)':
-                        eprint.text(printline(
-                            quantity(line['quantity']) + ' x ' +
-                            price(line['price']), pricestr, ratio=0.6,
-                            indent=2))
+                    eprint.text(printline(line["product_name"], ratio=0.6))
+                    if line["discount"] != 0:
+                        eprint.text(
+                            printline(
+                                _(u"Discount: ") + str(line["discount"]) + "%",
+                                ratio=0.6,
+                                indent=2,
+                            )
+                        )
+                    if line["unit_name"] == "Unit(s)":
+                        eprint.text(
+                            printline(
+                                quantity(line["quantity"])
+                                + " x "
+                                + price(line["price"]),
+                                pricestr,
+                                ratio=0.6,
+                                indent=2,
+                            )
+                        )
                     else:
-                        eprint.text(printline(
-                            quantity(line['quantity']) + ' ' +
-                            line['unit_name'] + ' x ' + price(line['price']),
-                            pricestr, ratio=0.6, indent=2))
+                        eprint.text(
+                            printline(
+                                quantity(line["quantity"])
+                                + " "
+                                + line["unit_name"]
+                                + " x "
+                                + price(line["price"]),
+                                pricestr,
+                                ratio=0.6,
+                                indent=2,
+                            )
+                        )
 
             # Subtotal if the taxes are not included
             taxincluded = True
-            if money(receipt['subtotal']) != money(receipt['total_with_tax']):
-                eprint.text(printline('', '-------'))
-                eprint.text(printline(
-                    _(u'Subtotal'), money(receipt['subtotal']), width=40,
-                    ratio=0.6))
+            if money(receipt["subtotal"]) != money(receipt["total_with_tax"]):
+                eprint.text(printline("", "-------"))
+                eprint.text(
+                    printline(
+                        _(u"Subtotal"), money(receipt["subtotal"]), width=40, ratio=0.6
+                    )
+                )
                 print_taxes()
-                eprint.text(printline(
-                    _(u'Taxes'), money(receipt['total_tax']), width=40,
-                    ratio=0.6))
+                eprint.text(
+                    printline(
+                        _(u"Taxes"), money(receipt["total_tax"]), width=40, ratio=0.6
+                    )
+                )
                 taxincluded = False
 
             # Total
-            eprint.text(printline('', '-------'))
-            eprint.set(align='center', height=2)
-            eprint.text(printline(
-                _(u'         TOTAL'), money(receipt['total_with_tax']),
-                width=40, ratio=0.6))
-            eprint.text('\n\n')
+            eprint.text(printline("", "-------"))
+            eprint.set(align="center", height=2)
+            eprint.text(
+                printline(
+                    _(u"         TOTAL"),
+                    money(receipt["total_with_tax"]),
+                    width=40,
+                    ratio=0.6,
+                )
+            )
+            eprint.text("\n\n")
 
             # Paymentlines
-            eprint.set(align='center')
-            for line in receipt['paymentlines']:
-                eprint.text(printline(
-                    line['journal'], money(line['amount']), ratio=0.6))
+            eprint.set(align="center")
+            for line in receipt["paymentlines"]:
+                eprint.text(
+                    printline(line["journal"], money(line["amount"]), ratio=0.6)
+                )
 
-            eprint.text('\n')
-            eprint.set(align='center', height=2)
-            eprint.text(printline(
-                _(u'        CHANGE'), money(receipt['change']), width=40,
-                ratio=0.6))
-            eprint.set(align='center')
-            eprint.text('\n')
+            eprint.text("\n")
+            eprint.set(align="center", height=2)
+            eprint.text(
+                printline(
+                    _(u"        CHANGE"), money(receipt["change"]), width=40, ratio=0.6
+                )
+            )
+            eprint.set(align="center")
+            eprint.text("\n")
 
             # Extra Payment info
-            if receipt['total_discount'] != 0:
-                eprint.text(printline(
-                    _(u'Discounts'), money(receipt['total_discount']),
-                    width=40, ratio=0.6))
+            if receipt["total_discount"] != 0:
+                eprint.text(
+                    printline(
+                        _(u"Discounts"),
+                        money(receipt["total_discount"]),
+                        width=40,
+                        ratio=0.6,
+                    )
+                )
             if taxincluded:
                 print_taxes()
-                eprint.text(printline(
-                    _(u'Taxes'), money(receipt['total_tax']), width=40,
-                    ratio=0.6))
+                eprint.text(
+                    printline(
+                        _(u"Taxes"), money(receipt["total_tax"]), width=40, ratio=0.6
+                    )
+                )
 
             # Footer
-            if check(receipt.get('footer')):
-                eprint.text('\n'+receipt['footer']+'\n\n')
-            eprint.text(receipt['name']+'\n')
+            if check(receipt.get("footer")):
+                eprint.text("\n" + receipt["footer"] + "\n\n")
+            eprint.text(receipt["name"] + "\n")
             eprint.text(
-                str(receipt['date']['date']).zfill(2) +
-                '/' + str(receipt['date']['month']+1).zfill(2) +
-                '/' + str(receipt['date']['year']).zfill(4) +
-                ' ' + str(receipt['date']['hour']).zfill(2) +
-                ':' + str(receipt['date']['minute']).zfill(2))
+                str(receipt["date"]["date"]).zfill(2)
+                + "/"
+                + str(receipt["date"]["month"] + 1).zfill(2)
+                + "/"
+                + str(receipt["date"]["year"]).zfill(4)
+                + " "
+                + str(receipt["date"]["hour"]).zfill(2)
+                + ":"
+                + str(receipt["date"]["minute"]).zfill(2)
+            )
 
             eprint.cut()
 
@@ -360,29 +452,36 @@ else:
         # #####################################################################
 
     driver = ESCPOSDriver(app.config)
-    drivers['escpos'] = driver
+    drivers["escpos"] = driver
     installed = True
 
-    @app.route(
-            '/hw_proxy/print_xml_receipt',
-            methods=['POST', 'GET', 'PUT'])
+    @app.route("/hw_proxy/default_printer_action", methods=["POST", "GET", "PUT"])
+    def default_printer_action():
+        """ For Odoo 13.0+"""
+
+        action = request.json["params"]["data"]["action"]
+        if action == "print_receipt":
+            receipt = request.json["params"]["data"]["receipt"]
+            driver.push_task("receipt_jpeg", receipt)
+        if action == "cashbox":
+            driver.push_task("open_cashbox")
+        return jsonify(jsonrpc="2.0", result=True)
+
+    @app.route("/hw_proxy/print_xml_receipt", methods=["POST", "GET", "PUT"])
     def print_xml_receipt_json():
         """ For Odoo 8.0+"""
 
-        driver.open_printer()
-        receipt = request.json['params']['receipt']
-        driver.push_task('receipt', receipt)
+        receipt = request.json["params"]["receipt"].replace("ean13", "EAN13")
+        driver.push_task("receipt", receipt)
 
-        return jsonify(jsonrpc='2.0', result=True)
+        return jsonify(jsonrpc="2.0", result=True)
 
-    @app.route('/print_status.html', methods=['GET'])
+    @app.route("/print_status.html", methods=["GET"])
     def print_status_http():
-        driver.push_task('printstatus')
-        return render_template('print_status.html')
+        driver.push_task("printstatus")
+        return render_template("print_status.html")
 
-    @app.route(
-        '/hw_proxy/open_cashbox',
-        methods=['POST', 'GET', 'PUT'])
+    @app.route("/hw_proxy/open_cashbox", methods=["POST", "GET", "PUT"])
     def open_cashbox():
-        driver.push_task('open_cashbox')
-        return jsonify(jsonrpc='2.0', result=True)
+        driver.push_task("open_cashbox")
+        return jsonify(jsonrpc="2.0", result=True)

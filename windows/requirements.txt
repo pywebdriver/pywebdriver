@@ -1,0 +1,16 @@
+#jcconv
+simplejson
+Flask
+Flask-Babel
+Flask-cors
+#pyusb # Only useful to make escpos work via usb (easier via win32raw)
+pyserial
+pif
+Pillow
+netifaces
+pymtp
+setuptools>45
+pywin32
+git+https://github.com/akretion/py-xml-escpos.git@py3
+#git+https://github.com/akretion/pypostelium.git@master
+git+https://github.com/akretion/pyposdisplay.git

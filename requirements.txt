@@ -1,4 +1,4 @@
-jcconv
+#jcconv
 simplejson
 Flask
 Flask-Babel
@@ -10,7 +10,7 @@ Pillow
 netifaces
 pycups
 pymtp
-gunicorn>=19.8
+gunicorn>=20.0.4
 setuptools>=34
 pip>=10
 git+https://github.com/dmroeder/pylogix@master

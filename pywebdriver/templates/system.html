@@ -1,4 +1,4 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <!-- ********************************************************************** -->
 <!--    PyWebDriver Software                                                -->
 <!--    Copyright (C) 2014-TODAY Akretion <http://www.akretion.com>         -->
@@ -18,67 +18,71 @@
 <!--along with this program.  If not, see <http://www.gnu.org/licenses/>.   -->
 <!-- ********************************************************************** -->
 
-{% extends "layout.html" %}
-
-{% block page_title %}{{ _('System Information')}}{% endblock %}
-
-{% block content_title %}{{ _('Technical Information about the system')}}{% endblock %}
-
-
-{% block content %}
+{% extends "layout.html" %} {% block page_title %}{{ _('System Information')}}{%
+endblock %} {% block content_title %}{{ _('Technical Information about the system')}}{%
+endblock %} {% block content %}
 <h2>{{ _('Pywebdriver')}}</h2>
 <table class="table table-hover">
-    <thead>
-        <tr>
-            <th>{{ _('Name') }}</th>
-            <th>{{ _('Value') }}</th>
-        <tr>
-    </thead>
-    <tbody>
+  <thead>
+    <tr>
+      <th>{{ _('Name') }}</th>
+      <th>{{ _('Value') }}</th>
+    </tr>
+
+    <tr></tr>
+  </thead>
+
+  <tbody>
     {% for info in pywebdriver_info %}
-        <tr>
-            <td>{{info['name']}}</td>
-            <td>{{info['value']}}</td>
-        </tr>
+    <tr>
+      <td>{{info['name']}}</td>
+      <td>{{info['value']}}</td>
+    </tr>
     {% endfor %}
-    </tbody>
+  </tbody>
 </table>
 <h2>{{ _('System')}}</h2>
 <table class="table table-hover">
-    <thead>
-        <tr>
-            <th>{{ _('Name') }}</th>
-            <th>{{ _('Value') }}</th>
-        <tr>
-    </thead>
-    <tbody>
+  <thead>
+    <tr>
+      <th>{{ _('Name') }}</th>
+      <th>{{ _('Value') }}</th>
+    </tr>
+
+    <tr></tr>
+  </thead>
+
+  <tbody>
     {% for info in system_info %}
-        <tr>
-            <td>{{info['name']}}</td>
-            <td>{{info['value']}}</td>
-        </tr>
+    <tr>
+      <td>{{info['name']}}</td>
+      <td>{{info['value']}}</td>
+    </tr>
     {% endfor %}
-    </tbody>
+  </tbody>
 </table>
 
 <h2>{{ _('Python Packages')}}</h2>
 <table class="table table-hover">
-    <thead>
-        <tr>
-            <th>{{ _('Name') }}</th>
-            <th>{{ _('Version') }}</th>
-            <th>{{ _('Location') }}</th>
-        <tr>
-    </thead>
-    <tbody>
+  <thead>
+    <tr>
+      <th>{{ _('Name') }}</th>
+      <th>{{ _('Version') }}</th>
+      <th>{{ _('Location') }}</th>
+    </tr>
+
+    <tr></tr>
+  </thead>
+
+  <tbody>
     {% for packages in installed_python_packages %}
-        <tr>
-            <td>{{packages['key']}}</td>
-            <td>{{packages['version']}}</td>
-            <td>{{packages['location']}}</td>
-        </tr>
+    <tr>
+      <td>{{packages['key']}}</td>
+      <td>{{packages['version']}}</td>
+      <td>{{packages['location']}}</td>
+    </tr>
     {% endfor %}
-    </tbody>
+  </tbody>
 </table>
 
 {% endblock %}

@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <!-- ********************************************************************** -->
 <!--    PyWebDriver Software                                                -->
 <!--    Copyright (C) 2014-TODAY Akretion <http://www.akretion.com>         -->
@@ -18,49 +18,51 @@
 <!--along with this program.  If not, see <http://www.gnu.org/licenses/>.   -->
 <!-- ********************************************************************** -->
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{% block page_title %}{% endblock %} - {{ _('PyWebDriver Software')}}</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block page_title %}{% endblock %} - {{ _('PyWebDriver Software')}}</title>
 
-        <!-- from : http://code.jquery.com/jquery-2.0.3.min.js -->
-        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <!-- from : http://code.jquery.com/jquery-2.0.3.min.js -->
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
 
-        <!-- from : http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js -->
-        <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <!-- from : http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js -->
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 
-        <!-- from : http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css -->
-        <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" />
+    <!-- from : http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css -->
+    <link
+      href="{{ url_for('static', filename='css/bootstrap.min.css') }}"
+      rel="stylesheet"
+    />
 
     {% block extra_css %}{% endblock %}
-
-    </head>
-    <body>
-        <div class="container">
-
-            <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-
-                <div class="container-fluid">
-                    <div class="nav navbar-left">
-                        <a class="btn btn-sm btn-default" href="{{  url_for('index') }}">
-                            {{_('Home')}}</a>
-                        <a class="btn btn-sm btn-default" href="{{  url_for('status') }}">
-                            {{_('Status')}}</a>
-                        <a class="btn btn-sm btn-default" href="{{  url_for('usb_devices') }}">
-                            {{_('USB Devices')}}</a>
-                        <a class="btn btn-sm btn-default" href="{{  url_for('system') }}">
-                            {{_('System')}}</a>
-                    </div>
-                </div>
-            </nav>
-        <div id="content" style="margin-top:70px;">
+  </head>
+  <body>
+    <div class="container">
+      <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+          <div class="nav navbar-left">
+            <a class="btn btn-sm btn-default" href="{{  url_for('index') }}">
+              {{_('Home')}}</a
+            >
+            <a class="btn btn-sm btn-default" href="{{  url_for('status') }}">
+              {{_('Status')}}</a
+            >
+            <a class="btn btn-sm btn-default" href="{{  url_for('usb_devices') }}">
+              {{_('USB Devices')}}</a
+            >
+            <a class="btn btn-sm btn-default" href="{{  url_for('system') }}">
+              {{_('System')}}</a
+            >
+          </div>
+        </div>
+      </nav>
+      <div id="content" style="margin-top: 70px">
         <h1>{% block content_title %}{% endblock %}</h1>
         {% block content %}{% endblock %}
-        </div>
-
+      </div>
+    </div>
     {% block extra_js %}{% endblock %}
-
-    </body>
+  </body>
 </html>
-

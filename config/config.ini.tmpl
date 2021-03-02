@@ -13,20 +13,31 @@ accesslog = -
 certfile=/etc/ssl/certs/ssl-cert-snakeoil.pem
 keyfile=/etc/ssl/private/ssl-cert-snakeoil.key
 
+[waitress]
+; parameters for configuring waitress, which replaces gunicorn on windows
+listen=0.0.0.0:8069
+
 [flask]
 ; Set The port of the webserver 'dev' mode
 host=0.0.0.0
 port=8069
 ; Set the origins allow to commuicate with pywebdriver, default all (*)
 cors_origins=*
-
 ; Enable this value for debug works
 debug=true
+; Set this to false to disable the automatic reloader
+; in Flask's autoreload mechanism conflicts with some driver code
+use_reloader=false
 
 [application]
 ; Set to True if you want that the PyWebDriver Software print a status receipt
 ; when the service is started
 print_status_start=false
+; List the drivers to enable
+; You should always enable the driver 'odoo8' if you use Odoo v8+
+; because otherwize the POSbox logo will be red in Odoo POS frontend
+; and nothing will work
+drivers = odoo8,telium_driver,escpos_driver
 
 [odoo]
 ; [7.0] Define default value for the receipt send by Odoo if not defined
@@ -43,7 +54,8 @@ device_type=usb
 ; If your POS printer has a serial interface, comment the line above
 ; and uncomment the lines below
 ;device_type=serial
-;serial_device_name=/dev/ttyS1
+;serial_device_name=/dev/ttyS1 # If you are on linux
+;serial_device_name=COM1 # If you are on windows
 ;serial_baudrate=9600
 ;serial_bytesize=8
 ;serial_timeout=1
@@ -76,3 +88,32 @@ eol_lf=true
 
 [plc]
 micro800=true
+
+; if sections loggers, handlers and formatters are present
+; configure the logging module using logging.config.fileConfig
+; see https://docs.python.org/3/library/logging.config.html#logging-config-fileformat
+
+[loggers]
+keys=root
+
+[logger_root]
+level=DEBUG
+handlers=hand01
+
+[handlers]
+keys=hand01
+
+[handler_hand01]
+class=StreamHandler
+level=NOTSET
+formatter=form01
+args=(sys.stdout,)
+
+[formatters]
+keys=form01
+
+[formatter_form01]
+format=%(asctime)s %(levelname)8s %(message)s
+datefmt=
+class=logging.Formatter
+

@@ -1,6 +1,6 @@
 from pywebdriver import config
 
-from ConfigParser import NoOptionError
+from configparser import NoOptionError
 from importlib import import_module
 
 DEFAULT_DRIVERS = [
@@ -17,9 +17,9 @@ DEFAULT_DRIVERS = [
 ]
 
 try:
-    drivers = config.get('application', 'drivers').split(',')
+    drivers = config.get("application", "drivers").split(",")
 except NoOptionError:
     drivers = DEFAULT_DRIVERS
 
 for driver in drivers:
-    globals()[driver] = import_module('.'+driver, __package__)
+    globals()[driver] = import_module("." + driver, __package__)

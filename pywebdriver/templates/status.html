@@ -1,4 +1,4 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <!-- ********************************************************************** -->
 <!--    PyWebDriver Software                                                -->
 <!--    Copyright (C) 2014-TODAY Akretion <http://www.akretion.com>         -->
@@ -18,92 +18,105 @@
 <!--along with this program.  If not, see <http://www.gnu.org/licenses/>.   -->
 <!-- ********************************************************************** -->
 
-{% extends "layout.html" %}
+{% extends "layout.html" %} {% block page_title %}{{ _('Status')}}{% endblock %} {%
+block content_title %}{{ _('Hardware Status')}}{% endblock %} {% block content %}
+<p>{{ _('The list of enabled drivers and their status')}}</p>
+{% for driver in drivers_info %}
+<div class="col-xs-3 col-md-3 thumbnail" style="margin-right: 5px">
+  <h2 style="text-align: center">{{driver}}</h2>
+  <div style="height: 20px; font-weight: bold">
+    {{_('status: ')}} {% if drivers_info[driver]['state']['status']== 'connected' %}
+    <span style="color: green">{{ _('Connected')}}</span>
+    {% elif drivers_info[driver]['state']['status']== 'connecting' %}
+    <span style="color: blue">{{ _('Connecting')}}</span>
+    {% elif drivers_info[driver]['state']['status']== 'disconnected' %}
+    <span style="color: gray">{{ _('Disconnected')}}</span>
+    {% elif drivers_info[driver]['state']['status']== 'error' %}
+    <span style="color: red">{{ _('Error')}}</span>
+    {% else %}
+    <span style="color: orange">{{drivers_info[driver]['state']['status']}}</span>
+    {% endif %}
+  </div>
 
-{% block page_title %}{{ _('Status')}}{% endblock %}
-
-{% block content_title %}{{ _('Hardware Status')}}{% endblock %}
-
-{% block content %}
-        <p>{{ _('The list of enabled drivers and their status')}}</p>
-    {% for driver in drivers_info %}
-    <div class="col-xs-3 col-md-3 thumbnail" style="margin-right:5px;">
-        <h2 style="text-align:center">{{driver}}</h2>
-        <div style="height:20px;font-weight:bold;">{{_('status: ')}}
-        {% if drivers_info[driver]['state']['status']== 'connected' %}
-            <span style="color:green;">{{ _('Connected')}}</span>
-        {% elif drivers_info[driver]['state']['status']== 'connecting' %}
-            <span style="color:blue;">{{ _('Connecting')}}</span>
-        {% elif drivers_info[driver]['state']['status']== 'disconnected' %}
-            <span style="color:gray;">{{ _('Disconnected')}}</span>
-        {% elif drivers_info[driver]['state']['status']== 'error' %}
-            <span style="color:red;">{{ _('Error')}}</span>
-        {% else %}
-            <span style="color:orange;">{{drivers_info[driver]['state']['status']}}</span>
-        {% endif %}
-        </div>
-
-        {% if drivers_info[driver]['image'] %}
-            <img src="{{drivers_info[driver]['image']}}" style="width:150px;height:150px;" class="thumbnail img-responsive" />
-        {% else %}
-            <img src="{{ url_for('static', filename='images/device_not_found.jpg') }}" style="width:150px;height:150px;" class="thumbnail img-responsive" />
-        {% endif %}
-        <div style="height:80px;">
-                <ul class="list-group">
-        {% if driver =='telium' %}
-                {% if drivers_info[driver]['state']['status']  == 'connected' %}
-               <li class="list-group-item">
-                    <input type="text" class="form-control" id="telium_price" placeholder="6543.21"/>
-                    <select id="telium_payment_mode">
-                        <option value="card">Credit Card</option>
-                        <option value="check">Check</option>
-                    </select>
-                    <button type="button" onclick="telium_status()" class="btn btn-link btn-xs">{{_('Test Communication')}}</button>
-                </li>
-                {% endif %}
-        {% endif %}
-        {% if driver =='escpos' %}
-                {% if drivers_info[driver]['state']['status']  == 'connected' %}
-                <li class="list-group-item"><button type="button" onclick="print_status()" class="btn btn-link btn-xs">{{_('Print Status Receipt')}}</button></li>
-                {% endif %}
-        {% endif %}
-        {% if driver =='display_driver' %}
-                {% if drivers_info[driver]['state']['status']  == 'connected' %}
-                <li class="list-group-item"><button type="button" onclick="display_status()" class="btn btn-link btn-xs">{{_('Display Status')}}</button></li>
-                {% endif %}
-        {% endif %}
-        {% for message in drivers_info[driver]['state']['messages'] %}
-                <li class="list-group-item list-group-item-danger">{{message}}</li>
-        {% endfor %}
-                </ul>
-        </div>
-    </div>
-    {% endfor %}
-    <script>
-        function telium_status(){
-            $.ajax({
-                url: "telium_status.html",
-                type: "POST",
-                data: {
-                    'price': $('#telium_price').val(),
-                    'payment_mode': $('#telium_payment_mode').val(),
-                },
-                timeout: 1000,
-            })
-        }
-        function print_status(){
-            $.ajax({
-                url: "print_status.html",
-                type: "GET",
-                timeout: 1000,
-            })
-        }
-        function display_status(){
-            $.ajax({
-                url: "display_status.html",
-                type: "GET",
-                timeout: 1000,
-            })
-        }
-    </script>
+  {% if drivers_info[driver]['image'] %}
+  <img
+    src="{{drivers_info[driver]['image']}}"
+    style="width: 150px; height: 150px"
+    class="thumbnail img-responsive"
+  />
+  {% else %}
+  <img
+    src="{{ url_for('static', filename='images/device_not_found.jpg') }}"
+    style="width: 150px; height: 150px"
+    class="thumbnail img-responsive"
+  />
+  {% endif %}
+  <div style="height: 80px">
+    <ul class="list-group">
+      {% if driver =='telium' %} {% if drivers_info[driver]['state']['status'] ==
+      'connected' %}
+      <li class="list-group-item">
+        <input
+          type="text"
+          class="form-control"
+          id="telium_price"
+          placeholder="6543.21"
+        />
+        <select id="telium_payment_mode">
+          <option value="card">Credit Card</option>
+          <option value="check">Check</option>
+        </select>
+        <button type="button" onclick="telium_status()" class="btn btn-link btn-xs">
+          {{_('Test Communication')}}
+        </button>
+      </li>
+      {% endif %} {% endif %} {% if driver =='escpos' %} {% if
+      drivers_info[driver]['state']['status'] == 'connected' %}
+      <li class="list-group-item">
+        <button type="button" onclick="print_status()" class="btn btn-link btn-xs">
+          {{_('Print Status Receipt')}}
+        </button>
+      </li>
+      {% endif %} {% endif %} {% if driver =='display_driver' %} {% if
+      drivers_info[driver]['state']['status'] == 'connected' %}
+      <li class="list-group-item">
+        <button type="button" onclick="display_status()" class="btn btn-link btn-xs">
+          {{_('Display Status')}}
+        </button>
+      </li>
+      {% endif %} {% endif %} {% for message in
+      drivers_info[driver]['state']['messages'] %}
+      <li class="list-group-item list-group-item-danger">{{message}}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endfor %}
+<script>
+  function telium_status() {
+    $.ajax({
+      url: "telium_status.html",
+      type: "POST",
+      data: {
+        price: $("#telium_price").val(),
+        payment_mode: $("#telium_payment_mode").val(),
+      },
+      timeout: 1000,
+    });
+  }
+  function print_status() {
+    $.ajax({
+      url: "print_status.html",
+      type: "GET",
+      timeout: 1000,
+    });
+  }
+  function display_status() {
+    $.ajax({
+      url: "display_status.html",
+      type: "GET",
+      timeout: 1000,
+    });
+  }
+</script>
 {% endblock %}
