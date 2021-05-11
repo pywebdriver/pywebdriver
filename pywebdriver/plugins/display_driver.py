@@ -60,16 +60,10 @@ else:
             # the model easily
             self.vendor_product = "1504_11"
 
-        @app.route("/display_status.html", methods=["GET"])
-        def display_status_http(self):
-            for line, duration in AUTHOR:
-                display_driver.push_task("send_text", line)
-                time.sleep(duration)
-            return render_template("display_status.html")
-
         def get_status(self, **params):
+            status = {"status": "disconnected"}
             try:
-                self.set_status("connected")
+                status = super().get_status()
                 # When I use Odoo POS v8, it regularly displays
                 # "PyWebDriver / PosBox Status" on the LCD !!!
                 # So I comment the line below -- Alexis de Lattre
@@ -80,8 +74,13 @@ else:
                 # is 'disconnected' in 'error' state
                 # Maybe could be possible, improving pyposdisplay library.
             except Exception:
-                pass
-            return self.status
+                app.logger.debug("Could not retrieve serial display status")
+            return status
+
+        def display_status(self, display):
+            for lines, duration in AUTHOR:
+                self.send_text(lines)
+                time.sleep(duration)
 
     driver_config = {}
     if config.get("display_driver", "device_name"):
@@ -101,7 +100,13 @@ else:
         driver_name = config.get("display_driver", "driver_name")
 
     display_driver = DisplayDriver(driver_config, use_driver_name=driver_name)
-    drivers["display_driver"] = display_driver
+    drivers["display"] = display_driver
+
+
+@app.route("/display_status.html", methods=["GET"])
+def display_status_http():
+    display_driver.push_task("display_status")
+    return render_template("display_status.html")
 
 
 @app.route("/hw_proxy/send_text_customer_display", methods=["POST", "GET", "PUT"])
