@@ -77,7 +77,7 @@ block content_title %}{{ _('Hardware Status')}}{% endblock %} {% block content %
           {{_('Print Status Receipt')}}
         </button>
       </li>
-      {% endif %} {% endif %} {% if driver =='display_driver' %} {% if
+      {% endif %} {% endif %} {% if driver =='display' %} {% if
       drivers_info[driver]['state']['status'] == 'connected' %}
       <li class="list-group-item">
         <button type="button" onclick="display_status()" class="btn btn-link btn-xs">
