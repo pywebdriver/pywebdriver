@@ -58,6 +58,8 @@ Point of Sale with PyWebDriver as a Proxy.
     - [Epson OCD300](http://www.aures-support.fr/NEWSITE/ocd300/)
   - **Scale**:
     - TODO : planned by GRAP (Any help welcome);
+  - **Weighing**:
+    - Mettler TOLEDO IND425
   - **Barcode Reader**, **Cash Box** :
     - Not Planned
 
@@ -80,6 +82,7 @@ The main contributors of this project are :
 - Sébastien Beau <sebastien.beau@akretion.com>
 - Arthur Vuillard <arthur@hashbang.fr>
 - Sylvain Calador <sylvain.calador@akretion.com>
+- Laurent Mignon <laurent.mignon@acsone.eu>
 
 A lot of the code come from other projects. Licences and copyright are mentionned in
 each file or in a readme file of the folder. The main other contributors are:
@@ -220,6 +223,7 @@ If not, default drivers will be loaded:
 - opcua_driver
 - odoo7
 - odoo8
+- mettler_toledo_driver
 
 ## <a name="browser-settings"></a>Specific configuration
 
