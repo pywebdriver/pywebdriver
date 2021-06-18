@@ -65,7 +65,7 @@ def serial_reader_task():
                     continue
                 buffer = buffer[:pos]
                 matches = re.match(
-                    r"^S (?P<stability>[SD])  (?P<weight> +([0-9\.]+)) kg$",
+                    r"^S (?P<stability>[SD])( )*(?P<weight>(-)?([0-9\.]+))( )*kg",
                     buffer[:pos],
                 )
                 if matches:
@@ -75,7 +75,7 @@ def serial_reader_task():
                     value = float(groups["weight"])
                     status = "FIXED" if stability == "S" else "ACQUIRING"
                     values.update({"value": value, "status": status})
-                elif "Kg" in buffer:
+                elif "kg" in buffer or len(buffer) > 128:
                     # reset buffer we maybe have a partial value into the buffer
                     buffer = ""
     except Exception as e:
