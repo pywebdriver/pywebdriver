@@ -9,16 +9,9 @@ SNAKE=/usr/bin/python3
 override_dh_virtualenv:
 	dh_virtualenv --python=$(SNAKE) --builtin-venv
 
+# https://dh-virtualenv.readthedocs.io/en/latest/howtos.html#handling-binary-wheels
 override_dh_strip:
 	dh_strip --exclude=/site-packages/
 
 override_dh_shlibdeps:
 	dh_shlibdeps --exclude=/site-packages/
-#
-#override_dh_strip:
-#	dh_strip --exclude=_imaging
-#
-#override_dh_shlibdeps:
-#	dh_shlibdeps \
-#	    --exclude site-packages/Pillow.libs \
-#	    --exclude site-packages/PIL.libs
