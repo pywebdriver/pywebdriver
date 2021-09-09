@@ -46,8 +46,8 @@ jobs:
             pywebdriver_win64.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  build-ubuntu:
-    runs-on: ubuntu-latest
+  build-bionic:
+    runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
@@ -64,8 +64,8 @@ jobs:
           debuild
       - name: Test build
         run: |
-          mv ../pywebdriver_$(date +%Y%m%d)_amd64.deb ../pywebdriver_amd64.deb
-          sudo dpkg -i ../pywebdriver_amd64.deb
+          mv ../pywebdriver_$(date +%Y%m%d)_amd64.deb ../pywebdriver_bionic.deb
+          sudo dpkg -i ../pywebdriver_bionic.deb
           sh debian/replace_snakeoil_mkcert.sh
           sudo journalctl -u pywebdriver
           sudo service pywebdriver status
@@ -74,6 +74,37 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            ../pywebdriver_amd64.deb
+            ../pywebdriver_bionic.deb
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  build-focal:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - name: Install dependencies
+        run: |
+          sudo add-apt-repository ppa:jyrki-pulliainen/dh-virtualenv
+          sudo apt --yes update
+          sudo apt --yes install libnss3-tools libcups2-dev cups devscripts debhelper dh-python dh-virtualenv dh-systemd python3-wheel python3-setuptools python3-venv libmtp-dev libffi-dev fakeroot
+          python -m pip install -r requirements.txt
+      - name: Build
+        run: |
+          mkdir -p build
+          dch --package pywebdriver --newversion $(date +%Y%m%d) --create -m "Created by CI"
+          debuild
+      - name: Test build
+        run: |
+          mv ../pywebdriver_$(date +%Y%m%d)_amd64.deb ../pywebdriver_focal.deb
+          sudo dpkg -i ../pywebdriver_focal.deb
+          sh debian/replace_snakeoil_mkcert.sh
+          sudo journalctl -u pywebdriver
+          sudo service pywebdriver status
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            ../pywebdriver_focal.deb
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
