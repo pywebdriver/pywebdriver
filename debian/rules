@@ -1,35 +1,17 @@
 #!/usr/bin/make -f
-#pypi_dir= debian/pypi
-#pypi = ${CURDIR}/${pypi_dir}
 #source_dir = ${CURDIR}/debian/source
 #include_binaries = ${source_dir}/include-binaries
 SNAKE=/usr/bin/python3
 
 %:
-	dh $@ --with python-virtualenv --with systemd
+	dh $@ --with python-virtualenv --with systemd --buildsystem=pybuild
 
 override_dh_virtualenv:
-	dh_virtualenv --python=$(SNAKE) --builtin-venv --extra-pip-arg='--no-binary=:all:'
+	dh_virtualenv --python=$(SNAKE) --builtin-venv
 
-# override_dh_install:
-# 	install -d debian/tmp/etc/pywebdriver
-# 	install -m 644 debian/config.ini debian/tmp/etc/pywebdriver/config.ini
-# 	install -m 644 debian/mkcert debian/tmp/etc/pywebdriver/mkcert
-# 	install -d debian/tmp/lib/udev/rules.d
-# 	install -m 644 debian/99-pywebdriver.rules debian/tmp/lib/udev/rules.d/99-pywebdriver.rules
-# 	dh_install
-
+# https://dh-virtualenv.readthedocs.io/en/latest/howtos.html#handling-binary-wheels
 override_dh_strip:
-	dh_strip --exclude=PIL
+	dh_strip --exclude=/site-packages/
 
 override_dh_shlibdeps:
-	dh_shlibdeps --exclude=PIL
-
-override_dh_missing:
-	dh_missing --list-missing
-
-override_dh_builddeb:
-	dh_builddeb -- -Zgzip
-
-override_dh_shlibdeps:
-	dh_shlibdeps -l${CURDIR}/debian/pywebdriver/opt/venvs/pywebdriver/lib/python3.6/site-packages/PIL/.libs
+	dh_shlibdeps --exclude=/site-packages/
