@@ -14,7 +14,6 @@ distribution.
 - [Features](#features)
   - [Web Page](#feature-a)
   - [Specific WebServices for Odoo](#feature-b)
-  - [Generic WebServices using CUP](#feature-c)
 - [End-Users / Customers Section](#customers)
 - [Contributors](#contributors)
 - [Developers Section](#developers)
@@ -48,6 +47,8 @@ Point of Sale with PyWebDriver as a Proxy.
 - **Odoo8**:
   - **Printers** :
     - Epson TM-T20
+    - Epson TM-T70
+    - Epson TM-P20
   - **Credit Card Reader**:
     - Ingenico and Sagem credit card readers with Telium Manager version 37783600 or
       superior
@@ -56,14 +57,14 @@ Point of Sale with PyWebDriver as a Proxy.
     - Bixolon BCD-1100
     - Bixolon BCD-1000
     - [Epson OCD300](http://www.aures-support.fr/NEWSITE/ocd300/)
+    - SAGA SGDP240
+    - Labau LD240 (non-optimal)
   - **Scale**:
     - TODO : planned by GRAP (Any help welcome);
-  - **Barcode Reader**, **Cash Box** :
-    - Not Planned
-
-## <a name="feature-c"></a>Generic WebServices using CUP
-
-Done.
+  - **Barcode Reader**:
+    - They are usually recognized as keyboards and do not need pywebdriver to function
+  - **Cash Box** :
+    - The communication is usually handled by the receipt printer via Esc/Pos
 
 # <a name="customers"></a>End-Users / Customers Section
 
