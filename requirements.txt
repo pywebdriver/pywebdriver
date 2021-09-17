@@ -1,3 +1,5 @@
+pip>=10.0
+setuptools>=34
 wheel
 #jcconv
 simplejson
@@ -11,8 +13,6 @@ Pillow
 netifaces
 pycups
 pymtp
-setuptools>=34
-pip>=10
 git+https://github.com/akretion/py-xml-escpos.git@py3
 #git+https://github.com/akretion/pypostelium.git@master
 git+https://github.com/akretion/pyposdisplay.git@master

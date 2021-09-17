@@ -55,8 +55,7 @@ jobs:
         run: |
           sudo add-apt-repository ppa:jyrki-pulliainen/dh-virtualenv
           sudo apt --yes update
-          sudo apt --yes install libnss3-tools libcups2-dev cups devscripts debhelper dh-python dh-virtualenv dh-systemd python3-wheel python3-setuptools python3-venv libmtp-dev libffi-dev fakeroot
-          python -m pip install -r requirements.txt
+          sudo apt --yes install libnss3-tools libcups2-dev cups devscripts debhelper dh-python dh-virtualenv dh-systemd python3-wheel python3-setuptools python3-venv libmtp-dev libffi-dev fakeroot python3-distutils python3-pip python3-simplejson python3-flask-babel python3-usb python3-serial python3-netifaces python3-cups python3-pillow
       - name: Build
         run: |
           mkdir -p build
@@ -86,8 +85,7 @@ jobs:
         run: |
           sudo add-apt-repository ppa:jyrki-pulliainen/dh-virtualenv
           sudo apt --yes update
-          sudo apt --yes install libnss3-tools libcups2-dev cups devscripts debhelper dh-python dh-virtualenv dh-systemd python3-wheel python3-setuptools python3-venv libmtp-dev libffi-dev fakeroot
-          python -m pip install -r requirements.txt
+          sudo apt --yes install libnss3-tools libcups2-dev cups devscripts debhelper dh-python dh-virtualenv dh-systemd python3-wheel python3-setuptools python3-venv libmtp-dev libffi-dev fakeroot python3-distutils python3-pip python3-simplejson python3-flask-babel python3-usb python3-serial python3-netifaces python3-cups python3-pillow python3-flask-cors
       - name: Build
         run: |
           mkdir -p build
