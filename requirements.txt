@@ -14,5 +14,5 @@ netifaces
 pycups
 pymtp
 git+https://github.com/akretion/py-xml-escpos.git@py3
-#git+https://github.com/akretion/pypostelium.git@master
+git+https://github.com/akretion/pypostelium.git@master
 git+https://github.com/akretion/pyposdisplay.git@master
