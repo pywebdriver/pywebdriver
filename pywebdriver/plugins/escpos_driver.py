@@ -79,16 +79,19 @@ else:
         def __init__(self, *args, **kwargs):
             self.eprint = None
             self.vendor_product = None
+            self.open_args = []
             if device_type == "usb":
                 printers = self.connected_usb_devices()
                 if printers:
                     printer = printers[0]
                     idVendor = printer.get("vendor")
                     idProduct = printer.get("product")
+                    usb_args = {"idVendor": idVendor, "idProduct": idProduct}
                     kwargs["in_ep"] = printer.get("in_ep", 0x82)
                     kwargs["out_ep"] = printer.get("out_ep", 0x01)
                     kwargs["timeout"] = 0
                     POSDriver.__init__(self, idVendor, idProduct, **kwargs)
+                    self.open_args.append(usb_args)  # First open_arg is usb_args
             elif device_type == "serial":
                 kwargs["devfile"] = config.get("escpos_driver", "serial_device_name")
                 kwargs["baudrate"] = config.getint("escpos_driver", "serial_baudrate")
@@ -120,8 +123,8 @@ else:
             if self.device:
                 return
             try:
-                self.open()
-                if self.hPrinter:
+                self.open(*self.open_args)
+                if device_type == "win32":
                     self.device = self.hPrinter
             except Exception as e:
                 self.set_status("error", e)
