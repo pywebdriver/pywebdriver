@@ -19,7 +19,10 @@
 #
 ###############################################################################
 
+import fnmatch
+import logging
 import math
+from configparser import NoOptionError
 
 import usb.core
 from flask import jsonify, render_template, request
@@ -60,12 +63,91 @@ SUPPORTED_DEVICES = [
     {"vendor": 0x04B8, "product": 0x0202, "name": "Epson TM-P20"},
 ]
 
+_logger = logging.getLogger(__name__)
+
 try:  # noqa C901
     if device_type == "serial":
         from escpos.printer import Serial as POSDriver
     elif device_type == "win32":
         import win32print
         from escpos.printer import Win32Raw as POSDriver
+
+        PRINTER_STATUS_DICT = {
+            0: {"title": "AVAILABLE", "usable": True},
+            win32print.PRINTER_STATUS_PAUSED: {"title": "PAUSED", "usable": False},
+            win32print.PRINTER_STATUS_ERROR: {"title": "ERROR", "usable": False},
+            win32print.PRINTER_STATUS_PENDING_DELETION: {
+                "title": "PENDING_DELETION",
+                "usable": False,
+            },
+            win32print.PRINTER_STATUS_PAPER_JAM: {
+                "title": "PAPER_JAM",
+                "usable": False,
+            },
+            win32print.PRINTER_STATUS_PAPER_OUT: {
+                "title": "PAPER_OUT",
+                "usable": False,
+            },
+            win32print.PRINTER_STATUS_MANUAL_FEED: {
+                "title": "MANUAL_FEED",
+                "usable": False,
+            },
+            win32print.PRINTER_STATUS_PAPER_PROBLEM: {
+                "title": "PAPER_PROBLEM",
+                "usable": False,
+            },
+            win32print.PRINTER_STATUS_OFFLINE: {"title": "OFFLINE", "usable": False},
+            win32print.PRINTER_STATUS_IO_ACTIVE: {
+                "title": "IO_ACTIVE",
+                "usable": False,
+            },
+            win32print.PRINTER_STATUS_BUSY: {"title": "BUSY", "usable": False},
+            win32print.PRINTER_STATUS_PRINTING: {"title": "PRINTING", "usable": True},
+            win32print.PRINTER_STATUS_OUTPUT_BIN_FULL: {
+                "title": "OUTPUT_BIN_FULL",
+                "usable": False,
+            },
+            win32print.PRINTER_STATUS_NOT_AVAILABLE: {
+                "title": "NOT_AVAILABLE",
+                "usable": False,
+            },
+            win32print.PRINTER_STATUS_WAITING: {"title": "WAITING", "usable": True},
+            win32print.PRINTER_STATUS_PROCESSING: {
+                "title": "PROCESSING",
+                "usable": True,
+            },
+            win32print.PRINTER_STATUS_INITIALIZING: {
+                "title": "INITIALIZING",
+                "usable": True,
+            },
+            win32print.PRINTER_STATUS_WARMING_UP: {
+                "title": "WARMING_UP",
+                "usable": True,
+            },
+            win32print.PRINTER_STATUS_TONER_LOW: {"title": "TONER_LOW", "usable": True},
+            win32print.PRINTER_STATUS_NO_TONER: {"title": "NO_TONER", "usable": False},
+            win32print.PRINTER_STATUS_PAGE_PUNT: {
+                "title": "PAGE_PUNT",
+                "usable": False,
+            },
+            win32print.PRINTER_STATUS_USER_INTERVENTION: {
+                "title": "USER_INTERVENTION",
+                "usable": False,
+            },
+            win32print.PRINTER_STATUS_OUT_OF_MEMORY: {
+                "title": "OUT_OF_MEMORY",
+                "usable": False,
+            },
+            win32print.PRINTER_STATUS_DOOR_OPEN: {"title": "DOOR_OPEN", "usable": True},
+            win32print.PRINTER_STATUS_SERVER_UNKNOWN: {
+                "title": "SERVER_UNKNOWN",
+                "usable": False,
+            },
+            win32print.PRINTER_STATUS_POWER_SAVE: {
+                "title": "POWER_SAVE",
+                "usable": True,
+            },
+        }
     else:
         from escpos.printer import Usb as POSDriver
 except ImportError:
@@ -99,8 +181,37 @@ else:
                 kwargs["timeout"] = config.getint("escpos_driver", "serial_timeout")
                 POSDriver.__init__(self, **kwargs)
             elif device_type == "win32":
-                kwargs["printer_name"] = config.get("escpos_driver", "printer_name")
-                POSDriver.__init__(self, **kwargs)
+                try:
+                    kwargs["printer_name"] = config.get("escpos_driver", "printer_name")
+                except NoOptionError:
+                    config_printer_names = config.get(
+                        "escpos_driver", "printer_names"
+                    ).split(",")
+                    printers_list = win32print.EnumPrinters(
+                        win32print.PRINTER_ENUM_NAME, None, 2
+                    )
+                    printers_dict = {
+                        item["pPrinterName"]: item for item in printers_list
+                    }
+                    i = 0
+                    while i < len(config_printer_names):
+                        config_printer_name = config_printer_names[i]
+                        i += 1
+                        for printer_name, printer in printers_dict.items():
+                            if fnmatch.fnmatch(printer_name, config_printer_name):
+                                status = PRINTER_STATUS_DICT.get(printer["Status"])
+                                _logger.debug([printer_name, status])
+                                if status and "usable" in status and status["usable"]:
+                                    kwargs[
+                                        "printer_name"
+                                    ] = printer_name  # Printer will be used
+                                    break
+                        if "printer_name" in kwargs:
+                            break
+                finally:
+                    if "printer_name" not in kwargs:
+                        kwargs["printer_name"] = "escpos"  # To avoid crashing
+                    POSDriver.__init__(self, **kwargs)
             ThreadDriver.__init__(self, *args, **kwargs)
 
         def get_vendor_product(self):
@@ -157,15 +268,20 @@ else:
                     status = "error"
                     self.device = False
                     messages.append("Error: %s" % err)
-            else:
-                state = win32print.GetPrinter(self.device, 2)
-                if state["Status"] in [
-                    win32print.PRINTER_STATUS_OFFLINE,
-                    win32print.PRINTER_STATUS_NOT_AVAILABLE,
-                ]:
+            elif device_type == "win32":
+                messages.append(self.printer_name)
+                result = win32print.GetPrinter(self.device, 2)
+                status = PRINTER_STATUS_DICT.get(result["Status"])
+                if status:
+                    messages.append(status["title"])
+                else:
+                    messages.append("UNKNOWN: {}".format(result["Status"]))
+                if not status or status["title"] in ["OFFLINE", "NOT_AVAILABLE"]:
                     status = "disconnected"
                 else:
                     status = "connected"
+            else:
+                status = "disconnected"
             self.close()
             return {
                 "status": status,
