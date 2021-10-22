@@ -45,7 +45,7 @@ jobs:
           files: |
             pywebdriver_win64.zip
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.WEB_GITHUB_TOKEN }}
   build-bionic:
     runs-on: ubuntu-18.04
     steps:
@@ -75,7 +75,7 @@ jobs:
           files: |
             ../pywebdriver_bionic.deb
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.WEB_GITHUB_TOKEN }}
   build-focal:
     runs-on: ubuntu-20.04
     steps:
@@ -105,4 +105,4 @@ jobs:
           files: |
             ../pywebdriver_focal.deb
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.WEB_GITHUB_TOKEN }}
