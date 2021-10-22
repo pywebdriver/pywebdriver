@@ -61,9 +61,9 @@ def serial_options(options):
     data = options.get("data", "")
 
     if values["eol_cr"]:
-        data += serial.CR
+        data += serial.CR.decode("utf-8")
     if values["eol_lf"]:
-        data += serial.LF
+        data += serial.LF.decode("utf-8")
 
     return values, data
 
@@ -97,6 +97,14 @@ def serial_close(ser):
         ser.close()
 
 
+def _read_data(ser):
+    while True:
+        data = ser.readlines()
+        if len(data):
+            # app.logger.debug('serial: read done (data: "%s")' % ''.join(data).strip())
+            return [x.decode("utf-8") for x in data]
+
+
 def serial_do_operation(operation, params):
     options, data = serial_options(params)
     result = {}
@@ -105,9 +113,7 @@ def serial_do_operation(operation, params):
         ser = serial_open(options)
         if ser:
             if operation == "read":
-                data = ser.readline()
-                app.logger.debug('serial: read done (data: "%s")' % data.strip())
-                result["data"] = data
+                result["data"] = _read_data(ser)
             else:
                 ser.write(data)
                 app.logger.debug('serial: write done (data: "%s")' % data.strip())

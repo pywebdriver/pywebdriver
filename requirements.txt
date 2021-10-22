@@ -7,7 +7,7 @@ Flask
 Flask-Babel
 Flask-cors
 pyusb
-pyserial
+pyserial==3.5
 pif
 Pillow
 netifaces
