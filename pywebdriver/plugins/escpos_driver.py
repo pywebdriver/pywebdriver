@@ -56,11 +56,12 @@ else:
     device_type = "usb"
 
 SUPPORTED_DEVICES = [
+    # Don't add 2 entries with the same vendor and product IDs
+    # Epson TM-T70, TM-T70II and Epson TM-P20 have the same vendor/product IDs
     {"vendor": 0x04B8, "product": 0x0E03, "name": "Epson TM-T20"},
     {"vendor": 0x04B8, "product": 0x0202, "name": "Epson TM-T70"},
     {"vendor": 0x04B8, "product": 0x0E15, "name": "Epson TM-T20II"},
     {"vendor": 0x04B8, "product": 0x0E28, "name": "Epson TM-T20III"},
-    {"vendor": 0x04B8, "product": 0x0202, "name": "Epson TM-P20"},
 ]
 
 _logger = logging.getLogger(__name__)
