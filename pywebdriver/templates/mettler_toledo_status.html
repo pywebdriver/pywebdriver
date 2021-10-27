@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!-- ********************************************************************** -->
+<!--    PyWebDriver Software                                                -->
+<!--    Copyright (C) 2021 ACSONE SA/NV <http://www.acsone.eu>              -->
+<!--    @author Laurent Mignon                                              -->
+
+<!--This program is free software: you can redistribute it and/or modify    -->
+<!--it under the terms of the GNU Affero General Public License as          -->
+<!--published by the Free Software Foundation, either version 3 of the      -->
+<!--License, or (at your option) any later version.                         -->
+
+<!--This program is distributed in the hope that it will be useful,         -->
+<!--but WITHOUT ANY WARRANTY; without even the implied warranty of          -->
+<!--MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           -->
+<!--GNU Affero General Public License for more details.                     -->
+
+<!--You should have received a copy of the GNU Affero General Public License-->
+<!--along with this program.  If not, see <http://www.gnu.org/licenses/>.   -->
+<!-- ********************************************************************** -->
+
+{% extends "layout.html" %} {% block page_title %}{{ _('Mettler Devices Status')}}{%
+endblock %} {% block content_title %}Mettler Devices{% endblock %} {% block content %}
+<label for="weight">Weight: </label> <input id="weight" readonly="1" />
+<script>
+  setInterval(async function () {
+    let response = await fetch("hw_proxy/weight");
+    let data = await response.json();
+    weight_input = document.getElementById("weight");
+    weight_input.value = data.value;
+    if (data.status === "ACQUIRING") {
+      weight_input.style.backgroundColor = "red";
+    } else {
+      weight_input.style.backgroundColor = "green";
+    }
+    return data;
+  }, 500);
+</script>
+{% endblock %}

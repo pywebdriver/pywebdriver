@@ -109,3 +109,8 @@ def system():
 @app.route("/static/images/<path:path>", methods=["POST", "GET", "PUT", "OPTIONS"])
 def image_html(path=None):
     return app.send_static_file(os.path.join("images/", path))
+
+
+@app.route("/mettler_toledo_status.html", methods=["GET"])
+def mettler_toledo_status():
+    return render_template("mettler_toledo_status.html")
