@@ -22,11 +22,12 @@
 import os
 import platform
 import subprocess
+import sys
 
-try:
-    from pip._internal.utils.misc import get_installed_distributions
-except ImportError:  # pip<10
-    from pip import get_installed_distributions
+if sys.version_info >= (3, 8):
+    from importlib import metadata as importlib_metadata
+else:  # Python < 3.8
+    import importlib_metadata
 
 from flask import render_template
 from flask_babel import gettext as _
@@ -90,9 +91,12 @@ def system():
     system_info.append(
         {"name": _("Python Version"), "value": platform.python_version()}
     )
-    installed_python_packages = get_installed_distributions()
+    distributions = importlib_metadata.distributions()
+    installed_python_packages = []
+    for distribution in distributions:
+        installed_python_packages.append(distribution.metadata)
     installed_python_packages = sorted(
-        installed_python_packages, key=lambda package: package.key
+        installed_python_packages, key=lambda package: package["name"].upper()
     )
     return render_template(
         "system.html",

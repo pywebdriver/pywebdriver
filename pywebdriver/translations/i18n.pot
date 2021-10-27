@@ -205,7 +205,11 @@ msgid "Version"
 msgstr ""
 
 #: templates/system.html:53
-msgid "Location"
+msgid "Summary"
+msgstr ""
+
+#: templates/system.html:54
+msgid "Home Page"
 msgstr ""
 
 #: templates/usb_devices.html:23 templates/usb_devices.html:25
