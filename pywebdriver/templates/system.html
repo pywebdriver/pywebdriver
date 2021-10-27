@@ -68,7 +68,8 @@ endblock %} {% block content %}
     <tr>
       <th>{{ _('Name') }}</th>
       <th>{{ _('Version') }}</th>
-      <th>{{ _('Location') }}</th>
+      <th>{{ _('Summary') }}</th>
+      <th>{{ _('Home Page') }}</th>
     </tr>
 
     <tr></tr>
@@ -77,9 +78,10 @@ endblock %} {% block content %}
   <tbody>
     {% for packages in installed_python_packages %}
     <tr>
-      <td>{{packages['key']}}</td>
-      <td>{{packages['version']}}</td>
-      <td>{{packages['location']}}</td>
+      <td>{{ packages['Name'] }}</td>
+      <td>{{ packages['Version'] }}</td>
+      <td>{{ packages['Summary'] }}</td>
+      <td><a href="{{ packages['Home-Page'] }}">{{ packages['Home-Page'] }}</a></td>
     </tr>
     {% endfor %}
   </tbody>
