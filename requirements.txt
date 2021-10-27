@@ -15,4 +15,4 @@ pycups
 pymtp
 git+https://github.com/akretion/py-xml-escpos.git@py3
 pypostelium
-git+https://github.com/akretion/pyposdisplay.git@master
+pyposdisplay
