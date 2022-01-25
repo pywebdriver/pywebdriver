@@ -92,6 +92,10 @@ flask_args = dict(
     processes=0,
     threaded=True,
 )
+
+if flask_args.get("debug"):
+    flask_args["ssl_context"] = "adhoc"
+
 if config.has_option("flask", "sslcert"):
     sslcert = config.get("flask", "sslcert")
     if sslcert:
