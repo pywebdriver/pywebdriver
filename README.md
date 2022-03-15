@@ -53,6 +53,8 @@ Point of Sale with PyWebDriver as a Proxy.
     - Ingenico and Sagem credit card readers with Telium Manager version 37783600 or
       superior
     - Ingenico i2200 check reader and writer
+    - Adyen terminals (compatible with Adyen Terminal API 3.0 -
+      https://docs.adyen.com/point-of-sale/terminal-api-fundamentals)
   - **Customer Display**:
     - Bixolon BCD-1100
     - Bixolon BCD-1000
