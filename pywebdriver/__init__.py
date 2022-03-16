@@ -25,6 +25,7 @@
 import gettext
 import logging.config
 import os
+from locale import getdefaultlocale
 
 from configparser import ConfigParser
 
@@ -73,7 +74,9 @@ from . import plugins  # noqa: E402
 
 # Localization
 localization = config.get("localization", "locale")
-app.config["BABEL_DEFAULT_LOCALE"] = localization or "en_US"
+locale = localization if localization else getdefaultlocale()[0]
+app.config["BABEL_DEFAULT_LOCALE"] = locale or "en_US"
+
 babel = Babel(app)
 
 path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "translations")
