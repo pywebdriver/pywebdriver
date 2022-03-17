@@ -1,110 +1,147 @@
 name: CI
 
-on:
-  pull_request:
-    branches: [master]
-  push:
-    branches: [master]
-    tags: ["v*.*.*"]
+on: [workflow_dispatch]
 
 jobs:
-  pre-commit:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-      - uses: pre-commit/action@v2.0.0
-  build-windows:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: "3.9"
-      - name: Install dependencies
-        run: |
-          python -m pip install virtualenv wheel
-          virtualenv venv
-          ./venv/Scripts/activate
-          python -m pip install -r windows/requirements.txt
-          python -m pip install pyinstaller
-          python -m pip install .
-      - name: Build
-        run: |
-          ./venv/Scripts/activate
-          pyinstaller.exe windows/pywebdriver.spec
-      - name: Test build
-        shell: bash
-        run: |
-          timeout 3s ./dist/pywebdriver/pywebdriver.exe debug || test "$?" = 124
-      - name: prepare release
-        run: |
-          7z a pywebdriver_win64.zip dist/pywebdriver
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: |
-            pywebdriver_win64.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  build-bionic:
-    runs-on: ubuntu-18.04
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-      - name: Install dependencies
-        run: |
-          sudo add-apt-repository ppa:jyrki-pulliainen/dh-virtualenv
-          sudo apt --yes update
-          sudo apt --yes install libnss3-tools libcups2-dev cups devscripts debhelper dh-python dh-virtualenv dh-systemd python3-wheel python3-setuptools python3-venv libmtp-dev libffi-dev fakeroot python3-distutils python3-pip python3-simplejson python3-flask-babel python3-usb python3-serial python3-netifaces python3-cups python3-pillow
-      - name: Build
-        run: |
-          mkdir -p build
-          dch --package pywebdriver --newversion $(date +%Y%m%d) --create -m "Created by CI"
-          debuild
-      - name: Test build
-        run: |
-          mv ../pywebdriver_$(date +%Y%m%d)_amd64.deb ../pywebdriver_bionic.deb
-          sudo dpkg -i ../pywebdriver_bionic.deb
-          sh debian/replace_snakeoil_mkcert.sh
-          sudo journalctl -u pywebdriver
-          sudo service pywebdriver status
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: |
-            ../pywebdriver_bionic.deb
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  build-focal:
+  #  pre-commit:
+  #    runs-on: ubuntu-latest
+  #    steps:
+  #      - uses: actions/checkout@v2
+  #      - uses: actions/setup-python@v2
+  #      - uses: pre-commit/action@v2.0.0
+        #  build-windows:
+        #    runs-on: windows-latest
+        #    steps:
+        #      - uses: actions/checkout@v2
+        #      - uses: actions/setup-python@v2
+        #        with:
+        #          python-version: "3.9"
+        #      - name: Install dependencies
+        #        run: |
+        #          python -m pip install virtualenv wheel
+        #          virtualenv venv
+        #          ./venv/Scripts/activate
+        #          python -m pip install -r windows/requirements.txt
+        #          python -m pip install pyinstaller
+        #          python -m pip install .
+        #      - name: Build
+        #        run: |
+        #          ./venv/Scripts/activate
+        #          pyinstaller.exe windows/pywebdriver.spec
+        #      - name: Test build
+        #        shell: bash
+        #        run: |
+        #          timeout 3s ./dist/pywebdriver/pywebdriver.exe debug || test "$?" = 124
+        #      - name: prepare release
+        #        run: |
+        #          7z a pywebdriver_win64.zip dist/pywebdriver
+        #      - name: Release
+        #        uses: softprops/action-gh-release@v1
+        #        if: startsWith(github.ref, 'refs/tags/')
+        #        with:
+        #          files: |
+        #            pywebdriver_win64.zip
+        #        env:
+        #          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        #  build-bionic:
+        #    runs-on: ubuntu-18.04
+        #    steps:
+        #      - uses: actions/checkout@v2
+        #      - uses: actions/setup-python@v2
+        #      - name: Install dependencies
+        #        run: |
+        #          sudo add-apt-repository ppa:jyrki-pulliainen/dh-virtualenv
+        #          sudo apt --yes update
+        #          sudo apt --yes install libnss3-tools libcups2-dev cups devscripts debhelper dh-python dh-virtualenv python3-wheel python3-setuptools python3-venv libmtp-dev libffi-dev fakeroot python3-distutils python3-pip python3-simplejson python3-flask-babel python3-usb python3-serial python3-netifaces python3-cups python3-pillow
+        #      - name: Build
+        #        run: |
+        #          mkdir -p build
+        #          dch --package pywebdriver --newversion $(date +%Y%m%d) --create -m "Created by CI"
+        #          debuild
+        #      - name: Test build
+        #        run: |
+        #          mv ../pywebdriver_$(date +%Y%m%d)_amd64.deb ../pywebdriver_bionic.deb
+        #          sudo dpkg -i ../pywebdriver_bionic.deb
+        #          sh debian/replace_snakeoil_mkcert.sh
+        #          sudo journalctl -u pywebdriver
+        #          sudo service pywebdriver status
+        #      - name: Release
+        #        uses: softprops/action-gh-release@v1
+        #        if: startsWith(github.ref, 'refs/tags/')
+        #        with:
+        #          files: |
+        #            ../pywebdriver_bionic.deb
+        #        env:
+        #          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        #  build-focal:
+        #    runs-on: ubuntu-20.04
+        #    steps:
+        #      - uses: actions/checkout@v2
+        #      - uses: actions/setup-python@v2
+        #      - name: Install dependencies
+        #        run: |
+        #          sudo add-apt-repository ppa:jyrki-pulliainen/dh-virtualenv
+        #          sudo apt --yes update
+        #          sudo apt --yes install libnss3-tools libcups2-dev cups devscripts debhelper dh-python dh-virtualenv python3-wheel python3-setuptools python3-venv libmtp-dev libffi-dev fakeroot python3-distutils python3-pip python3-simplejson python3-flask-babel python3-usb python3-serial python3-netifaces python3-cups python3-pillow python3-flask-cors
+        #      - name: Build
+        #        run: |
+        #          mkdir -p build
+        #          dch --package pywebdriver --newversion $(date +%Y%m%d) --create -m "Created by CI"
+        #          debuild
+        #      - name: Test build
+        #        run: |
+        #          mv ../pywebdriver_$(date +%Y%m%d)_amd64.deb ../pywebdriver_focal.deb
+        #          sudo dpkg -i ../pywebdriver_focal.deb
+        #          sh debian/replace_snakeoil_mkcert.sh
+        #          sudo journalctl -u pywebdriver
+        #          sudo service pywebdriver status
+        #      - name: Release
+        #        uses: softprops/action-gh-release@v1
+        #        if: startsWith(github.ref, 'refs/tags/')
+        #        with:
+        #          files: |
+        #            ../pywebdriver_focal.deb
+        #        env:
+        #          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  build-bullseye-arm:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-      - name: Install dependencies
-        run: |
-          sudo add-apt-repository ppa:jyrki-pulliainen/dh-virtualenv
-          sudo apt --yes update
-          sudo apt --yes install libnss3-tools libcups2-dev cups devscripts debhelper dh-python dh-virtualenv dh-systemd python3-wheel python3-setuptools python3-venv libmtp-dev libffi-dev fakeroot python3-distutils python3-pip python3-simplejson python3-flask-babel python3-usb python3-serial python3-netifaces python3-cups python3-pillow python3-flask-cors
-      - name: Build
-        run: |
-          mkdir -p build
-          dch --package pywebdriver --newversion $(date +%Y%m%d) --create -m "Created by CI"
-          debuild
-      - name: Test build
-        run: |
-          mv ../pywebdriver_$(date +%Y%m%d)_amd64.deb ../pywebdriver_focal.deb
-          sudo dpkg -i ../pywebdriver_focal.deb
-          sh debian/replace_snakeoil_mkcert.sh
-          sudo journalctl -u pywebdriver
-          sudo service pywebdriver status
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
+      - uses: uraimo/run-on-arch-action@v2.1.0
+        name: Build
         with:
-          files: |
-            ../pywebdriver_focal.deb
+          arch: armv7
+          distro: bullseye
+          # Create an artifacts directory
+          setup: |
+            mkdir -p "${PWD}/artifacts"
+          # Mount the artifacts directory as /artifacts in the container
+          dockerRunArgs: |
+            --volume "${PWD}/artifacts:/artifacts"
+          run: |
+            apt --yes update
+            apt --yes install libnss3-tools libcups2-dev cups devscripts debhelper dh-python dh-virtualenv python3-wheel python3-setuptools python3-venv libmtp-dev libffi-dev fakeroot python3-distutils python3-pip python3-simplejson python3-flask-babel python3-usb python3-serial python3-netifaces python3-cups python3-pillow python3-flask-cors
+            mkdir -p build
+            dch --package pywebdriver --newversion $(date +%Y%m%d) --create -m "Created by CI"
+            debuild
+            mv ../pywebdriver_$(date +%Y%m%d)_armhf.deb /artifacts
+      - name: Test build
+      - uses: uraimo/run-on-arch-action@2
+        name: Build
+        with:
+          arch: armv7
+          distro: bullseye
+          run: |
+            mv pywebdriver_$(date +%Y%m%d)_armhf.deb pywebdriver_bullseye_armhf.deb
+            sudo dpkg -i pywebdriver_bullseye_armhf.deb
+            sh debian/replace_snakeoil_mkcert.sh
+            sudo journalctl -u pywebdriver
+            sudo service pywebdriver status
+          #      - name: Release
+          #        uses: softprops/action-gh-release@v1
+          #        if: startsWith(github.ref, 'refs/tags/')
+          #        with:
+          #          files: |
+          #            ../pywebdriver_bullseye_armhf.deb
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
