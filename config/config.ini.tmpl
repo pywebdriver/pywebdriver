@@ -60,6 +60,14 @@ device_timeout=0.05
 device_name=/dev/ttyACM0
 device_rate=9600
 
+[zvt_driver]
+device=/dev/ttyACM0
+baudrate=9600
+; If the device is available over TCP/IP the following syntax can be used
+; py3-ecrterm allows setting parameters using GET parameters in the URI
+; device=socket://<ip>:<port>
+password=000000
+
 [serial_driver]
 port=/dev/ttyS0
 baudrate=9600

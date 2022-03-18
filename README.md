@@ -55,6 +55,7 @@ Point of Sale with PyWebDriver as a Proxy.
     - Ingenico i2200 check reader and writer
     - Adyen terminals (compatible with Adyen Terminal API 3.0 -
       https://docs.adyen.com/point-of-sale/terminal-api-fundamentals)
+    - Terminals with ZVT-700 compatibility
   - **Customer Display**:
     - Bixolon BCD-1100
     - Bixolon BCD-1000
@@ -220,6 +221,7 @@ If not, default drivers will be loaded:
 - serial_driver
 - signature_driver
 - telium_driver
+- zvt_driver
 - opcua_driver
 - odoo7
 - odoo8

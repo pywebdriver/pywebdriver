@@ -11,6 +11,7 @@ DEFAULT_DRIVERS = [
     "serial_driver",
     "signature_driver",
     "telium_driver",
+    "zvt_driver",
     "opcua_driver",
     "odoo7",
     "odoo8",
