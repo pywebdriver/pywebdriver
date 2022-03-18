@@ -22,6 +22,7 @@ import simplejson as json
 from ecrterm.ecr import ECR
 from ecrterm.packets.base_packets import Registration
 from flask import jsonify, request
+
 from pywebdriver import app, config, drivers
 
 from .payment_base_driver import PaymentTerminalDriver
@@ -117,7 +118,7 @@ class ZVTDriver(PaymentTerminalDriver):
             message = "\n".join(lines)
             try:
                 # assume device sends CP-437 strings (the default)
-                message = bytes([ord(i) for i in message]).decode('cp437')
+                message = bytes([ord(i) for i in message]).decode("cp437")
             except Exception:
                 pass
 
