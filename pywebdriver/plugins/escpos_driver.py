@@ -201,6 +201,9 @@ else:
         def get_vendor_product(self):
             return "escpos-icon"
 
+        def printer_available(self):
+            return usb.core.find(**self.usb_args) is not None
+
         def connected_usb_devices(self):
             connected = []
 
@@ -215,20 +218,29 @@ else:
             return connected
 
         def open_printer(self):
+            # Check if the printer is still available and wasn't disconnected
+            if not self.printer_available():
+                self.close()
+                return
+
             if self.device:
                 return
+
             try:
                 self.open(*self.open_args)
                 if device_type == "win32":
                     self.device = self.hPrinter
             except Exception as e:
                 self.set_status("error", e)
+                self.close()
 
         def open_cashbox(self, printer):
             self.open_printer()
+            if not self.device:
+                return
+
             self.cashdraw(2)
             self.cashdraw(5)
-            self.close()
 
         def get_status(self, **params):
             messages = []
@@ -266,7 +278,6 @@ else:
                     status = "connected"
             else:
                 status = "disconnected"
-            self.close()
             return {
                 "status": status,
                 "messages": messages,
@@ -278,11 +289,18 @@ else:
 
         def receipt(self, content):
             self.open_printer()
+            if not self.device:
+                return
+
             Layout(content).format(self)
             self.cut()
-            self.close()
 
         def printstatus(self, eprint):
+
+            self.open_printer()
+            if not self.device:
+                return
+
             addr_lines = []
             for ifaceName in interfaces():
                 addresses = [
