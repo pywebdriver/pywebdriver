@@ -251,19 +251,7 @@ else:
                 # Maybe we could do something here to start serial
                 status = "connected"
             elif device_type == "usb":
-                try:
-                    if self.is_online():
-                        status = "connected"
-                    else:
-                        status = "connecting"
-                    # if res['printer']['status_error']:
-                    #     status = 'error'
-                    #     messages.append(
-                    #         'Error code: %i' % res['printer']['status_error'])
-                except Exception as err:
-                    status = "error"
-                    self.device = False
-                    messages.append("Error: %s" % err)
+                status = "connected"
             elif device_type == "win32":
                 messages.append(self.printer_name)
                 result = win32print.GetPrinter(self.device, 2)
