@@ -22,7 +22,6 @@ import simplejson as json
 from ecrterm.ecr import ECR
 from ecrterm.packets.base_packets import Registration
 from flask import jsonify, request
-
 from pywebdriver import app, config, drivers
 
 from .payment_base_driver import PaymentTerminalDriver
@@ -88,13 +87,21 @@ class ZVTDriver(PaymentTerminalDriver):
             self.zvt_status()
         return super().get_status("0", **kwargs)
 
+    def _payment(self, amount):
+        try:
+            return self.device.payment(amount)
+        except Exception as e:
+            app.logger.exception(e)
+            self.device = None
+            return False
+
     def transaction_start(self, data):
         payment_info = data["payment_info"]
 
         success = False
         status = reference = ""
-        if self.zvt_status():
-            success = self.device.payment(int(100 * payment_info["amount"]))
+        if self.zvt_status() and self._payment(int(100 * payment_info["amount"])):
+            success = True
         else:
             status = "ZVT Driver - Device not connected"
 
@@ -111,9 +118,17 @@ class ZVTDriver(PaymentTerminalDriver):
             reference=reference,
         )
 
+    def _end_of_day(self):
+        try:
+            return self.device.end_of_day()
+        except Exception as e:
+            app.logger.exception(e)
+            self.device = None
+            return False
+
     def end_of_day(self, data):
         status = message = ""
-        if self.zvt_status() and self.device.end_of_day():
+        if self.zvt_status() and self._end_of_day():
             lines = self.device.daylog
             message = "\n".join(lines)
             try:
