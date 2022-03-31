@@ -202,10 +202,13 @@ else:
             return "escpos-icon"
 
         def printer_available(self):
-            return (
-                usb.core.find(idVendor=self.idVendor, idProduct=self.idProduct)
-                is not None
-            )
+            if device_type == "usb":
+                return (
+                    usb.core.find(idVendor=self.idVendor, idProduct=self.idProduct)
+                    is not None
+                )
+            # TODO: Determine the state of the printer for different device_type
+            return False
 
         def connected_usb_devices(self):
             connected = []
