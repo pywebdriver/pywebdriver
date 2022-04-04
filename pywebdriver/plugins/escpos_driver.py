@@ -52,6 +52,16 @@ elif (
     and config.get("escpos_driver", "device_type") == "win32"
 ):
     device_type = "win32"
+elif (
+    config.has_option("escpos_driver", "device_type")
+    and config.get("escpos_driver", "device_type") == "network"
+):
+    device_type = "network"
+elif (
+    config.has_option("escpos_driver", "device_type")
+    and config.get("escpos_driver", "device_type") == "dummy"
+):
+    device_type = "dummy"
 else:
     device_type = "usb"
 
@@ -149,6 +159,10 @@ try:  # noqa C901
                 "usable": True,
             },
         }
+    elif device_type == "dummy":
+        from escpos.printer import Dummy as POSDriver
+    elif device_type == "network":
+        from escpos.printer import Network as POSDriver
     else:
         from escpos.printer import Usb as POSDriver
 except ImportError:
@@ -181,6 +195,13 @@ else:
                 kwargs["bytesize"] = config.getint("escpos_driver", "serial_bytesize")
                 kwargs["timeout"] = config.getint("escpos_driver", "serial_timeout")
                 POSDriver.__init__(self, **kwargs)
+            elif device_type == "dummy":
+                POSDriver.__init__(self, **kwargs)
+            elif device_type == "network":
+                super(POSDriver, self).__init__(**kwargs)
+                self.host = None
+                self.port = 9100
+                self.timeout = 60
             elif device_type == "win32":
                 try:
                     kwargs["printer_name"] = config.get("escpos_driver", "printer_name")
@@ -215,6 +236,13 @@ else:
                     POSDriver.__init__(self, **kwargs)
             ThreadDriver.__init__(self, *args, **kwargs)
 
+        def open(self):
+            """Open TCP socket with ``socket``-library and set it as escpos device"""
+            if device_type == "network" and not self.host:
+                print("Could not open socket for {}".format(self.host))
+            else:
+                super(ESCPOSDriver, self).open()
+
         def get_vendor_product(self):
             return "escpos-icon"
 
@@ -231,7 +259,12 @@ else:
                     connected.append(device)
             return connected
 
-        def open_printer(self):
+        def open_printer(self, printer_ip=None):
+            if printer_ip:
+                self.host = printer_ip
+                self.open()
+                return
+
             if self.device:
                 return
             try:
@@ -294,8 +327,10 @@ else:
             self.receipt(content)
 
         def receipt(self, content):
-            self.open_printer()
-            Layout(content).format(self)
+            receipt = content.get("receipt")
+            printer_ip = content.get("printer_ip")
+            self.open_printer(printer_ip)
+            Layout(receipt).format(self)
             self.cut()
             self.close()
 
@@ -591,8 +626,11 @@ else:
     def print_xml_receipt_json():
         """ For Odoo 8.0+"""
 
-        receipt = request.json["params"]["receipt"].replace("ean13", "EAN13")
-        driver.push_task("receipt", receipt)
+        content = dict(
+            receipt=request.json["params"]["receipt"].replace("ean13", "EAN13"),
+            printer_ip=request.json["params"].get("proxy"),
+        )
+        driver.push_task("receipt", content)
 
         return jsonify(jsonrpc="2.0", result=True)
 
