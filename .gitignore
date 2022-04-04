@@ -64,7 +64,6 @@ coverage.xml
 docs/_build/
 
 # automatic build
-Dockerfile
 debuild.sh
 debian/changelog
 
