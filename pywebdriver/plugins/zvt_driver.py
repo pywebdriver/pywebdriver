@@ -89,7 +89,10 @@ class ZVTDriver(PaymentTerminalDriver):
 
     def _payment(self, amount):
         try:
-            return self.device.payment(amount)
+            if amount >= 0:
+                return self.device.payment(amount)
+            else:
+                return self.device.refund(abs(amount))
         except Exception as e:
             app.logger.exception(e)
             self.device = None
