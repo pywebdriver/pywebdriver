@@ -64,6 +64,8 @@ drivers["telium"] = telium_driver
 def payment_terminal_transaction_start():
     app.logger.debug("Telium: Call payment_terminal_transaction_start")
     payment_info = request.json["params"]["payment_info"]
+    if payment_info["refund"]:
+        return jsonify(jsonrpc="2.0", result=False)
     app.logger.debug("Telium: payment_info=%s", payment_info)
     result = telium_driver.transaction_start(payment_info)
     app.logger.debug("Telium: result of transation_start=%s", result)
