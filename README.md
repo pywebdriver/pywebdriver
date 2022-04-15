@@ -17,7 +17,7 @@ distribution.
 - [End-Users / Customers Section](#customers)
 - [Contributors](#contributors)
 - [Developers Section](#developers)
-  - [Installation on Debian/Ubuntu](#install-debian)
+  - [Installation on Debian/Ubuntu](#install-ubuntu)
   - [Installation on Mac OS X](#install-osx)
   - [Installation on Windows 10](#install-windows)
   - [Browser settings](#browser-settings)
@@ -44,9 +44,9 @@ The aim of this sub project is to provide WebServices and Web Page to simulate t
 behaviour of Odoo Apps (hw_proxy applications & co) to allow Odoo users to use Odoo
 Point of Sale with PyWebDriver as a Proxy.
 
-- **Odoo8**:
+- **Odoo8 - Odoo12**:
   - **Printers** :
-    - Epson TM-T20
+    - Epson TM-T20 II and Epson TM-T20 III
     - Epson TM-T70
     - Epson TM-P20
   - **Credit Card Reader**:
@@ -93,33 +93,17 @@ each file or in a readme file of the folder. The main other contributors are:
 
 # <a name="developers"></a>Developers Section
 
-## <a name="install-debian"></a>Installation on Debian/Ubuntu [OLD]
+## <a name="install-ubuntu"></a>Installation on Ubuntu 18.04 and 20.04 with a signed certificate using mkcert
 
 ```
-sudo add-apt-repository ppa:akretion-team/pywebdriver
-sudo apt-get update
-sudo apt-get install pywebdriver
+wget https://raw.githubusercontent.com/akretion/pywebdriver/master/debian/install.sh
+sudo chmod +x install.sh
+sudo ./install.sh
 ```
 
-## <a name="install-bionic"></a>Installation on Ubuntu 18.04 [NEW]
-
-```
-sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 305CB544DDFC7A97
-sudo apt-add-repository 'deb [arch=amd64] http://apt.akretion.com/ pywebdriver-nightly main'
-sudo apt update
-sudo apt install pywebdriver
-```
-
-If you update from the OLD version, you will need to uninstall nginx after upgrading or
+If you update from an OLD version, you will need to uninstall nginx after upgrading or
 you could face port reservation problems. Also it is not required anymore so there is no
 reason to have it.
-
-## <a name="install-script"></a>Installation on Ubuntu 18.04 with a signed certificate using mkcert
-
-Alternatively you can use the script
-[debian/install.sh](https://github.com/akretion/pywebdriver/tree/master/debian/install.sh).
-It will install pywebdriver and you will not have to accept the self-signed certificate
-anymore on https.
 
 ## <a name="install-osx"></a>Installation on Mac OS X
 
@@ -190,12 +174,9 @@ sslkey=c:/pywebdriver/localhost+2-key.pem
 
 ## <a name="browser-settings"></a>Browser settings
 
-You need to confirmed security exception on your browers for the following paths:
-http://localhost and https://localhost
-
-see
+You need to confirmed security exception on your browers for the following paths
+https://localhost:8069, click on 'Advanced' and 'confirm security exception'. See
 <a href="https://support.mozilla.org/en-US/kb/what-does-your-connection-is-not-secure-mean">here</a>
-and click on 'Advanced' and 'confirm security exception'
 
 ## <a name="browser-settings"></a>Base configuration
 
@@ -240,17 +221,6 @@ Add entries in config file like:
 sslcert=cert.pem
 sslkey=privkey.pem
 
-```
-
-#### <a name="browser-settings"></a>Epson OCD300
-
-For the customer display **Epson OCD300**, you need to change the config file
-(config/config.ini).
-
-Change line device_name in category [display_driver] with this :
-
-```
-device_name=/dev/ttyACM0
 ```
 
 ## <a name="development"></a>Development
