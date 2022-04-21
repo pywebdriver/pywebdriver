@@ -87,8 +87,13 @@ class ZVTDriver(PaymentTerminalDriver):
             self.zvt_status()
         return super().get_status("0", **kwargs)
 
-    def _payment(self, amount):
+    def _payment(self, amount, refund):
+        if amount < 0:
+            return False
+
         try:
+            if refund:
+                return self.device.refund(amount)
             return self.device.payment(amount)
         except Exception as e:
             app.logger.exception(e)
@@ -100,7 +105,9 @@ class ZVTDriver(PaymentTerminalDriver):
 
         success = False
         status = reference = ""
-        if self.zvt_status() and self._payment(int(100 * payment_info["amount"])):
+        if self.zvt_status() and self._payment(
+            int(100 * payment_info["amount"]), payment_info.get("refund")
+        ):
             success = True
         else:
             status = "ZVT Driver - Device not connected"
