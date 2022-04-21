@@ -22,6 +22,7 @@ import simplejson as json
 from ecrterm.ecr import ECR
 from ecrterm.packets.base_packets import Registration
 from flask import jsonify, request
+
 from pywebdriver import app, config, drivers
 
 from .payment_base_driver import PaymentTerminalDriver
