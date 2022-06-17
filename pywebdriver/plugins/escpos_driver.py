@@ -8,6 +8,7 @@ import logging
 from configparser import NoOptionError
 
 import usb.core
+import errno
 from flask import jsonify, render_template, request
 from netifaces import AF_INET, ifaddresses, interfaces
 from xmlescpos import Layout
@@ -15,6 +16,8 @@ from xmlescpos import Layout
 from pywebdriver import app, config, drivers
 
 from .base_driver import ThreadDriver
+
+ENODEV = errno.__dict__.get('ENODEV', None),
 
 meta = {
     "name": "ESCPOS Printer",
@@ -230,7 +233,22 @@ else:
                 return
 
             if self.device:
-                return
+                if device_type == "usb":
+                    # Device was previously initialized
+                    # Try writing to it to see if it is still available
+                    # If we get Error ENODEV it might have been temporarily disconnected
+                    # -> try to reopen
+                    # Otherwise no reopening is neccessary
+                    try:
+                        self._raw("")
+                    except usb.core.USBError as e:
+                        if e.errno != ENODEV:
+                            self.set_status("error", e)
+                        _logger.info("Printer was disconnected. Reconnecting")
+                    else:
+                        return
+                else:
+                    return
 
             try:
                 self.open(*self.open_args)
