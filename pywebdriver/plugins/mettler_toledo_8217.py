@@ -27,18 +27,6 @@ class MettlerToledo8217ScaleDriver(AbstractScaleDriver):
     def _baudrate(self):
         return self.config.getint("scale_driver", "baudrate", fallback=9600)
 
-    @property
-    def weight(self):
-        """Return the last reported weight of the scale."""
-        with self.data_lock:
-            return self.data.get("value", 0)
-
-    @property
-    def scale_status(self):
-        """Return the last reported status of the scale."""
-        with self.data_lock:
-            return self.data.get("status", "ERROR")
-
     def acquire_data(self, connection):
         """Acquire data over the connection."""
         buffer = b""

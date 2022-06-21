@@ -34,16 +34,16 @@ class AbstractScaleDriver(Thread, AbstractDriver, ABC):
         self.vendor_product = None
 
     @property
-    @abstractmethod
     def weight(self):
         """Return the last reported weight of the scale."""
-        # Read this from self.data. Use self.lock.
+        with self.data_lock:
+            return self.data.get("value", 0)
 
     @property
-    @abstractmethod
     def scale_status(self):
         """Return the last reported status of the scale."""
-        # Read this from self.data. Use self.lock.
+        with self.data_lock:
+            return self.data.get("status", "ERROR")
 
     @property
     def poll_interval(self):
