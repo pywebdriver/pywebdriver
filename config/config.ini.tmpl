@@ -79,7 +79,9 @@ api_key=api_key_from_adyen
 [scale_driver]
 ; Customise this
 protocol_name=mettler_toledo_8217
-poll_interval=0.2
+; Time between requests to the scale. The default differs per protocol, and
+; normally should not be changed.
+;poll_interval=0.2
 ; Used by serial scales
 ;port=/dev/ttyS0
 ;baudrate=9600

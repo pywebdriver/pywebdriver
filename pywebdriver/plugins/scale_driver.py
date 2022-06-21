@@ -46,9 +46,9 @@ class AbstractScaleDriver(Thread, AbstractDriver, ABC):
             return self.data.get("status", "error")
 
     @property
+    @abstractmethod
     def poll_interval(self):
-        """Read the poll interval from the config."""
-        return self.config.getfloat("scale_driver", "poll_interval", fallback=0.2)
+        """Time between polls to the scale."""
 
     def get_vendor_product(self):
         product = self.vendor_product

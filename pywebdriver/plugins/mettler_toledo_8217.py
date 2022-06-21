@@ -22,6 +22,13 @@ class MettlerToledo8217ScaleDriver(AbstractScaleDriver):
     def __init__(self, config, *args, **kwargs):
         super().__init__(config, *args, **kwargs)
         self.vendor_product = "mettler_toledo_8217"
+        self._poll_interval = self.config.getfloat(
+            "scale_driver", "poll_interval", fallback=0.2
+        )
+
+    @property
+    def poll_interval(self):
+        return self._poll_interval
 
     @property
     def _port(self):
