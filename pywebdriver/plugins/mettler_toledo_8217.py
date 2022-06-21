@@ -67,7 +67,8 @@ class MettlerToledo8217ScaleDriver(AbstractScaleDriver):
         _logger.debug(matchdict)
         status = matchdict["status"]
         weight = matchdict["weight"]
-        result = self.data.copy()
+        with self.data_lock:
+            result = self.data.copy()
         if weight is not None:
             result.update({"value": float(weight), "status": "ok"})
             return result
