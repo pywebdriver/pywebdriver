@@ -127,13 +127,8 @@ def before_first_request():
         )
 
 
-@app.route("/hw_proxy/weight", methods=["GET"])
-def read_weight():
-    return jsonify(**{"value": driver.weight, "status": driver.scale_status})
-
-
 @app.route("/hw_proxy/scale_read", methods=["POST"])
-def read_weight_post():
+def scale_read_post():
     return jsonify(
         jsonrpc="2.0",
         result={
