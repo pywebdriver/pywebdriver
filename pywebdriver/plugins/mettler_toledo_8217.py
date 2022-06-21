@@ -15,6 +15,10 @@ _logger = logging.getLogger(__name__)
 
 
 class MettlerToledo8217ScaleDriver(AbstractScaleDriver):
+    """Driver for the 8217 Mettler Toledo protocol. Because of Python
+    restrictions, the number doesn't come first in the class name.
+    """
+
     def __init__(self, config, *args, **kwargs):
         super().__init__(config, *args, **kwargs)
         self.vendor_product = "mettler_toledo_8217"
