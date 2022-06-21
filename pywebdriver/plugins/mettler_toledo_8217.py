@@ -58,16 +58,17 @@ class MettlerToledo8217ScaleDriver(AbstractScaleDriver):
         weight = matchdict["weight"]
         result = self.data.copy()
         if weight is not None:
-            result.update({"value": float(weight), "status": "FIXED"})
+            result.update({"value": float(weight), "status": "ok"})
             return result
         if not isinstance(status, bytes):
             return result
         status_byte = int.from_bytes(status, byteorder="big")
         if status_byte & 0b1:
             # in motion
-            result.update({"status": "ACQUIRING"})
+            result.update({"status": "moving"})
         elif status_byte & 0b110:
-            result.update({"status": "ERROR"})
+            # FIXME: Find a better status.
+            result.update({"status": "error"})
         return result
 
     def establish_connection(self):

@@ -43,7 +43,7 @@ class AbstractScaleDriver(Thread, AbstractDriver, ABC):
     def scale_status(self):
         """Return the last reported status of the scale."""
         with self.data_lock:
-            return self.data.get("status", "ERROR")
+            return self.data.get("status", "error")
 
     @property
     def poll_interval(self):
@@ -134,6 +134,6 @@ def scale_read_post():
         result={
             "weight": driver.weight,
             "unit": "kg",
-            "info": "ok",
+            "info": driver.scale_status,
         },
     )
