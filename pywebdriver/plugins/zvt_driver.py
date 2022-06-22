@@ -20,6 +20,7 @@
 
 import simplejson as json
 from ecrterm.ecr import ECR
+from ecrterm.exceptions import TransmissionException, TransportLayerException
 from ecrterm.packets.base_packets import Registration
 from flask import jsonify, request
 
@@ -46,8 +47,12 @@ class ZVTDriver(PaymentTerminalDriver):
 
     def zvt_status(self):
         """Get the connection status of the device"""
-        with self.lock:
-            status = self.device and self.device.detect_pt()
+
+        try:
+            with self.lock:
+                status = self.device and self.device.status()
+        except TransmissionException, TransportLayerException:
+            status = False
 
         self._set_terminal_status("0", "connected" if status else "disconnected")
         return status
