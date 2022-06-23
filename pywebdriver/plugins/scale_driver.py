@@ -37,7 +37,7 @@ class AbstractScaleDriver(Thread, AbstractDriver, ABC):
         self.connection = None
         self.data = {}
         self.data_lock = RLock()
-        self.vendor_product = None
+        self.vendor_product = "default_scale"
 
     @property
     def weight(self):
