@@ -22,6 +22,12 @@ _logger = logging.getLogger(__name__)
 driver = None
 
 
+class ScaleConnectionError(Exception):
+    """Raised when the connection with the scale is not healthy when trying to
+    acquire data from it.
+    """
+
+
 class AbstractScaleDriver(Thread, AbstractDriver, ABC):
     def __init__(self, config, *args, **kwargs):
         super().__init__(*args, daemon=True, **kwargs)
@@ -71,10 +77,6 @@ class AbstractScaleDriver(Thread, AbstractDriver, ABC):
     def establish_connection(self):
         """Establish a connection. The connection must be a context manager."""
 
-    @abstractmethod
-    def is_connection_active(self, connection):
-        """Ascertain whether the connection is active and healthy."""
-
     def run(self):
         with ExitStack() as exit_stack:
             while True:
@@ -93,15 +95,15 @@ class AbstractScaleDriver(Thread, AbstractDriver, ABC):
                         with self.data_lock:
                             self.data = data
                         time.sleep(self.poll_interval)
+                    except ScaleConnectionError:
+                        _logger.error("connection with scale lost")
+                        exit_stack.close()
+                        self.active = False
+                        break
                     except Exception:
+                        # While connection is still active, continue and try
+                        # again.
                         _logger.exception("error during acquiring of data")
-                        if not self.is_connection_active(connection):
-                            # Force-close the connection.
-                            exit_stack.close()
-                            self.active = False
-                            break
-                        # While connection is still active, try again.
-                        continue
 
 
 @app.before_first_request

@@ -7,7 +7,7 @@ import re
 
 import serial
 
-from .scale_driver import AbstractScaleDriver
+from .scale_driver import AbstractScaleDriver, ScaleConnectionError
 
 ANSWER_RE = re.compile(rb"^\?(?P<status>.)|(?P<weight>\d+\.\d+)$")
 
@@ -43,9 +43,15 @@ class MettlerToledo8217ScaleDriver(AbstractScaleDriver):
         buffer = b""
         stx = False
         # ask for weight data
-        connection.write(b"W")
+        try:
+            connection.write(b"W")
+        except serial.SerialException as e:
+            raise ScaleConnectionError() from e
         while True:
-            c = connection.read(1)
+            try:
+                c = connection.read(1)
+            except serial.SerialException as e:
+                raise ScaleConnectionError() from e
             if not c:
                 # timeout
                 raise serial.SerialTimeoutException()
@@ -93,13 +99,3 @@ class MettlerToledo8217ScaleDriver(AbstractScaleDriver):
             bytesize=serial.SEVENBITS,
             timeout=1,
         )
-
-    def is_connection_active(self, connection):
-        """Ascertain whether the connection is active and healthy."""
-        if not connection or not connection.isOpen():
-            return False
-        try:
-            connection.read(1)
-        except serial.SerialException:
-            return False
-        return True
