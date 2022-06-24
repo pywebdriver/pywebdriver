@@ -35,21 +35,21 @@ class AbstractScaleDriver(Thread, AbstractDriver, ABC):
         self.active = False
         self.config = config
         self.connection = None
-        self.data = {}
-        self.data_lock = RLock()
+        self._data = {}
+        self._data_lock = RLock()
         self.vendor_product = "default_scale"
 
     @property
     def weight(self):
         """Return the last reported weight of the scale."""
-        with self.data_lock:
-            return self.data.get("value", 0)
+        with self._data_lock:
+            return self._data.get("value", None)
 
     @property
     def scale_status(self):
         """Return the last reported status of the scale."""
-        with self.data_lock:
-            return self.data.get("status", "error")
+        with self._data_lock:
+            return self._data.get("status", ["error"])
 
     @property
     @abstractmethod
@@ -92,8 +92,8 @@ class AbstractScaleDriver(Thread, AbstractDriver, ABC):
                 while True:
                     try:
                         data = self.acquire_data(connection)
-                        with self.data_lock:
-                            self.data = data
+                        with self._data_lock:
+                            self._data = data
                         time.sleep(self.poll_interval)
                     except ScaleConnectionError:
                         _logger.error("connection with scale lost")

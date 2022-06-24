@@ -73,21 +73,24 @@ class MettlerToledo8217ScaleDriver(AbstractScaleDriver):
         _logger.debug(matchdict)
         status = matchdict["status"]
         weight = matchdict["weight"]
-        with self.data_lock:
-            result = self.data.copy()
         if weight is not None:
-            result.update({"value": float(weight), "status": "ok"})
-            return result
-        if not isinstance(status, bytes):
-            return result
+            return {"value": float(weight), "status": "ok"}
         status_byte = int.from_bytes(status, byteorder="big")
-        if status_byte & 0b1:
-            # in motion
-            result.update({"status": "moving"})
-        elif status_byte & 0b110:
-            # FIXME: Find a better status.
-            result.update({"status": "error"})
-        return result
+        weight_info = []
+        if status_byte & 1:
+            weight_info.append("moving")
+        if status_byte & 1 << 1:
+            weight_info.append("over_capacity")
+        if status_byte & 1 << 2:
+            weight_info.append("negative")
+            weight = 0.0
+        if status_byte & 1 << 3:
+            weight_info.append("outside_zero_capture_range")
+        if status_byte & 1 << 4:
+            weight_info.append("center_of_zero")
+        if status_byte & 1 << 5:
+            weight_info.append("net_weight")
+        return {"value": weight, "status": weight_info}
 
     def establish_connection(self):
         """Establish a connection. The connection must be a context manager."""
