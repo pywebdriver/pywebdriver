@@ -7,7 +7,11 @@ import re
 
 import serial
 
-from .scale_driver import AbstractScaleDriver, ScaleConnectionError
+from .scale_driver import (
+    AbstractScaleDriver,
+    ScaleConnectionError,
+    ScaleAcquireDataError,
+)
 
 ANSWER_RE = re.compile(rb"^\?(?P<status>.)|(?P<weight>\d+\.\d+)$")
 
@@ -54,7 +58,7 @@ class MettlerToledo8217ScaleDriver(AbstractScaleDriver):
                 raise ScaleConnectionError() from e
             if not c:
                 # timeout
-                raise serial.SerialTimeoutException()
+                raise ScaleAcquireDataError("read time-out")
             if c == b"\x02":
                 # start of answer
                 stx = True

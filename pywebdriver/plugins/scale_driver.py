@@ -22,9 +22,19 @@ _logger = logging.getLogger(__name__)
 driver = None
 
 
-class ScaleConnectionError(Exception):
+class ScaleError(Exception):
+    """Base exception."""
+
+
+class ScaleConnectionError(ScaleError):
     """Raised when the connection with the scale is not healthy when trying to
     acquire data from it.
+    """
+
+
+class ScaleAcquireDataError(ScaleError):
+    """An error occurred during the acquiring of data that did not break the
+    connection.
     """
 
 
