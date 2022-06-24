@@ -90,6 +90,8 @@ class AbstractScaleDriver(Thread, AbstractDriver, ABC):
     def run(self):
         with ExitStack() as exit_stack:
             while True:
+                with self._data_lock:
+                    self._data = {}
                 while not self.active:
                     try:
                         connection = exit_stack.enter_context(
