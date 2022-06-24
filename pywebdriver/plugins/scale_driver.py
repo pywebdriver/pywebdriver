@@ -121,7 +121,7 @@ def before_first_request():
     protocol = config.get("scale_driver", "protocol_name", fallback=None)
     if not protocol:
         raise ValueError("scale_driver.protocol_name is not defined")
-    module = import_module("." + protocol, __package__)
+    module = import_module(".scale_protocols." + protocol, __package__)
     for _, value in module.__dict__.items():
         try:
             result = issubclass(value, AbstractScaleDriver)

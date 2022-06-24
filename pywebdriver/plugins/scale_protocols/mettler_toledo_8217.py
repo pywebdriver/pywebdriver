@@ -7,7 +7,7 @@ import re
 
 import serial
 
-from .scale_driver import (
+from ..scale_driver import (
     AbstractScaleDriver,
     ScaleConnectionError,
     ScaleAcquireDataError,
