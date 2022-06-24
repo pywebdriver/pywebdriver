@@ -108,7 +108,6 @@ class AbstractScaleDriver(Thread, AbstractDriver, ABC):
 
 @app.before_first_request
 def before_first_request():
-    global driver
     protocol = config.get("scale_driver", "protocol_name", fallback=None)
     if not protocol:
         raise ValueError("scale_driver.protocol_name is not defined")
@@ -134,8 +133,8 @@ def scale_read_post():
     return jsonify(
         jsonrpc="2.0",
         result={
-            "weight": driver.weight,
+            "weight": drivers["scale"].weight,
             "unit": "kg",
-            "info": driver.scale_status,
+            "info": drivers["scale"].scale_status,
         },
     )
