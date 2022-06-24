@@ -99,12 +99,20 @@ class AbstractScaleDriver(Thread, AbstractDriver, ABC):
                     except Exception:
                         _logger.error("failed to connect to scale")
                         time.sleep(1)
+                poll_time = 0
                 while True:
                     try:
+                        # Sleep until approximately exactly self.poll_interval
+                        # time has passed since previous iteration.
+                        current_time = time.perf_counter()
+                        sleep_time = self.poll_interval - (current_time - poll_time)
+                        if sleep_time > 0:
+                            time.sleep(sleep_time)
+                        poll_time = time.perf_counter()
+
                         data = self.acquire_data(connection)
                         with self._data_lock:
                             self._data = data
-                        time.sleep(self.poll_interval)
                     except ScaleConnectionError:
                         _logger.error("connection with scale lost")
                         exit_stack.close()
