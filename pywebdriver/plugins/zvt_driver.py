@@ -20,7 +20,6 @@
 
 import simplejson as json
 from ecrterm.ecr import ECR
-from ecrterm.exceptions import TransmissionException, TransportLayerException
 from ecrterm.packets.base_packets import Registration
 from flask import jsonify, request
 
@@ -42,16 +41,17 @@ class ZVTDriver(PaymentTerminalDriver):
     """ Telium Driver class for pywebdriver """
 
     def __init__(self):
+        print("ZVT init")
         super().__init__()
         self.device = None
 
     def zvt_status(self):
         """Get the connection status of the device"""
 
-        try:
-            with self.lock:
-                status = self.device and self.device.status()
-        except TransmissionException, TransportLayerException:
+        if self.device:
+             with self.lock:
+                 status = self.device.connected()
+        else:
             status = False
 
         self._set_terminal_status("0", "connected" if status else "disconnected")
