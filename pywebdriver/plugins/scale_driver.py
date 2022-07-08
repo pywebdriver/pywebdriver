@@ -39,6 +39,8 @@ class ScaleAcquireDataError(ScaleError):
 
 
 class AbstractScaleDriver(Thread, AbstractDriver, ABC):
+    VALID_WEIGHT_STATUS = "ok"
+
     def __init__(self, config, *args, **kwargs):
         super().__init__(*args, daemon=True, **kwargs)
 

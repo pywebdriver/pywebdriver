@@ -29,6 +29,7 @@ class MettlerToledo8217ScaleDriver(AbstractScaleDriver):
         self._poll_interval = self.config.getfloat(
             "scale_driver", "poll_interval", fallback=0.2
         )
+        self._last_weight = 0.0
 
     @property
     def poll_interval(self):
@@ -78,7 +79,11 @@ class MettlerToledo8217ScaleDriver(AbstractScaleDriver):
         status = matchdict["status"]
         weight = matchdict["weight"]
         if weight is not None:
-            return {"value": float(weight), "status": "ok"}
+            self._last_weight = float(weight)
+            return {
+                "value": self._last_weight,
+                "status": self.VALID_WEIGHT_STATUS,
+            }
         status_byte = int.from_bytes(status, byteorder="big")
         weight_info = []
         if status_byte & 1:
@@ -94,6 +99,12 @@ class MettlerToledo8217ScaleDriver(AbstractScaleDriver):
             weight_info.append("center_of_zero")
         if status_byte & 1 << 5:
             weight_info.append("net_weight")
+        if not weight_info:
+            # some scales return the weight once and then only status 0 for
+            # each subsequent weight command until the weight changes. in that
+            # case, return the last weight.
+            weight = self._last_weight
+            weight_info = self.VALID_WEIGHT_STATUS
         return {"value": weight, "status": weight_info}
 
     def establish_connection(self):
