@@ -17,7 +17,7 @@ from pywebdriver import app, config, drivers
 
 from .base_driver import ThreadDriver
 
-ENODEV = errno.__dict__.get('ENODEV', None),
+ENODEV = (errno.__dict__.get("ENODEV", None),)
 
 meta = {
     "name": "ESCPOS Printer",
