@@ -3,12 +3,12 @@
 # @author Sylvain CALADOR <sylvain.calador@akretion.com>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
+import errno
 import fnmatch
 import logging
 from configparser import NoOptionError
 
 import usb.core
-import errno
 from flask import jsonify, render_template, request
 from netifaces import AF_INET, ifaddresses, interfaces
 from xmlescpos import Layout
@@ -205,7 +205,7 @@ else:
             return "escpos-icon"
 
         def printer_available(self):
-            if device_type == "usb":
+            if device_type == "usb" and hasattr(self, "idVendor"):
                 return (
                     usb.core.find(idVendor=self.idVendor, idProduct=self.idProduct)
                     is not None
