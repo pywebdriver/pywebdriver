@@ -48,11 +48,11 @@ class ZVTDriver(PaymentTerminalDriver):
     def zvt_status(self):
         """Get the connection status of the device"""
 
-        if self.device:
-             with self.lock:
+        with self.lock:
+            if self.device:
                  status = self.device.connected()
-        else:
-            status = False
+            else:
+                status = False
 
         self._set_terminal_status("0", "connected" if status else "disconnected")
         return status
