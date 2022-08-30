@@ -1,3 +1,4 @@
+import flask
 import simplejson as json
 from flask import jsonify, render_template, request
 
@@ -21,8 +22,8 @@ if config.get("sat_driver", "sat_path"):
         "sat_driver", "sat_path"
     )
 
-if config.getint("sat_driver", "codigo_ativacao"):
-    driver_config["codigo_ativacao"] = config.getint(
+if config.get("sat_driver", "codigo_ativacao"):
+    driver_config["codigo_ativacao"] = config.get(
         "sat_driver", "codigo_ativacao"
     )
 
@@ -46,25 +47,35 @@ if config.get("sat_driver", "assinatura"):
         "sat_driver", "assinatura"
     )
 
-sat_driver = SatDriver(**driver_config)
-drivers["sat"] = sat_driver
+#sat_driver = SatDriver(**driver_config)
+#drivers["hw_fiscal"] = sat_driver
 
+@app.route('/hw_proxy/init', methods=["POST", "GET", "PUT"])
+def int_sat():
+    sat_driver = SatDriver(**driver_config)
+    drivers["hw_fiscal"] = sat_driver
+    return jsonify(success=True)
+    # TODO: Verificar a questão do retorno do init.
+    # {"jsonrpc": "2.0", "id": 581330955, "result": true}
 
 @app.route('/hw_proxy/enviar_cfe_sat/', methods=["POST", "GET", "PUT"])
 def enviar_cfe_sat():
-    return drivers['sat'].action_call_sat('send', request.json["params"]['json'])
+    res = drivers['hw_fiscal'].action_call_sat('send', request.json["params"]['json'])
+    return jsonify(jsonrpc= "2.0", result=res)
 
 
 @app.route('/hw_proxy/cancelar_cfe/', methods=["POST", "GET", "PUT"])
 def cancelar_cfe():
-    return drivers['sat'].action_call_sat('cancel', request.json["params"]['json'])
+    res = drivers['hw_fiscal'].action_call_sat('cancel', request.json["params"]['json'])
+    return jsonify(jsonrpc= "2.0", result=res)
 
 
 @app.route('/hw_proxy/reprint_cfe/', methods=["POST", "GET", "PUT"])
 def reprint_cfe():
-    return drivers['sat'].action_call_sat('reprint', request.json["params"]['json'])
+    res = drivers['hw_fiscal'].action_call_sat('reprint', request.json["params"]['json'])
+    return jsonify(jsonrpc="2.0", result=res)
 
-
-@app.route('/hw_proxy/sessao_sat/', methods=["POST", "GET", "PUT"])
+@app.route('/hw_proxy/sessao_sat', methods=["POST"])
 def sessao_sat():
-    return drivers['sat'].action_call_sat('sessao')
+    res = drivers['hw_fiscal'].action_call_sat('sessao')
+    return jsonify(jsonrpc="2.0", result=res)
