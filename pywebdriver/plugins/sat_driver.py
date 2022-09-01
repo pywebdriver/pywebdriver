@@ -1,11 +1,11 @@
 import flask
 import simplejson as json
+from erpbrasil.driver.sat import driver
 from flask import jsonify, render_template, request
 
 from pywebdriver import app, config, drivers
 
 from .base_driver import ThreadDriver
-from erpbrasil.driver.sat import driver
 
 
 class SatDriver(ThreadDriver, driver.Sat):
@@ -15,44 +15,45 @@ class SatDriver(ThreadDriver, driver.Sat):
         driver.Sat.__init__(self, *args, **kwargs)
 
 
-driver_config = {}
+#if config.get("sat_driver", "sat_path"):
+#    driver_config["sat_path"] = config.get(
+#        "sat_driver", "sat_path"
+#    )
 
-if config.get("sat_driver", "sat_path"):
-    driver_config["sat_path"] = config.get(
-        "sat_driver", "sat_path"
-    )
+#if config.get("sat_driver", "codigo_ativacao"):
+#    driver_config["codigo_ativacao"] = config.get(
+#        "sat_driver", "codigo_ativacao"
+#    )
 
-if config.get("sat_driver", "codigo_ativacao"):
-    driver_config["codigo_ativacao"] = config.get(
-        "sat_driver", "codigo_ativacao"
-    )
+#if config.get("sat_driver", "impressora"):
+#    driver_config["impressora"] = config.get(
+#        "sat_driver", "impressora"
+#    )
 
-if config.get("sat_driver", "impressora"):
-    driver_config["impressora"] = config.get(
-        "sat_driver", "impressora"
-    )
+#if config.get("sat_driver", "printer_params"):
+#    driver_config["printer_params"] = config.get(
+#        "sat_driver", "printer_params"
+#    )
 
-if config.get("sat_driver", "printer_params"):
-    driver_config["printer_params"] = config.get(
-        "sat_driver", "printer_params"
-    )
+#if config.get("sat_driver", "fiscal_printer_type"):
+#    driver_config["fiscal_printer_type"] = config.get(
+#        "sat_driver", "fiscal_printer_type"
+#    )
 
-if config.get("sat_driver", "fiscal_printer_type"):
-    driver_config["fiscal_printer_type"] = config.get(
-        "sat_driver", "fiscal_printer_type"
-    )
+#if config.get("sat_driver", "assinatura"):
+#    driver_config["assinatura"] = config.get(
+#        "sat_driver", "assinatura"
+#    )
 
-if config.get("sat_driver", "assinatura"):
-    driver_config["assinatura"] = config.get(
-        "sat_driver", "assinatura"
-    )
-
-#sat_driver = SatDriver(**driver_config)
-#drivers["hw_fiscal"] = sat_driver
+#if config.get("sat_driver"):
+#    sat_driver = SatDriver(**driver_config)
+#    drivers["hw_fiscal"] = sat_driver
+#else:
 
 @app.route('/hw_proxy/init', methods=["POST", "GET", "PUT"])
 def int_sat():
-    sat_driver = SatDriver(**driver_config)
+    res = request.json["params"]["json"]
+    sat_driver = SatDriver(**res)
     drivers["hw_fiscal"] = sat_driver
     return jsonify(success=True)
     # TODO: Verificar a questão do retorno do init.
