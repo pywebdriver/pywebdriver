@@ -67,6 +67,8 @@ Point of Sale with PyWebDriver as a Proxy.
     - They are usually recognized as keyboards and do not need pywebdriver to function
   - **Cash Box** :
     - The communication is usually handled by the receipt printer via Esc/Pos
+  - **Magnetic Stripe Reader (MSR)**:
+    - ID TECH: SecureHead
 
 # <a name="customers"></a>End-Users / Customers Section
 
