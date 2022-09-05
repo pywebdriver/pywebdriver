@@ -4,7 +4,7 @@
 SNAKE=/usr/bin/python3
 
 %:
-	dh $@ --with python-virtualenv --with systemd --buildsystem=pybuild
+	dh $@ --with python-virtualenv --buildsystem=pybuild
 
 override_dh_virtualenv:
 	dh_virtualenv --python=$(SNAKE) --builtin-venv
