@@ -157,7 +157,7 @@ except ImportError:
 else:
 
     class ESCPOSDriver(ThreadDriver, POSDriver):
-        """ ESCPOS Printer Driver class for pywebdriver """
+        """ESCPOS Printer Driver class for pywebdriver"""
 
         def __init__(self, *args, **kwargs):
             self.eprint = None
@@ -328,8 +328,9 @@ else:
                     addr_lines.append(
                         "<p>" + ",".join(addresses) + " (" + ifaceName + ")" + "</p>"
                     )
-                msg = _(
-                    """
+                msg = (
+                    _(
+                        """
                        <div align="center">
                             <h4>PyWebDriver Software Status</h4>
                             <br/><br/>
@@ -339,10 +340,12 @@ else:
                             Port: %i
                        </div>
                 """
-                ) % (
-                    ip + " (" + _(u"Public") + ")",
-                    "".join(addr_lines),
-                    config.getint("flask", "port"),
+                    )
+                    % (
+                        ip + " (" + _("Public") + ")",
+                        "".join(addr_lines),
+                        config.getint("flask", "port"),
+                    )
                 )
                 Layout("<div>" + msg + "</div>").format(self)
                 self.close()
@@ -422,9 +425,9 @@ else:
             if check(receipt["company"].get("contact_address", False)):
                 eprint.text(receipt["company"]["contact_address"] + "\n")
             if check(receipt["company"].get("phone", False)):
-                eprint.text(_(u"Tel: ") + receipt["company"]["phone"] + "\n")
+                eprint.text(_("Tel: ") + receipt["company"]["phone"] + "\n")
             if check(receipt["company"].get("vat", False)):
-                eprint.text(_(u"VAT: ") + receipt["company"]["vat"] + "\n")
+                eprint.text(_("VAT: ") + receipt["company"]["vat"] + "\n")
             if check(receipt["company"].get("email", False)):
                 eprint.text(receipt["company"]["email"] + "\n")
             if check(receipt["company"].get("website", False)):
@@ -433,7 +436,7 @@ else:
                 eprint.text(receipt["header"] + "\n")
             if check(receipt.get("cashier")):
                 eprint.text("-" * 32 + "\n")
-                eprint.text(_(u"Served by ") + receipt["cashier"] + "\n")
+                eprint.text(_("Served by ") + receipt["cashier"] + "\n")
 
             # Orderlines
             if config.getboolean("odoo", "orderline_price_with_tax"):
@@ -455,7 +458,7 @@ else:
                     if line["discount"] != 0:
                         eprint.text(
                             printline(
-                                _(u"Discount: ") + str(line["discount"]) + "%",
+                                _("Discount: ") + str(line["discount"]) + "%",
                                 ratio=0.6,
                                 indent=2,
                             )
@@ -491,13 +494,13 @@ else:
                 eprint.text(printline("", "-------"))
                 eprint.text(
                     printline(
-                        _(u"Subtotal"), money(receipt["subtotal"]), width=40, ratio=0.6
+                        _("Subtotal"), money(receipt["subtotal"]), width=40, ratio=0.6
                     )
                 )
                 print_taxes()
                 eprint.text(
                     printline(
-                        _(u"Taxes"), money(receipt["total_tax"]), width=40, ratio=0.6
+                        _("Taxes"), money(receipt["total_tax"]), width=40, ratio=0.6
                     )
                 )
                 taxincluded = False
@@ -507,7 +510,7 @@ else:
             eprint.set(align="center", height=2)
             eprint.text(
                 printline(
-                    _(u"         TOTAL"),
+                    _("         TOTAL"),
                     money(receipt["total_with_tax"]),
                     width=40,
                     ratio=0.6,
@@ -526,7 +529,7 @@ else:
             eprint.set(align="center", height=2)
             eprint.text(
                 printline(
-                    _(u"        CHANGE"), money(receipt["change"]), width=40, ratio=0.6
+                    _("        CHANGE"), money(receipt["change"]), width=40, ratio=0.6
                 )
             )
             eprint.set(align="center")
@@ -536,7 +539,7 @@ else:
             if receipt["total_discount"] != 0:
                 eprint.text(
                     printline(
-                        _(u"Discounts"),
+                        _("Discounts"),
                         money(receipt["total_discount"]),
                         width=40,
                         ratio=0.6,
@@ -546,7 +549,7 @@ else:
                 print_taxes()
                 eprint.text(
                     printline(
-                        _(u"Taxes"), money(receipt["total_tax"]), width=40, ratio=0.6
+                        _("Taxes"), money(receipt["total_tax"]), width=40, ratio=0.6
                     )
                 )
 
@@ -577,7 +580,7 @@ else:
 
     @app.route("/hw_proxy/default_printer_action", methods=["POST", "GET", "PUT"])
     def default_printer_action():
-        """ For Odoo 13.0+"""
+        """For Odoo 13.0+"""
 
         action = request.json["params"]["data"]["action"]
         if action == "print_receipt":
@@ -589,7 +592,7 @@ else:
 
     @app.route("/hw_proxy/print_xml_receipt", methods=["POST", "GET", "PUT"])
     def print_xml_receipt_json():
-        """ For Odoo 8.0+"""
+        """For Odoo 8.0+"""
 
         receipt = request.json["params"]["receipt"].replace("ean13", "EAN13")
         driver.push_task("receipt", receipt)
