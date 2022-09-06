@@ -54,7 +54,7 @@ def check(installed, plugin):
 
 
 class AbstractDriver(object):
-    """ Abstract Driver Class"""
+    """Abstract Driver Class"""
 
     def __init__(self, *args, **kwargs):
         self.status = {"status": "disconnected", "messages": []}

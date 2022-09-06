@@ -42,16 +42,16 @@ except ImportError:
     print("DISPLAY: pyposdisplay python library not installed")
 else:
     AUTHOR = [
-        ([u"PyWebDriver", u"By"], 2),
-        ([u"Sylvain CALADOR", u"@ Akretion"], 1.5),
-        ([u"Sébastien BEAU", u"@ Akretion"], 1.5),
-        ([u"Sylvain LE GAL", u"@ GRAP"], 1.5),
-        ([u"Status:", u"OK"], 5),
+        (["PyWebDriver", "By"], 2),
+        (["Sylvain CALADOR", "@ Akretion"], 1.5),
+        (["Sébastien BEAU", "@ Akretion"], 1.5),
+        (["Sylvain LE GAL", "@ GRAP"], 1.5),
+        (["Status:", "OK"], 5),
     ]
     installed = True
 
     class DisplayDriver(ThreadDriver, pyposdisplay.Driver):
-        """ Display Driver class for pywebdriver """
+        """Display Driver class for pywebdriver"""
 
         def __init__(self, *args, **kwargs):
             ThreadDriver.__init__(self)

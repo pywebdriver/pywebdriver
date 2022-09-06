@@ -28,7 +28,7 @@ from .base_driver import ThreadDriver
 
 
 class TeliumDriver(ThreadDriver, pypostelium.Driver):
-    """ Telium Driver class for pywebdriver """
+    """Telium Driver class for pywebdriver"""
 
     def __init__(self, *args, **kwargs):
         ThreadDriver.__init__(self)
