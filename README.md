@@ -49,6 +49,7 @@ Point of Sale with PyWebDriver as a Proxy.
     - Epson TM-T20 II and Epson TM-T20 III
     - Epson TM-T70
     - Epson TM-P20
+    - Netchip POS Printer Aures ODP 333
   - **Credit Card Reader**:
     - Ingenico and Sagem credit card readers with Telium Manager version 37783600 or
       superior
