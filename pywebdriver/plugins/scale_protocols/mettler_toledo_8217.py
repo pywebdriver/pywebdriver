@@ -9,8 +9,8 @@ import serial
 
 from ..scale_driver import (
     AbstractScaleDriver,
-    ScaleConnectionError,
     ScaleAcquireDataError,
+    ScaleConnectionError,
 )
 
 ANSWER_RE = re.compile(rb"^\?(?P<status>.)|(?P<weight>\d+\.\d+)$")
@@ -45,32 +45,7 @@ class MettlerToledo8217ScaleDriver(AbstractScaleDriver):
 
     def acquire_data(self, connection):
         """Acquire data over the connection."""
-        buffer = b""
-        stx = False
-        # ask for weight data
-        try:
-            connection.write(b"W")
-        except serial.SerialException as e:
-            raise ScaleConnectionError() from e
-        while True:
-            try:
-                c = connection.read(1)
-            except serial.SerialException as e:
-                raise ScaleConnectionError() from e
-            if not c:
-                # timeout
-                raise ScaleAcquireDataError("read time-out")
-            if c == b"\x02":
-                # start of answer
-                stx = True
-                buffer = b""
-            elif c == b"\r":
-                # end of answer
-                if not stx:
-                    continue
-                break
-            else:
-                buffer += c
+        buffer = self._read_raw_data(connection)
         match = ANSWER_RE.match(buffer)
         if match is None:
             raise ValueError("serial readout was not valid")
@@ -106,6 +81,34 @@ class MettlerToledo8217ScaleDriver(AbstractScaleDriver):
             weight = self._last_weight
             weight_info = self.VALID_WEIGHT_STATUS
         return {"value": weight, "status": weight_info}
+
+    def _read_raw_data(self, connection):
+        buffer = b""
+        stx = False
+        try:
+            connection.write(b"W")
+        except serial.SerialException as e:
+            raise ScaleConnectionError() from e
+        while True:
+            try:
+                c = connection.read(1)
+            except serial.SerialException as e:
+                raise ScaleConnectionError() from e
+            if not c:
+                # timeout
+                raise ScaleAcquireDataError("read time-out")
+            if c == b"\x02":
+                # start of answer
+                stx = True
+                buffer = b""
+            elif c == b"\r":
+                # end of answer
+                if not stx:
+                    continue
+                break
+            else:
+                buffer += c
+        return buffer
 
     def establish_connection(self):
         """Establish a connection. The connection must be a context manager."""
