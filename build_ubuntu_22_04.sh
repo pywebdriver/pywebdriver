@@ -25,6 +25,7 @@ chmod +x debuild.sh
 cat <<DOCKERFILE > Dockerfile
 FROM $BASE_IMAGE
 RUN apt-get update && apt-get install -y software-properties-common
+RUN DEBIAN_FRONTEND=noninteractive TZ=Europe/Paris apt-get -y install tzdata
 RUN apt-get update && apt-get install -y debhelper dh-python dh-virtualenv devscripts python3-wheel libcups2-dev python3-setuptools libmtp-dev python3-pip libffi-dev python3-venv python3-distutils python3-pip python3-simplejson python3-flask-babel python3-flask-cors python3-usb python3-serial python3-netifaces python3-cups python3-pillow
 #COPY . /$PACKAGE
 WORKDIR /$PACKAGE
