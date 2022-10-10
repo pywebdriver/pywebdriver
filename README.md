@@ -63,7 +63,8 @@ Point of Sale with PyWebDriver as a Proxy.
     - SAGA SGDP240
     - Labau LD240 (non-optimal)
   - **Scale**:
-    - TODO : planned by GRAP (Any help welcome);
+    - 8217 Mettler Toledo protocol
+      - Mettler Toledo Ariva-S
   - **Barcode Reader**:
     - They are usually recognized as keyboards and do not need pywebdriver to function
   - **Cash Box** :

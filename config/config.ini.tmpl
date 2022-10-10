@@ -76,6 +76,17 @@ eol_lf=true
 endpoint=https://terminal-api-live.adyen.com/sync
 api_key=api_key_from_adyen
 
+[scale_driver]
+; Customise this
+protocol_name=mettler_toledo_8217
+; Time between requests to the scale. The default differs per protocol, and
+; normally should not be changed. Can lead to problems if the value is too low.
+;poll_interval=0.5
+; Used by serial scales
+;port=/dev/ttyS0
+;baudrate=9600
+
+
 ; if sections loggers, handlers and formatters are present
 ; configure the logging module using logging.config.fileConfig
 ; see https://docs.python.org/3/library/logging.config.html#logging-config-fileformat
