@@ -76,6 +76,18 @@ eol_lf=true
 endpoint=https://terminal-api-live.adyen.com/sync
 api_key=api_key_from_adyen
 
+[scan_driver]
+port=/dev/ttyS0
+baudrate=9600
+bytesize=8
+parity=N
+stopbits=1
+rtscts=false
+xonxoff=true
+timeout=0
+eol_cr=True
+eol_lf=false
+
 ; if sections loggers, handlers and formatters are present
 ; configure the logging module using logging.config.fileConfig
 ; see https://docs.python.org/3/library/logging.config.html#logging-config-fileformat
