@@ -25,6 +25,7 @@
 import gettext
 import logging.config
 import os
+from locale import getdefaultlocale
 
 from configparser import ConfigParser
 
@@ -72,13 +73,18 @@ from . import views  # noqa: E402
 from . import plugins  # noqa: E402
 
 # Localization
-app.config["BABEL_DEFAULT_LOCALE"] = config.get("localization", "locale")
+localization = config.get("localization", "locale")
+locale = localization if localization else getdefaultlocale()[0]
+app.config["BABEL_DEFAULT_LOCALE"] = locale or "en_US"
+
 babel = Babel(app)
 
 path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "translations")
-localization = config.get("localization", "locale")
-language = gettext.translation("messages", path, [localization])
-language.install()
+if localization:
+    language = gettext.translation("messages", path, [localization])
+    language.install()
+else:
+    gettext.install("messages", path)
 
 # To run with flask
 if config.getboolean("application", "print_status_start"):
