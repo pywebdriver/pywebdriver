@@ -45,7 +45,7 @@ class MettlerToledo8217ScaleDriver(AbstractScaleDriver):
 
     def acquire_data(self, connection):
         """Acquire data over the connection."""
-        buffer, stx = self._read_raw_data(connection)
+        buffer = self._read_raw_data(connection)
         match = ANSWER_RE.match(buffer)
         if match is None:
             raise ValueError("serial readout was not valid")
@@ -108,7 +108,7 @@ class MettlerToledo8217ScaleDriver(AbstractScaleDriver):
                 break
             else:
                 buffer += c
-        return buffer, stx
+        return buffer
 
     def establish_connection(self):
         """Establish a connection. The connection must be a context manager."""
