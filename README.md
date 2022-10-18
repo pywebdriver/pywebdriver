@@ -107,6 +107,8 @@ If you update from an OLD version, you will need to uninstall nginx after upgrad
 you could face port reservation problems. Also it is not required anymore so there is no
 reason to have it.
 
+If your Firefox has a master password, there will be an extra step. The terminal will ask *Enter Password or Pin for "NSS Certificate DB"* and you have to write your Firefox master password.
+
 ## <a name="install-osx"></a>Installation on Mac OS X
 
 Pywebdriver can be installed on Mac OS X and is successfully used in production on a Mac
