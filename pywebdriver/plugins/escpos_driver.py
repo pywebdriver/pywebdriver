@@ -233,7 +233,7 @@ else:
             return connected
 
         def open_printer(self):
-            if self.device:
+            if self.device and hasattr(self.device, "is_open") and self.device.is_open:
                 return
             try:
                 self.open(*self.open_args)
@@ -343,7 +343,7 @@ else:
                 """
                     )
                     % (
-                        ip + " (" + _("Public") + ")",
+                        ip.replace("<", "").replace(">", "") + " (" + _("Public") + ")",
                         "".join(addr_lines),
                         config.getint("flask", "port"),
                     )
