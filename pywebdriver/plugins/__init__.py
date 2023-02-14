@@ -1,7 +1,7 @@
-from pywebdriver import config
-
 from configparser import NoOptionError
 from importlib import import_module
+
+from pywebdriver import config
 
 DEFAULT_DRIVERS = [
     "cups_driver",

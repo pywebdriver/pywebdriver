@@ -25,9 +25,8 @@
 import gettext
 import logging.config
 import os
-from locale import getdefaultlocale
-
 from configparser import ConfigParser
+from locale import getdefaultlocale
 
 # Librairies Imports
 from flask import Flask
@@ -69,8 +68,8 @@ cors = CORS(
     app, resources={r"/*": {"origins": cors_origins, "headers": ["Content-Type"]}}
 )
 
-from . import views  # noqa: E402
 from . import plugins  # noqa: E402
+from . import views  # noqa: E402
 
 # Localization
 localization = config.get("localization", "locale")
