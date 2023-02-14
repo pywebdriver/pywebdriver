@@ -3,7 +3,7 @@ Section: python
 Priority: extra
 Maintainer: Pierrick Brun <pierrick.brun@akretion.com>
 XSBC-Original-Maintainer: Sylvain Calador <sylvain.calador@gmail.com>
-Build-Depends: debhelper (>= 11), python3, python3-wheel, python3-setuptools, libffi-dev, dh-virtualenv(>= 1.0), dh-systemd(>= 11), dh-python, python3-venv
+Build-Depends: debhelper (>= 11), python3, python3-wheel, python3-setuptools, libffi-dev, dh-virtualenv(>= 1.0), base-files (>= 11.1~) | dh-systemd, dh-python, python3-venv
 Standards-Version: 3.9.7
 
 Package: pywebdriver
