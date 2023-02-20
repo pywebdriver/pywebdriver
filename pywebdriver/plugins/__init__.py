@@ -8,6 +8,7 @@ DEFAULT_DRIVERS = [
     "win32print_driver",
     "display_driver",
     "escpos_driver",
+    "scale_driver",
     "serial_driver",
     "signature_driver",
     "telium_driver",
