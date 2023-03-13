@@ -64,8 +64,10 @@ Point of Sale with PyWebDriver as a Proxy.
     - SAGA SGDP240
     - Labau LD240 (non-optimal)
   - **Scale**:
-    - 8217 Mettler Toledo protocol
-      - Mettler Toledo Ariva-S
+    - Toledo protocol
+      - 8217: Mettler Toledo Ariva-S
+      - 8213: Mettler Toledo Ariva-S
+      - No decimals: Mettler Toledo BC, Baxtran TW/VW
   - **Barcode Reader**:
     - They are usually recognized as keyboards and do not need pywebdriver to function
   - **Cash Box** :
