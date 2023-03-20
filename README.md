@@ -2,12 +2,12 @@
 
 ## Summary
 
-Python Web Services to communicate wih Devices.
+Python Web Services to communicate with Devices.
 
 The aim of this project is to ease the communication between application and Devices,
 providing light WebServices based on Python-Flask libraries. The software can be
 installed on a computer or a Raspberry-like device. It is compatible with Linux
-distribution.
+and Windows distributions.
 
 ## Table of Content
 
