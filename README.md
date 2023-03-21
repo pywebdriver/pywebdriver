@@ -183,6 +183,8 @@ sslkey=c:/pywebdriver/localhost+2-key.pem
 
 If you need to compile pywebdriver from scratch in Windows 11, it is a prerequisite to install these:
 
+You can help yourself by using [Chocolatey](https://chocolatey.org/) to install these softwares more easily 
+
 - [Git](https://git-scm.com/download/win)
 - [Python 3.9](https://www.python.org/downloads/windows/)
     - Click on add to `PATH` variable while installing, or remember where it is installed to specify later the full path to the binary.
