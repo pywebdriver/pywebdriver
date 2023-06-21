@@ -6,8 +6,8 @@ Python Web Services to communicate with Devices.
 
 The aim of this project is to ease the communication between application and Devices,
 providing light WebServices based on Python-Flask libraries. The software can be
-installed on a computer or a Raspberry-like device. It is compatible with Linux
-and Windows distributions.
+installed on a computer or a Raspberry-like device. It is compatible with Linux and
+Windows distributions.
 
 ## Table of Content
 
@@ -181,20 +181,29 @@ sslkey=c:/pywebdriver/localhost+2-key.pem
 
 ## <a name="compile-windows"></a>Compilation on Windows 11
 
-If you need to compile pywebdriver from scratch in Windows 11, it is a prerequisite to install these:
+If you need to compile pywebdriver from scratch in Windows 11, it is a prerequisite to
+install these:
 
-You can help yourself by using [Chocolatey](https://chocolatey.org/) to install these softwares more easily 
+You can help yourself by using [Chocolatey](https://chocolatey.org/) to install these
+softwares more easily
 
 - [Git](https://git-scm.com/download/win)
 - [Python 3.9](https://www.python.org/downloads/windows/)
-    - Click on add to `PATH` variable while installing, or remember where it is installed to specify later the full path to the binary.
+  - Click on add to `PATH` variable while installing, or remember where it is installed
+    to specify later the full path to the binary.
 - [Microsoft Visual C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/)
-    - It's enough to select `Desktop development with C++`, suboptions `MSVC build tools` and `Windows 11 SDK`
+  - It's enough to select `Desktop development with C++`, suboptions `MSVC build tools`
+    and `Windows 11 SDK`
 - [InnoSetup](https://jrsoftware.org/isdl.php)
-    - Remember where you install it. You will later need to specify the full path to the `iscc.exe` binary (`C:\Program Files....`).
+  - Remember where you install it. You will later need to specify the full path to the
+    `iscc.exe` binary (`C:\Program Files....`).
 
-Open a command window and clone the git repository. Change directory into the cloned one.
-Then, you can follow the installation steps outlined for `windows-latest` in the [GitHub workflow file](https://github.com/akretion/pywebdriver/blob/master/.github/workflows/main.yml). If you use the `CMD` native terminal instead of `Git-Bash`, you will need to change `/` by `\`.  If `python.exe` or `iscc.exe` commands are not recognized, try specifying the full path.
+Open a command window and clone the git repository. Change directory into the cloned
+one. Then, you can follow the installation steps outlined for `windows-latest` in the
+[GitHub workflow file](https://github.com/akretion/pywebdriver/blob/master/.github/workflows/main.yml).
+If you use the `CMD` native terminal instead of `Git-Bash`, you will need to change `/`
+by `\`. If `python.exe` or `iscc.exe` commands are not recognized, try specifying the
+full path.
 
 ## <a name="browser-settings"></a>Browser settings
 
