@@ -284,6 +284,35 @@ sudo pip install -r requirement.txt
 - Call the url : http://localhost:8069 (by default, but depending of your config.ini
   file) in a browser to see devices state;
 
+If you want to inspect the log file, you can specify the following snippet in
+`config.ini`. The log file name `python.log` will be stored in the pywebdriver
+installation folder unless a path is prepended to its name.
+```
+[loggers]
+keys=root
+
+[logger_root]
+level=DEBUG
+handlers=hand01
+
+[handlers]
+keys=hand01
+
+[handler_hand01]
+class=FileHandler
+level=DEBUG
+formatter=form01
+args=('python.log', 'w')
+
+[formatters]
+keys=form01
+
+[formatter_form01]
+format=%(asctime)s %(levelname)8s %(message)s
+datefmt=
+class=logging.Formatter
+```
+
 ## <a name="contribute"></a>Contribute
 
 If you find a bug, feel free to report it and submit a bugfix.
