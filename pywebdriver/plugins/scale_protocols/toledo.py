@@ -13,19 +13,17 @@ from ..scale_driver import (
     ScaleConnectionError,
 )
 
-ANSWER_RE = re.compile(rb"^\?(?P<status>.)|(?P<weight>\d+\.\d+)$")
+ANSWER_RE = re.compile(rb"^\?(?P<status>.)|(?P<weight>\d+(\.\d+)?)$")
 
 _logger = logging.getLogger(__name__)
 
 
-class MettlerToledo8217ScaleDriver(AbstractScaleDriver):
-    """Driver for the 8217 Mettler Toledo protocol. Because of Python
-    restrictions, the number doesn't come first in the class name.
-    """
+class ToledoScaleDriver(AbstractScaleDriver):
+    """Driver for the Toledo protocol"""
 
     def __init__(self, config, *args, **kwargs):
         super().__init__(config, *args, **kwargs)
-        self.vendor_product = "mettler_toledo_8217"
+        self.vendor_product = "toledo"
         self._poll_interval = self.config.getfloat(
             "scale_driver", "poll_interval", fallback=0.2
         )

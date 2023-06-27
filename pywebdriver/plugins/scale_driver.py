@@ -21,6 +21,13 @@ _logger = logging.getLogger(__name__)
 
 driver = None
 
+WEIGHT_UNIT_TO_KG = {
+    "kg": 1,
+    "g": 0.001,
+    "lb": 0.45359237,
+    "oz": 0.02834952,
+}
+
 
 class ScaleError(Exception):
     """Base exception."""
@@ -51,11 +58,19 @@ class AbstractScaleDriver(Thread, AbstractDriver, ABC):
         self._data_lock = RLock()
         self.vendor_product = "default_scale"
 
+        weight_unit = config.get("scale_driver", "unit", fallback="kg")
+        self.kg_per_unit = WEIGHT_UNIT_TO_KG.get(weight_unit)
+        if self.kg_per_unit is None:
+            raise ValueError("unsupported scale unit: {unit}".format(unit=weight_unit))
+
     @property
     def weight(self):
-        """Return the last reported weight of the scale."""
+        """Return the last reported weight of the scale in kg."""
         with self._data_lock:
-            return self._data.get("value", None)
+            value = self._data.get("value")
+            if value is not None:
+                value *= self.kg_per_unit
+            return value
 
     @property
     def scale_status(self):
@@ -155,6 +170,8 @@ def scale_read_post():
         jsonrpc="2.0",
         result={
             "weight": drivers["scale"].weight,
+            # although the unit is sent here as part of the protocol, the odoo
+            # pos interface currently ignores it and always assumes kg.
             "unit": "kg",
             "info": drivers["scale"].scale_status,
         },
