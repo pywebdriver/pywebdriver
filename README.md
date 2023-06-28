@@ -98,7 +98,7 @@ each file or in a readme file of the folder. The main other contributors are:
 
 # <a name="developers"></a>Developers Section
 
-## <a name="install-ubuntu"></a>Installation on Ubuntu 18.04 and 20.04 with a signed certificate using mkcert
+## <a name="install-ubuntu"></a>Installation on Ubuntu 20.04 with a signed certificate using mkcert
 
 ```
 wget https://raw.githubusercontent.com/akretion/pywebdriver/master/debian/install.sh
