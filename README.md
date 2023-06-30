@@ -17,7 +17,7 @@ Windows distributions.
 - [End-Users / Customers Section](#customers)
 - [Contributors](#contributors)
 - [Developers Section](#developers)
-  - [Installation on Debian/Ubuntu](#install-ubuntu)
+  - [Installation on Ubuntu](#install-ubuntu)
   - [Installation on Mac OS X](#install-osx)
   - [Installation on Windows 10](#install-windows)
   - [Compilation on Windows 11](#compile-windows)
