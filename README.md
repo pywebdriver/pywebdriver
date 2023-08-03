@@ -287,6 +287,7 @@ sudo pip install -r requirement.txt
 If you want to inspect the log file, you can specify the following snippet in
 `config.ini`. The log file name `python.log` will be stored in the pywebdriver
 installation folder unless a path is prepended to its name.
+
 ```
 [loggers]
 keys=root
