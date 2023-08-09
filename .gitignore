@@ -67,8 +67,11 @@ docs/_build/
 Dockerfile
 debuild.sh
 debian/changelog
+debian/debhelper-build-stamp
+.pybuild/
 
 # Config file
+config.ini
 config/config.ini
 
 # Cert files
