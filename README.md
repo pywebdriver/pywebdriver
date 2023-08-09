@@ -237,7 +237,6 @@ If not, default drivers will be loaded:
 - signature_driver
 - telium_driver
 - opcua_driver
-- odoo7
 - odoo8
 
 ## <a name="browser-settings"></a>Specific configuration

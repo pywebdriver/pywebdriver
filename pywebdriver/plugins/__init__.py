@@ -13,7 +13,6 @@ DEFAULT_DRIVERS = [
     "signature_driver",
     "telium_driver",
     "opcua_driver",
-    "odoo7",
     "odoo8",
 ]
 
