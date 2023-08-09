@@ -4,7 +4,7 @@
 #define MyAppName "Pywebdriver"
 #define MyAppVersion "3.0.21"
 #define MyAppPublisher "Akretion"
-#define MyAppURL "https://github.com/akretion/pywebdriver"
+#define MyAppURL "https://github.com/pywebdriver/pywebdriver"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.

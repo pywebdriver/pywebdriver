@@ -6,8 +6,6 @@ set -e
 BUILD_DIR=$(pwd)/build
 MESSAGE="automatic build"
 PACKAGE="pywebdriver"
-DISTRIBUTION=pywebdriver-nightly
-REPO=apt.akretion.com
 BASE_IMAGE=ubuntu:20.04
 KEY=
 

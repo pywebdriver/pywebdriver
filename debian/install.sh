@@ -6,7 +6,7 @@ set -euo pipefail
 
 echo -e "\e[1;33m## Installation of Pywebdriver \e[0m"
 export $(cat /etc/os-release | grep UBUNTU_CODENAME)
-wget https://github.com/akretion/pywebdriver/releases/latest/download/pywebdriver_${UBUNTU_CODENAME}.deb
+wget https://github.com/pywebdriver/pywebdriver/releases/latest/download/pywebdriver_${UBUNTU_CODENAME}.deb
 sudo apt update
 sudo apt install --reinstall --yes ./pywebdriver_${UBUNTU_CODENAME}.deb
 rm -f ./pywebdriver_${UBUNTU_CODENAME}.deb
