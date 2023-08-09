@@ -1,8 +1,5 @@
-# SPDX-FileCopyrightText: 2022 Coop IT Easy SCRLfs
-#
-# SPDX-License-Identifier: AGPL-3.0-or-later
-
-"""Class API for implementing a weighing scale."""
+# Copyright (C) 2022-Today Coop IT Easy SCRLfs
+# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
 import logging
 import time
