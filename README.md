@@ -101,7 +101,7 @@ each file or in a readme file of the folder. The main other contributors are:
 ## <a name="install-ubuntu"></a>Installation on Ubuntu 20.04 with a signed certificate using mkcert
 
 ```
-wget https://raw.githubusercontent.com/akretion/pywebdriver/master/debian/install.sh
+wget https://raw.githubusercontent.com/pywebdriver/pywebdriver/master/debian/install.sh
 sudo chmod +x install.sh
 sudo ./install.sh
 ```
@@ -141,7 +141,7 @@ and click `Test Print` : it should print something !
 ### Get Build and install
 
 - In this repo, get the latest build in releases :
-  https://github.com/akretion/pywebdriver/releases
+  https://github.com/pywebdriver/pywebdriver/releases
 - Unzip it
 - Run generate_certificates.bat to make https work
 - It will create two files in C:\pywebdriver
@@ -202,7 +202,7 @@ softwares more easily
 
 Open a command window and clone the git repository. Change directory into the cloned
 one. Then, you can follow the installation steps outlined for `windows-latest` in the
-[GitHub workflow file](https://github.com/akretion/pywebdriver/blob/master/.github/workflows/main.yml).
+[GitHub workflow file](https://github.com/pywebdriver/pywebdriver/blob/master/.github/workflows/main.yml).
 If you use the `CMD` native terminal instead of `Git-Bash`, you will need to change `/`
 by `\`. If `python.exe` or `iscc.exe` commands are not recognized, try specifying the
 full path.
@@ -264,7 +264,7 @@ To test this module, do the following steps:
 - download it from git;
 
 ```
-git clone https://github.com/akretion/pywebdriver.git
+git clone https://github.com/pywebdriver/pywebdriver.git
 ```
 
 - Install dependency by running this two command

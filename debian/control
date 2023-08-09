@@ -10,7 +10,7 @@ Package: pywebdriver
 Architecture: amd64
 Pre-Depends: dpkg (>= 1.16.1), python3 (>= 3.6), python3-distutils, python3-pip, python3-simplejson, python3-flask-babel, python3-usb, python3-serial, python3-netifaces, python3-cups, python3-pillow, adduser, git-core, ssl-cert, cups, libcups2-dev, libmtp-dev, libnss3-tools, libtiff5, ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Homepage: https://github.com/akretion/pywebdriver
+Homepage: https://github.com/pywebdriver/pywebdriver
 Description: Python Web Services to communicate wih Devices
  This Software installs Web Services to allow easy communications with some
  devices. It provides Web Pages to see the status of the devices.
