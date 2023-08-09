@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Pywebdriver"
-#define MyAppVersion "3.0.19"
+#define MyAppVersion "3.0.21"
 #define MyAppPublisher "Akretion"
 #define MyAppURL "https://github.com/akretion/pywebdriver"
 
