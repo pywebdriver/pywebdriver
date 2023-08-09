@@ -5,7 +5,6 @@ Flask-Babel
 Flask-cors
 #pyusb # Only useful to make escpos work via usb (easier via win32raw)
 pyserial
-pif
 Pillow
 netifaces
 pymtp

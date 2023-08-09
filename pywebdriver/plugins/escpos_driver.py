@@ -26,7 +26,6 @@ from configparser import NoOptionError
 import usb.core
 from flask import jsonify, render_template, request
 from netifaces import AF_INET, ifaddresses, interfaces
-from pif import get_public_ip
 from xmlescpos import Layout
 
 from pywebdriver import app, config, drivers
@@ -300,55 +299,35 @@ else:
             self.close()
 
         def printstatus(self, eprint):
-            # <PyWebDriver> Full refactoring of the function to allow
-            # localisation and to make more easy the search of the ip
-
-            self.open_printer()
-            ip = get_public_ip()
-
-            if not ip:
-                msg = _(
-                    """ERROR: Could not connect to LAN<br/><br/>"""
-                    """Please check that your system is correc-<br/>"""
-                    """tly connected with a network cable,<br/>"""
-                    """ that the LAN is setup with DHCP, and<br/>"""
-                    """that network addresses are available"""
+            addr_lines = []
+            for ifaceName in interfaces():
+                addresses = [
+                    i["addr"]
+                    for i in ifaddresses(ifaceName).setdefault(
+                        AF_INET, [{"addr": "No IP addr"}]
+                    )
+                ]
+                addr_lines.append(
+                    "<p>" + ",".join(addresses) + " (" + ifaceName + ")" + "</p>"
                 )
-                Layout("<div>" + msg + "</div>").format(self)
-                self.cut()
-            else:
-                addr_lines = []
-                for ifaceName in interfaces():
-                    addresses = [
-                        i["addr"]
-                        for i in ifaddresses(ifaceName).setdefault(
-                            AF_INET, [{"addr": "No IP addr"}]
-                        )
-                    ]
-                    addr_lines.append(
-                        "<p>" + ",".join(addresses) + " (" + ifaceName + ")" + "</p>"
-                    )
-                msg = (
-                    _(
-                        """
-                       <div align="center">
-                            <h4>PyWebDriver Software Status</h4>
-                            <br/><br/>
-                            <h5>IP Addresses:</h5>
-                            %s<br/>
-                            %s<br/>
-                            Port: %i
-                       </div>
-                """
-                    )
-                    % (
-                        ip + " (" + _("Public") + ")",
-                        "".join(addr_lines),
-                        config.getint("flask", "port"),
-                    )
+            msg = (
+                _(
+                    """
+                   <div align="center">
+                        <h4>PyWebDriver Software Status</h4>
+                        <br/><br/>
+                        <h5>IP Addresses:</h5>
+                        %s<br/>
+                        Port: %i
+                   </div>
+            """
                 )
-                Layout("<div>" + msg + "</div>").format(self)
-                self.close()
+                % (
+                    "".join(addr_lines),
+                    config.getint("flask", "port"),
+                )
+            )
+            self.receipt(msg)
 
     driver = ESCPOSDriver(app.config)
     drivers["escpos"] = driver
