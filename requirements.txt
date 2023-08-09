@@ -7,7 +7,6 @@ Flask-Babel
 Flask-cors
 pyusb
 pyserial
-pif
 Pillow
 netifaces
 pycups
