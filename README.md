@@ -271,7 +271,7 @@ git clone https://github.com/pywebdriver/pywebdriver.git
 
 ```
 sudo apt-get install cups python-cups python-pip python-netifaces
-sudo pip install -r requirement.txt
+sudo pip install -r requirements.txt
 ```
 
 - set correct parameters in the config/config.ini file;
