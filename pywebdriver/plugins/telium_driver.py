@@ -53,6 +53,20 @@ def payment_terminal_transaction_start():
     app.logger.debug("Telium: result of transation_start=%s", result)
     return jsonify(jsonrpc="2.0", result=result)
 
+@app.route(
+    '/hw_proxy/payment_terminal_transaction_start_with_answer',
+    methods=['POST', 'GET', 'PUT', 'OPTIONS'])
+@cross_origin(headers=['Content-Type'])
+def payment_terminal_transaction_start_with_answer():
+    app.logger.debug(
+        'Telium: Call payment_terminal_transaction_start_with_answer')
+    # We do not use TeliumDriver to avoid the use of threads, which difficult
+    # a lot to get the answer from terminal.
+    telium_direct_driver = pypostelium.Driver(driver_config)
+    payment_info = request.json['params']['payment_info']
+    app.logger.debug('Telium: payment_info=%s', payment_info)
+    result = telium_direct_driver.transaction_start(payment_info)
+    return jsonify(jsonrpc='2.0', result=result)
 
 @app.route("/telium_status.html", methods=["POST"])
 def telium_status():
