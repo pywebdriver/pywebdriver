@@ -1,6 +1,6 @@
 #jcconv
 simplejson
-Flask
+Flask<2.3
 Flask-Babel
 Flask-cors
 #pyusb # Only useful to make escpos work via usb (easier via win32raw)
