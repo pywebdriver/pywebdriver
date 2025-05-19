@@ -1,3 +1,1 @@
 debian/config.ini etc/pywebdriver
-debian/99-pywebdriver.rules lib/udev/rules.d
-debian/pywebdriver.service lib/systemd/system
