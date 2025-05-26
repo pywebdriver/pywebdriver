@@ -16,10 +16,7 @@ override_dh_strip:
 override_dh_shlibdeps:
 	dh_shlibdeps --exclude=/site-packages/
 
-
-#is_ubuntu_twentyfour := $(shell ([ $(lsb_release -r | cut -f2) = "24.04" ] && echo "yes" || echo "no"))
 ubuntu_version := $(shell (lsb_release -r | cut -f2))
-#is_ubuntu_twentyfour := $(shell ([ "$(grep '^VERSION_ID=' /etc/os-release | cut -d= -f2 | tr -d '"')" = "24.04" ] && echo "yes" || echo "no"))
 
 override_dh_gencontrol:
 ifeq ($(ubuntu_version),24.04)
