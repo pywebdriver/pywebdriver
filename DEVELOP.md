@@ -36,7 +36,7 @@ http://localhost:8069/
 As a requirement, docker should be installed.
 
 ```bash
-./build_ubuntu_22_04.sh
+./build_ubuntu_24_04.sh
 ```
 
 if you want to install the generated package, run:
