@@ -3,6 +3,7 @@
 # @author Sylvain CALADOR <sylvain.calador@akretion.com>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
+import errno
 import fnmatch
 import logging
 from configparser import NoOptionError
@@ -15,6 +16,8 @@ from xmlescpos import Layout
 from pywebdriver import app, config, drivers
 
 from .base_driver import ThreadDriver
+
+ENODEV = (errno.__dict__.get("ENODEV", None),)
 
 meta = {
     "name": "ESCPOS Printer",
@@ -201,6 +204,15 @@ else:
         def get_vendor_product(self):
             return "escpos-icon"
 
+        def printer_available(self):
+            if device_type == "usb" and hasattr(self, "idVendor"):
+                return (
+                    usb.core.find(idVendor=self.idVendor, idProduct=self.idProduct)
+                    is not None
+                )
+            # TODO: Determine the state of the printer for different device_type
+            return False
+
         def connected_usb_devices(self):
             connected = []
 
@@ -215,20 +227,44 @@ else:
             return connected
 
         def open_printer(self):
-            if self.device:
+            # Check if the printer is still available and wasn't disconnected
+            if not self.printer_available():
+                self.close()
                 return
+
+            if self.device:
+                if device_type == "usb":
+                    # Device was previously initialized
+                    # Try writing to it to see if it is still available
+                    # If we get Error ENODEV it might have been temporarily disconnected
+                    # -> try to reopen
+                    # Otherwise no reopening is neccessary
+                    try:
+                        self._raw("")
+                    except usb.core.USBError as e:
+                        if e.errno != ENODEV:
+                            self.set_status("error", e)
+                        _logger.info("Printer was disconnected. Reconnecting")
+                    else:
+                        return
+                else:
+                    return
+
             try:
                 self.open(*self.open_args)
                 if device_type == "win32":
                     self.device = self.hPrinter
             except Exception as e:
                 self.set_status("error", e)
+                self.close()
 
         def open_cashbox(self, printer):
             self.open_printer()
+            if not self.device:
+                return
+
             self.cashdraw(2)
             self.cashdraw(5)
-            self.close()
 
         def get_status(self, **params):
             messages = []
@@ -239,19 +275,7 @@ else:
                 # Maybe we could do something here to start serial
                 status = "connected"
             elif device_type == "usb":
-                try:
-                    if self.is_online():
-                        status = "connected"
-                    else:
-                        status = "connecting"
-                    # if res['printer']['status_error']:
-                    #     status = 'error'
-                    #     messages.append(
-                    #         'Error code: %i' % res['printer']['status_error'])
-                except Exception as err:
-                    status = "error"
-                    self.device = False
-                    messages.append("Error: %s" % err)
+                status = "connected"
             elif device_type == "win32":
                 messages.append(self.printer_name)
                 result = win32print.GetPrinter(self.device, 2)
@@ -266,7 +290,6 @@ else:
                     status = "connected"
             else:
                 status = "disconnected"
-            self.close()
             return {
                 "status": status,
                 "messages": messages,
@@ -278,11 +301,18 @@ else:
 
         def receipt(self, content):
             self.open_printer()
+            if not self.device:
+                return
+
             Layout(content).format(self)
             self.cut()
-            self.close()
 
         def printstatus(self, eprint):
+
+            self.open_printer()
+            if not self.device:
+                return
+
             addr_lines = []
             for ifaceName in interfaces():
                 addresses = [
