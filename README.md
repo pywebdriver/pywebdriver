@@ -68,6 +68,7 @@ Point of Sale with PyWebDriver as a Proxy.
       - 8217: Mettler Toledo Ariva-S
       - 8213: Mettler Toledo Ariva-S
       - No decimals: Mettler Toledo BC, Baxtran TW/VW
+      - MT SICS Commandset Toledo scales such as **Mettler-Toledo JE5002G, Mettler-Toledo JL602GE** using [toledo_sics] protocol in config
   - **Barcode Reader**:
     - They are usually recognized as keyboards and do not need pywebdriver to function
   - **Cash Box** :

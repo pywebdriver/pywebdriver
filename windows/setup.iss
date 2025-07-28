@@ -35,7 +35,7 @@ Name: "french"; MessagesFile: "compiler:Languages\French.isl"
 Name: "{app}"; Permissions: users-modify;
 
 [Files]
-Source: "..\dist\pywebdriver\*"; DestDir: "{app}"; Permissions: users-modify; Flags: recursesubdirs ignoreversion overwritereadonly ;
+Source: "dist\pywebdriver\*"; DestDir: "{app}"; Permissions: users-modify; Flags: recursesubdirs ignoreversion overwritereadonly ;
 
 [INI]
 Filename: "{app}\config\config.ini"; Section: "flask"; Key: "sslcert"; String: "localhost+2.pem"

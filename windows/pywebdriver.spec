@@ -30,6 +30,7 @@ a = Analysis(
         "pywebdriver.plugins.scale_driver",
         "pywebdriver.plugins.scale_protocols",
         "pywebdriver.plugins.scale_protocols.toledo",
+        "pywebdriver.plugins.scale_protocols.toledo_sics",
         "win32timezone",
         "usb",
         "requests",
