@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>PyWebDriver</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1 id="app-title">PyWebDriver</h1>
+      <div class="lang-switch">
+        <button data-lang="es" class="active">ES</button>
+        <button data-lang="en">EN</button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <ol id="steps-list"></ol>
+      </aside>
+      <main id="main-content">
+        <div class="welcome">
+          <h2>Cargando...</h2>
+        </div>
+      </main>
+    </div>
+
+    <footer>
+      <button class="btn" id="btn-back">Atras</button>
+      <button class="btn primary" id="btn-next">Siguiente</button>
+    </footer>
+
+    <script src="i18n.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

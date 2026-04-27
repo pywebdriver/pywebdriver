@@ -37,6 +37,7 @@ jobs:
         shell: bash
         run: |
           timeout 3s ./dist/pywebdriver/pywebdriver.exe debug || test "$?" = 124
+          ./dist/pywebdriver/pywebdriver-configurator.exe --silent --locale es
       - name: prepare release
         run: |
           iscc.exe windows/setup.iss
