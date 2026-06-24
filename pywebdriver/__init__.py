@@ -28,7 +28,16 @@ for config_file in CONFIG_PATHS:
     if os.path.isfile(config_file):
         break
 else:
-    assert "Could not find config file (looking at {}).".format(CONFIG_PATHS)
+    import sys
+
+    logging.basicConfig()
+    logging.error(
+        "Could not find config.ini. Expected in one of: %s"
+        " -- To fix: copy config\\config.ini.tmpl config\\config.ini"
+        " and set your printer details.",
+        ", ".join(CONFIG_PATHS),
+    )
+    sys.exit(1)
 
 config = ConfigParser()
 config.read(config_file)
@@ -45,7 +54,16 @@ drivers = {}
 # Project Import
 # Application
 app = Flask(__name__)
-cors_origins = config.get("flask", "cors_origins")
+try:
+    cors_origins = config.get("flask", "cors_origins")
+except Exception:
+    import sys
+
+    logging.error(
+        "config.ini is missing the [flask] section."
+        " Add '[flask] / cors_origins = *' -- see config\\config.ini.tmpl for a full example."
+    )
+    sys.exit(1)
 cors = CORS(
     app, resources={r"/*": {"origins": cors_origins, "headers": ["Content-Type"]}}
 )

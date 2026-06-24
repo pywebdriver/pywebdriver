@@ -1,16 +1,17 @@
 setuptools>=34
 wheel
-#jcconv
 simplejson
 Flask
 Flask-Babel
 Flask-cors
+netifaces; sys_platform != "win32"
 pyusb
 pyserial
 Pillow
-netifaces
-pycups
-pymtp
 git+https://github.com/akretion/py-xml-escpos.git@py3
-pypostelium
-pyposdisplay
+pywin32; sys_platform == "win32"
+pywin32-ctypes; sys_platform == "win32"
+pycups; sys_platform == "linux"
+pymtp; sys_platform == "linux"
+pypostelium; sys_platform == "linux"
+pyposdisplay; sys_platform == "linux"

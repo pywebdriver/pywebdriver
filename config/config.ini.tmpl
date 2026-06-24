@@ -14,6 +14,30 @@ debug=true
 ; Set this to false to disable the automatic reloader
 ; in Flask's autoreload mechanism conflicts with some driver code
 use_reloader=false
+; SSL - required for HTTPS (Odoo POS refuses mixed http/https content).
+; Use mkcert (https://github.com/FiloSottile/mkcert) to generate trusted certs.
+; Run the following from the pywebdriver root directory (where pywebdriverd lives)
+; so the .pem files are created in the right place.
+;
+; On Windows (PowerShell, from the pywebdriver directory):
+;   Option A - winget:
+;     winget install FiloSottile.mkcert
+;     (restart PowerShell, then check: where.exe mkcert)
+;   Option B - direct download (no package manager needed):
+;     Invoke-WebRequest -Uri "https://dl.filippo.io/mkcert/latest?for=windows/amd64" -OutFile mkcert.exe
+;     .\mkcert.exe -install
+;     .\mkcert.exe localhost
+;
+; On Linux/macOS (from the pywebdriver directory):
+;   apt install mkcert   # or brew install mkcert
+;   mkcert -install
+;   mkcert localhost
+;
+; This produces localhost+2.pem and localhost+2-key.pem in the current directory.
+; Uncomment and set the paths below (relative to where pywebdriverd is run from,
+; or use absolute paths to avoid ambiguity):
+;sslcert=localhost+2.pem
+;sslkey=localhost+2-key.pem
 
 [application]
 ; Set to True if you want that the PyWebDriver Software print a status receipt
