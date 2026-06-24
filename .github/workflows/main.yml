@@ -7,6 +7,9 @@ on:
     branches: [master]
     tags: ["v*.*.*"]
 
+permissions:
+  contents: write
+
 jobs:
   pre-commit:
     runs-on: ubuntu-latest
@@ -37,13 +40,14 @@ jobs:
         shell: bash
         run: |
           timeout 3s ./dist/pywebdriver/pywebdriver.exe debug || test "$?" = 124
+          ./dist/pywebdriver/pywebdriver-configurator.exe --silent --locale es
       - name: prepare release
         run: |
           iscc.exe windows/setup.iss
           move windows/Output/pywebdriver_win64_installer.exe .
           7z a pywebdriver_win64.zip dist/pywebdriver
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
@@ -73,7 +77,7 @@ jobs:
           sudo journalctl -u pywebdriver
           sudo service pywebdriver status
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
@@ -83,8 +87,8 @@ jobs:
   build-noble:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
       - name: Install dependencies
         run: |
           sudo apt --yes update
@@ -102,10 +106,39 @@ jobs:
           sudo journalctl -u pywebdriver
           sudo service pywebdriver status
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
             ../pywebdriver_noble.deb
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  build-plucky:
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+      - name: Install dependencies
+        run: |
+          sudo apt --yes update
+          sudo apt --yes install build-essential libnss3-tools libcups2-dev cups devscripts debhelper dh-python dh-virtualenv python3-wheel python3-setuptools python3-venv libmtp-dev libffi-dev fakeroot python3-pip python3-simplejson python3-flask-babel python3-usb python3-serial python3-netifaces python3-cups python3-pillow python3-flask-cors
+      - name: Build
+        run: |
+          mkdir -p build
+          dch --package pywebdriver --newversion $(date +%Y%m%d) --create -m "Created by CI"
+          debuild
+      - name: Test build
+        run: |
+          mv ../pywebdriver_$(date +%Y%m%d)_amd64.deb ../pywebdriver_plucky.deb
+          sudo dpkg -i ../pywebdriver_plucky.deb
+          sh debian/replace_snakeoil_mkcert.sh
+          sudo journalctl -u pywebdriver
+          sudo service pywebdriver status
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            ../pywebdriver_plucky.deb
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

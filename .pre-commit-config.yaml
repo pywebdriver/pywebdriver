@@ -1,7 +1,10 @@
 exclude: |
-  (?x)
+  (?x)(
   # Plugins not migrated to py3
   ^pywebdriver/plugins/opcua_driver\.py
+  # Frontend del configurador (formato manual, prettier rompe layout)
+  |^windows/configurator/web/.*\.(js|html|css)$
+  )
 default_language_version:
   python: python3
 repos:

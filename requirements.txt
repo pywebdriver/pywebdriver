@@ -14,3 +14,4 @@ pymtp
 git+https://github.com/akretion/py-xml-escpos.git@py3
 pypostelium
 pyposdisplay
+polib
