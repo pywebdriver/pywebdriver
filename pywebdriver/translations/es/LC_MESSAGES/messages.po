@@ -1,0 +1,247 @@
+# Spanish translations for PyWebDriver.
+# Copyright (C) 2014 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2016-05-27 14:08+0200\n"
+"PO-Revision-Date: 2016-05-27 14:08+0200\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: es\n"
+"Language-Team: es <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.3.2\n"
+
+#: views.py:80
+msgid "OS - System"
+msgstr "SO - Sistema"
+
+#: views.py:82
+msgid "OS - Distribution"
+msgstr "SO - Distribución"
+
+#: views.py:85
+msgid "OS - Release"
+msgstr "SO - Versión del núcleo"
+
+#: views.py:87
+msgid "OS - Version"
+msgstr "SO - Versión"
+
+#: views.py:89
+msgid "Machine"
+msgstr "Máquina"
+
+#: views.py:91
+msgid "Python Version"
+msgstr "Versión de Python"
+
+#: plugins/escpos_driver.py:133
+msgid ""
+"ERROR: Could not connect to LAN<br/><br/>Please check that your system is"
+" correc-<br/>tly connected with a network cable,<br/> that the LAN is "
+"setup with DHCP, and<br/>that network addresses are available"
+msgstr ""
+"ERROR: No se pudo conectar a la red local<br/><br/>Compruebe que el "
+"sistema está<br/>correctamente conectado con un cable de red,<br/>que la "
+"red local está configurada con DHCP<br/>y que las direcciones de red están "
+"<br/>disponibles."
+
+#: plugins/escpos_driver.py:150
+#, python-format
+msgid ""
+"\n"
+"                       <div align=\"center\">\n"
+"                            <h4>PyWebDriver Software Status</h4>\n"
+"                            <br/><br/>\n"
+"                            <h5>IP Addresses:</h5>\n"
+"                            %s<br/>\n"
+"                            %s<br/>\n"
+"                            Port: %i\n"
+"                       </div>\n"
+"                "
+msgstr ""
+"\n"
+"                       <div align=\"center\">\n"
+"                            <h4>Estado de PyWebDriver</h4>\n"
+"                            <br/><br/>\n"
+"                            <h5>Direcciones IP:</h5>\n"
+"                            %s<br/>\n"
+"                            %s<br/>\n"
+"                            Puerto: %i\n"
+"                       </div>\n"
+"                "
+
+#: plugins/escpos_driver.py:160
+msgid "Public"
+msgstr "Público"
+
+#: plugins/escpos_driver.py:237
+msgid "Tel: "
+msgstr "Tel: "
+
+#: plugins/escpos_driver.py:239
+msgid "VAT: "
+msgstr "IVA: "
+
+#: plugins/escpos_driver.py:248
+msgid "Served by "
+msgstr "Atendido por "
+
+#: plugins/escpos_driver.py:268
+msgid "Discount: "
+msgstr "Descuento: "
+
+#: plugins/escpos_driver.py:286
+msgid "Subtotal"
+msgstr "Subtotal"
+
+#: plugins/escpos_driver.py:290 plugins/escpos_driver.py:324
+msgid "Taxes"
+msgstr "Impuestos"
+
+#: plugins/escpos_driver.py:298
+msgid "         TOTAL"
+msgstr "         TOTAL"
+
+#: plugins/escpos_driver.py:311
+msgid "        CHANGE"
+msgstr "        CAMBIO"
+
+#: plugins/escpos_driver.py:319
+msgid "Discounts"
+msgstr "Descuentos"
+
+#: templates/display_status.html:23 templates/status.html:72
+msgid "Display Status"
+msgstr "Mostrar estado"
+
+#: templates/display_status.html:25 templates/print_status.html:25
+#: templates/telium_status.html:25
+msgid "Please close this page"
+msgstr "Por favor, cierre esta página"
+
+#: templates/index.html:23
+msgid "Index"
+msgstr "Índice"
+
+#: templates/index.html:25
+msgid "Welcome on the PyWebDriver"
+msgstr "Bienvenido a PyWebDriver"
+
+#: templates/layout.html:25
+msgid "PyWebDriver Software"
+msgstr "Aplicación PyWebDriver"
+
+#: templates/layout.html:47
+msgid "Home"
+msgstr "Inicio"
+
+#: templates/layout.html:49 templates/status.html:23
+msgid "Status"
+msgstr "Estado"
+
+#: templates/layout.html:51
+msgid "USB Devices"
+msgstr "Dispositivos USB"
+
+#: templates/layout.html:53 templates/system.html:29
+msgid "System"
+msgstr "Sistema"
+
+#: templates/print_status.html:23 templates/telium_status.html:23
+msgid "Print Status"
+msgstr "Imprimir estado"
+
+#: templates/status.html:25
+msgid "Hardware Status"
+msgstr "Estado del hardware"
+
+#: templates/status.html:28
+msgid "The list of enabled drivers and their status"
+msgstr "La lista de controladores activos y su estado"
+
+#: templates/status.html:32
+msgid "status: "
+msgstr "Estado: "
+
+#: templates/status.html:34
+msgid "Connected"
+msgstr "Conectado"
+
+#: templates/status.html:36
+msgid "Connecting"
+msgstr "Conectando"
+
+#: templates/status.html:38
+msgid "Disconnected"
+msgstr "Desconectado"
+
+#: templates/status.html:40
+msgid "Error"
+msgstr "Error"
+
+#: templates/status.html:61
+msgid "Test Communication"
+msgstr "Probar comunicación"
+
+#: templates/status.html:67
+msgid "Print Status Receipt"
+msgstr "Imprimir ticket de estado"
+
+#: templates/system.html:23
+msgid "System Information"
+msgstr "Información del sistema"
+
+#: templates/system.html:25
+msgid "Technical Information about the system"
+msgstr "Información técnica del sistema"
+
+#: templates/system.html:33 templates/system.html:51
+msgid "Name"
+msgstr "Nombre"
+
+#: templates/system.html:34
+msgid "Value"
+msgstr "Valor"
+
+#: templates/system.html:47
+msgid "Python Packages"
+msgstr "Paquetes Python"
+
+#: templates/system.html:52
+msgid "Version"
+msgstr "Versión"
+
+#: templates/system.html:53
+msgid "Summary"
+msgstr "Resumen"
+
+#: templates/system.html:54
+msgid "Home Page"
+msgstr "Página de inicio"
+
+#: templates/usb_devices.html:23 templates/usb_devices.html:25
+msgid "Connected Devices (USB)"
+msgstr "Dispositivos conectados (USB)"
+
+#: templates/usb_devices.html:31
+msgid "Bus"
+msgstr "Bus"
+
+#: templates/usb_devices.html:32
+msgid "Device"
+msgstr "Dispositivo"
+
+#: templates/usb_devices.html:33
+msgid "ID"
+msgstr "ID"
+
+#: templates/usb_devices.html:34
+msgid "Description"
+msgstr "Descripción"

@@ -76,3 +76,8 @@ config/config.ini
 
 # Cert files
 *.pem
+
+# Windows installer build output
+windows/Output/
+windows/build/
+windows/dist/

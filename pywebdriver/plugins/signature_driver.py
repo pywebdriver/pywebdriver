@@ -41,7 +41,7 @@ def get_signature_http():
         try:
             mtp.get_file_to_file(file_.item_id, dest_file)
             app.logger.debug("file downloaded to %s" % dest_file)
-            with open(dest_file, "r") as f:
+            with open(dest_file, "r", encoding="utf-8") as f:
                 data = f.read()
             app.logger.debug(data)
             mtp.delete_object(file_.item_id)

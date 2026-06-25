@@ -1,7 +1,10 @@
+import logging
 from configparser import NoOptionError
 from importlib import import_module
 
 from pywebdriver import config
+
+_logger = logging.getLogger(__name__)
 
 DEFAULT_DRIVERS = [
     "cups_driver",
@@ -22,4 +25,7 @@ except NoOptionError:
     drivers = DEFAULT_DRIVERS
 
 for driver in drivers:
-    globals()[driver] = import_module("." + driver, __package__)
+    try:
+        globals()[driver] = import_module("." + driver, __package__)
+    except ImportError as e:
+        _logger.warning("Skipping driver %s: %s", driver, e)

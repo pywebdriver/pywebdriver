@@ -1,0 +1,222 @@
+# PyWebDriver Configurator Spanish Translation
+# Copyright (C) 2026
+# This file is distributed under the same license as the PyWebDriver package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PyWebDriver Configurator\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-23 23:00+0000\n"
+"PO-Revision-Date: 2026-06-23 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Spanish <es@li.org>\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "app_title"
+msgstr "Configurador de PyWebDriver"
+
+msgid "welcome_title"
+msgstr "Bienvenido a PyWebDriver"
+
+msgid "welcome_text"
+msgstr "Este asistente le guiara para configurar PyWebDriver: drivers de hardware, certificados SSL y servicio de Windows."
+
+msgid "choose_language"
+msgstr "Seleccione idioma"
+
+msgid "step_welcome"
+msgstr "Bienvenida"
+
+msgid "step_network"
+msgstr "Red"
+
+msgid "step_drivers"
+msgstr "Drivers"
+
+msgid "step_driver_config"
+msgstr "Configuracion"
+
+msgid "step_ssl"
+msgstr "SSL"
+
+msgid "step_service"
+msgstr "Servicio"
+
+msgid "step_summary"
+msgstr "Resumen"
+
+msgid "network_title"
+msgstr "Configuracion de red"
+
+msgid "network_subtitle"
+msgstr "Donde escuchara el servidor de PyWebDriver."
+
+msgid "host"
+msgstr "Host (interfaz)"
+
+msgid "host_hint"
+msgstr "127.0.0.1 = solo local. 0.0.0.0 = todas las interfaces."
+
+msgid "port"
+msgstr "Puerto"
+
+msgid "cors"
+msgstr "Origenes CORS permitidos"
+
+msgid "cors_hint"
+msgstr "Use * para permitir todos. Separe varios con coma."
+
+msgid "debug"
+msgstr "Modo debug (NO usar en produccion)"
+
+msgid "drivers_title"
+msgstr "Drivers a habilitar"
+
+msgid "drivers_subtitle"
+msgstr "Marque los dispositivos que va a utilizar. Los marcados con ★ son recomendados."
+
+msgid "driver_config_title"
+msgstr "Configuracion de drivers"
+
+msgid "driver_config_subtitle"
+msgstr "Ajuste los parametros de cada driver activado. Use Detectar para escanear hardware conectado."
+
+msgid "detect_hardware"
+msgstr "Detectar hardware"
+
+msgid "detecting"
+msgstr "Detectando..."
+
+msgid "no_drivers_selected"
+msgstr "No hay drivers que requieran configuracion adicional."
+
+msgid "ssl_title"
+msgstr "Certificados SSL"
+
+msgid "ssl_subtitle"
+msgstr "PyWebDriver sirve HTTPS. Genere certificados autofirmados con mkcert (incluido) o use los suyos."
+
+msgid "ssl_existing"
+msgstr "Ya existen certificados:"
+
+msgid "ssl_generate"
+msgstr "Generar certificados con mkcert"
+
+msgid "ssl_generating"
+msgstr "Generando certificados..."
+
+msgid "ssl_generated"
+msgstr "Certificados generados correctamente."
+
+msgid "ssl_skip"
+msgstr "Omitir SSL (no recomendado)"
+
+msgid "service_title"
+msgstr "Servicio de Windows"
+
+msgid "service_subtitle"
+msgstr "PyWebDriver se ejecuta como servicio (NSSM). Puede instalarlo y arrancarlo automaticamente."
+
+msgid "service_install"
+msgstr "Instalar servicio al finalizar"
+
+msgid "service_autostart"
+msgstr "Arrancar automaticamente con Windows"
+
+msgid "service_current"
+msgstr "Estado actual:"
+
+msgid "summary_title"
+msgstr "Resumen y aplicar"
+
+msgid "summary_subtitle"
+msgstr "Revise los valores y pulse Aplicar para guardar la configuracion."
+
+msgid "summary_locale"
+msgstr "Idioma"
+
+msgid "summary_network"
+msgstr "Red"
+
+msgid "summary_drivers"
+msgstr "Drivers"
+
+msgid "summary_ssl"
+msgstr "SSL"
+
+msgid "summary_service"
+msgstr "Servicio"
+
+msgid "apply"
+msgstr "Aplicar"
+
+msgid "applying"
+msgstr "Aplicando..."
+
+msgid "applied_ok"
+msgstr "Configuracion aplicada correctamente."
+
+msgid "finish"
+msgstr "Finalizar"
+
+msgid "back"
+msgstr "Atras"
+
+msgid "next"
+msgstr "Siguiente"
+
+msgid "save"
+msgstr "Guardar"
+
+msgid "yes"
+msgstr "Si"
+
+msgid "no"
+msgstr "No"
+
+msgid "auto"
+msgstr "Auto"
+
+msgid "detect"
+msgstr "Detectar"
+
+msgid "refresh"
+msgstr "Refrescar"
+
+msgid "open_folder"
+msgstr "Abrir carpeta"
+
+msgid "start"
+msgstr "Iniciar"
+
+msgid "stop"
+msgstr "Detener"
+
+msgid "restart"
+msgstr "Reiniciar"
+
+msgid "remove"
+msgstr "Desinstalar"
+
+msgid "status_running"
+msgstr "Activo"
+
+msgid "status_stopped"
+msgstr "Detenido"
+
+msgid "status_not_installed"
+msgstr "No instalado"
+
+msgid "status_unknown"
+msgstr "Desconocido"
+
+msgid "field_required"
+msgstr "Campo obligatorio"
+
+msgid "error_generic"
+msgstr "Ha ocurrido un error"

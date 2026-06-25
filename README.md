@@ -181,6 +181,46 @@ sslkey=c:/pywebdriver/localhost+2-key.pem
 - Go to your pywebdriver folder
 - Execute (as an admin) install.bat file and it will restart the service.
 
+### Log files
+
+The Windows service is registered under the name **`Pywebdriver`**. You can manage it
+from the command line:
+
+```bat
+sc query Pywebdriver
+net start Pywebdriver
+net stop Pywebdriver
+```
+
+When running as a Windows service, pywebdriver writes log files in the installation
+folder (e.g. `C:\Program Files\Odoo Pywebdriver\`):
+
+- **`pywebdriver.out.log`** — standard output (normal activity)
+- **`pywebdriver.err.log`** — standard error (warnings and errors)
+
+Logs rotate automatically when they reach 1 MB. When running manually (not as a
+service), output goes to the console only.
+
+### Running manually
+
+To run pywebdriver without the service (e.g. for troubleshooting), open a command prompt
+in the installation folder and run:
+
+```bat
+cd "C:\Program Files\Odoo Pywebdriver"
+pywebdriver.exe
+```
+
+For verbose output, enable debug mode in `config\config.ini`:
+
+```ini
+[flask]
+debug=true
+```
+
+This enables Flask debug mode: verbose request logging and detailed error traces. **Do
+not use in production.**
+
 ## <a name="compile-windows"></a>Compilation on Windows 11
 
 If you need to compile pywebdriver from scratch in Windows 11, it is a prerequisite to

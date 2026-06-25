@@ -7,20 +7,27 @@ on:
     branches: [master]
     tags: ["v*.*.*"]
 
+permissions:
+  contents: write
+
 jobs:
   pre-commit:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
       - uses: pre-commit/action@v3.0.1
   build-windows:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
-          python-version: "3.9"
+          python-version: "3.12"
+          cache: "pip"
       - name: Install dependencies
         run: |
           python -m pip install virtualenv wheel
@@ -29,6 +36,8 @@ jobs:
           python -m pip install -r windows/requirements.txt
           python -m pip install pyinstaller
           python -m pip install .
+          # Create config.ini from template for PyInstaller build
+          Copy-Item "config\config.ini.tmpl" "config.ini"
       - name: Build
         run: |
           ./venv/Scripts/activate
@@ -37,13 +46,14 @@ jobs:
         shell: bash
         run: |
           timeout 3s ./dist/pywebdriver/pywebdriver.exe debug || test "$?" = 124
+          ./dist/pywebdriver/pywebdriver-configurator.exe --silent --locale es
       - name: prepare release
         run: |
           iscc.exe windows/setup.iss
           move windows/Output/pywebdriver_win64_installer.exe .
           7z a pywebdriver_win64.zip dist/pywebdriver
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
@@ -54,14 +64,18 @@ jobs:
   build-jammy:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          cache: "pip"
       - name: Install dependencies
         run: |
           sudo apt --yes update
           sudo apt --yes install libnss3-tools libcups2-dev cups devscripts debhelper dh-python dh-virtualenv python3-wheel python3-setuptools python3-venv libmtp-dev libffi-dev fakeroot python3-distutils python3-pip python3-simplejson python3-flask-babel python3-usb python3-serial python3-netifaces python3-cups python3-pillow python3-flask-cors
       - name: Build
         run: |
+          export DEBEMAIL="ci@example.com"
+          export DEBFULLNAME="CI Build"
           mkdir -p build
           dch --package pywebdriver --newversion $(date +%Y%m%d) --create -m "Created by CI"
           debuild
@@ -73,7 +87,7 @@ jobs:
           sudo journalctl -u pywebdriver
           sudo service pywebdriver status
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
@@ -83,14 +97,18 @@ jobs:
   build-noble:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          cache: "pip"
       - name: Install dependencies
         run: |
           sudo apt --yes update
           sudo apt --yes install build-essential libnss3-tools libcups2-dev cups devscripts debhelper dh-python dh-virtualenv python3-wheel python3-setuptools python3-venv libmtp-dev libffi-dev fakeroot python3-pip python3-simplejson python3-flask-babel python3-usb python3-serial python3-netifaces python3-cups python3-pillow python3-flask-cors
       - name: Build
         run: |
+          export DEBEMAIL="ci@example.com"
+          export DEBFULLNAME="CI Build"
           mkdir -p build
           dch --package pywebdriver --newversion $(date +%Y%m%d) --create -m "Created by CI"
           debuild
@@ -102,7 +120,7 @@ jobs:
           sudo journalctl -u pywebdriver
           sudo service pywebdriver status
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |

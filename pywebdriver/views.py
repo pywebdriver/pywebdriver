@@ -48,12 +48,18 @@ def usb_devices():
     str_devices = subprocess.getoutput("lsusb").split("\n")
     devices = []
     for device in str_devices:
+        parts = device.split(": ID ")
+        # Skip blank lines or non-matching output (e.g. on Windows where lsusb
+        # does not exist and getoutput() returns an error message instead)
+        if len(parts) < 2:
+            continue
+        left = parts[0].split(" ")
         devices.append(
             {
-                "bus": device.split(": ID ")[0].split(" ")[1],
-                "device": device.split(": ID ")[0].split(" ")[3],
-                "id": device.split(": ID ")[1][:9],
-                "description": device.split(": ID ")[1][10:],
+                "bus": left[1] if len(left) > 1 else "",
+                "device": left[3] if len(left) > 3 else "",
+                "id": parts[1][:9],
+                "description": parts[1][10:],
             }
         )
     return render_template("usb_devices.html", devices=devices)
