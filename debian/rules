@@ -19,10 +19,10 @@ override_dh_shlibdeps:
 ubuntu_version := $(shell (lsb_release -r | cut -f2))
 
 override_dh_gencontrol:
-ifeq ($(ubuntu_version),24.04)
-		dh_gencontrol -- '-Voptional:pywebdriverDepends=libtiff6'
+ifneq ($(filter $(ubuntu_version),24.04 26.04),)
+	dh_gencontrol -- '-Voptional:pywebdriverDepends=libtiff6'
 else
-		dh_gencontrol -- '-Voptional:pywebdriverDepends=libtiff5, python3-distutils'
+	dh_gencontrol -- '-Voptional:pywebdriverDepends=libtiff5, python3-distutils'
 endif
 
 override_dh_install:

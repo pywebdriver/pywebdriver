@@ -21,6 +21,7 @@ a = Analysis(
         "pywebdriver.plugins.cups_driver",
         "pywebdriver.plugins.display_driver",
         "pywebdriver.plugins.escpos_driver",
+        "pywebdriver.plugins.cashlogy_cashdrawer_driver",
         "pywebdriver.plugins.serial_driver",
         "pywebdriver.plugins.signature_driver",
         "pywebdriver.plugins.telium_driver",

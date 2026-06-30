@@ -14,6 +14,9 @@ else
 fi
 
 echo "Restarting udev"
-service udev restart
-
+if systemctl list-unit-files | grep -q '^systemd-udevd'; then
+    systemctl restart systemd-udevd || true
+elif systemctl list-unit-files | grep -q '^udev'; then
+    systemctl restart udev || true
+fi
 #DEBHELPER#
