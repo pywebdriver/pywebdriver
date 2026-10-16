@@ -11,6 +11,7 @@ Pillow
 netifaces
 pycups
 pymtp
+cryptography
 git+https://github.com/akretion/py-xml-escpos.git@py3
 pypostelium
 pyposdisplay
