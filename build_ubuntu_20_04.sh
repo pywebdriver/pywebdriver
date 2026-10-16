@@ -20,7 +20,7 @@ cp ../${PACKAGE}_* /build
 DEBUILD
 chmod +x debuild.sh
 
-cat <<DOCKERFILE > Dockerfile
+cat <<DOCKERFILE > Dockerfile.build
 FROM $BASE_IMAGE
 RUN apt-get update && apt-get install -y software-properties-common && add-apt-repository ppa:jyrki-pulliainen/dh-virtualenv
 RUN apt-get update && apt-get install -y debhelper dh-python dh-virtualenv dh-systemd devscripts python3-wheel libcups2-dev python3-setuptools libmtp-dev python3-pip libffi-dev python3-venv python3-distutils python3-pip python3-simplejson python3-flask-babel python3-flask-cors python3-usb python3-serial python3-netifaces python3-cups python3-pillow
@@ -33,7 +33,7 @@ echo
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     docker pull $BASE_IMAGE
-    docker build -t ${PACKAGE}_build .
+    docker build -f Dockerfile.build -t ${PACKAGE}_build .
 fi
 
 read -p "Buid $PACKAGE package? (y/n) " -n 1 -r

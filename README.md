@@ -18,6 +18,7 @@ Windows distributions.
 - [Contributors](#contributors)
 - [Developers Section](#developers)
   - [Installation on Ubuntu](#install-ubuntu)
+  - [Running with Docker](#install-docker)
   - [Installation on Mac OS X](#install-osx)
   - [Installation on Windows 10](#install-windows)
   - [Compilation on Windows 11](#compile-windows)
@@ -113,6 +114,28 @@ reason to have it.
 If your Firefox has a master password, there will be an extra step. The terminal will
 ask _Enter Password or Pin for "NSS Certificate DB"_ and you have to write your Firefox
 master password.
+
+## <a name="install-docker"></a>Running with Docker
+
+The `Dockerfile` at the root of the repository builds an image that serves pywebdriver
+with gunicorn on port 8069:
+
+```
+docker build -t pywebdriver .
+docker run --rm -p 8069:8069 pywebdriver
+```
+
+The image uses `config/config.ini.tmpl` as its configuration. To use your own, mount it
+on `/etc/pywebdriver/config.ini`:
+
+```
+docker run --rm -p 8069:8069 -v $(pwd)/config.ini:/etc/pywebdriver/config.ini:ro pywebdriver
+```
+
+The container only sees the devices you give it, for instance `--device /dev/ttyUSB0`
+for a serial device or `--device /dev/bus/usb` for USB printers. Set the `SCRIPT_NAME`
+environment variable (e.g. `-e SCRIPT_NAME=/iot`) to serve pywebdriver under a path
+prefix behind a reverse proxy.
 
 ## <a name="install-osx"></a>Installation on Mac OS X
 

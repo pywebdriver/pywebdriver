@@ -109,3 +109,18 @@ jobs:
             ../pywebdriver_noble.deb
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  build-docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: docker build -t pywebdriver:ci .
+      - name: Test image
+        run: |
+          docker run --rm -d --name pywebdriver-ci -p 8069:8069 pywebdriver:ci
+          curl --fail --silent --show-error --output /dev/null \
+            --retry 15 --retry-all-errors --retry-delay 2 http://127.0.0.1:8069/
+          curl --fail --silent --show-error --output /dev/null \
+            http://127.0.0.1:8069/status.html
+          docker logs pywebdriver-ci
+          docker stop pywebdriver-ci

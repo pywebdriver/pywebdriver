@@ -20,7 +20,7 @@ cp ../${PACKAGE}_* /build
 DEBUILD
 chmod +x debuild.sh
 
-cat <<DOCKERFILE > Dockerfile
+cat <<DOCKERFILE > Dockerfile.build
 FROM $BASE_IMAGE
 RUN apt-get update && apt-get install -y software-properties-common
 RUN DEBIAN_FRONTEND=noninteractive TZ=Europe/Paris apt-get -y install tzdata
@@ -34,7 +34,7 @@ echo
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     docker pull $BASE_IMAGE
-    docker build -t ${PACKAGE}_build .
+    docker build -f Dockerfile.build -t ${PACKAGE}_build .
 fi
 
 read -p "Buid $PACKAGE package? (y/n) " -n 1 -r
