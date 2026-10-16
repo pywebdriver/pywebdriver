@@ -109,3 +109,61 @@ jobs:
             ../pywebdriver_noble.deb
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  build-jammy-arm64:
+    runs-on: ubuntu-22.04-arm
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - name: Install dependencies
+        run: |
+          sudo apt --yes update
+          sudo apt --yes install build-essential libnss3-tools libcups2-dev cups devscripts debhelper dh-python dh-virtualenv python3-wheel python3-setuptools python3-venv libmtp-dev libffi-dev fakeroot python3-distutils python3-pip python3-simplejson python3-flask-babel python3-usb python3-serial python3-netifaces python3-cups python3-pillow python3-flask-cors
+      - name: Build
+        run: |
+          mkdir -p build
+          dch --package pywebdriver --newversion $(date +%Y%m%d) --create -m "Created by CI"
+          debuild
+      - name: Test build
+        run: |
+          mv ../pywebdriver_$(date +%Y%m%d)_arm64.deb ../pywebdriver_jammy_arm64.deb
+          sudo dpkg -i ../pywebdriver_jammy_arm64.deb
+          sh debian/replace_snakeoil_mkcert.sh
+          sudo journalctl -u pywebdriver
+          sudo service pywebdriver status
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            ../pywebdriver_jammy_arm64.deb
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  build-noble-arm64:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - name: Install dependencies
+        run: |
+          sudo apt --yes update
+          sudo apt --yes install build-essential libnss3-tools libcups2-dev cups devscripts debhelper dh-python dh-virtualenv python3-wheel python3-setuptools python3-venv libmtp-dev libffi-dev fakeroot python3-pip python3-simplejson python3-flask-babel python3-usb python3-serial python3-netifaces python3-cups python3-pillow python3-flask-cors
+      - name: Build
+        run: |
+          mkdir -p build
+          dch --package pywebdriver --newversion $(date +%Y%m%d) --create -m "Created by CI"
+          debuild
+      - name: Test build
+        run: |
+          mv ../pywebdriver_$(date +%Y%m%d)_arm64.deb ../pywebdriver_noble_arm64.deb
+          sudo dpkg -i ../pywebdriver_noble_arm64.deb
+          sh debian/replace_snakeoil_mkcert.sh
+          sudo journalctl -u pywebdriver
+          sudo service pywebdriver status
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            ../pywebdriver_noble_arm64.deb
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

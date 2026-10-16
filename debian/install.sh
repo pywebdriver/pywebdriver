@@ -6,10 +6,16 @@ set -euo pipefail
 
 echo -e "\e[1;33m## Installation of Pywebdriver \e[0m"
 export $(cat /etc/os-release | grep UBUNTU_CODENAME)
-wget https://github.com/pywebdriver/pywebdriver/releases/latest/download/pywebdriver_${UBUNTU_CODENAME}.deb
+case "$(uname -m)" in
+	x86_64) deb_suffix=""; mkcert_arch="amd64" ;;
+	aarch64 | arm64) deb_suffix="_arm64"; mkcert_arch="arm64" ;;
+	*) echo "Unsupported architecture: $(uname -m)"; exit 1 ;;
+esac
+deb="pywebdriver_${UBUNTU_CODENAME}${deb_suffix}.deb"
+wget https://github.com/pywebdriver/pywebdriver/releases/latest/download/${deb}
 sudo apt update
-sudo apt install --reinstall --yes ./pywebdriver_${UBUNTU_CODENAME}.deb
-rm -f ./pywebdriver_${UBUNTU_CODENAME}.deb
+sudo apt install --reinstall --yes ./${deb}
+rm -f ./${deb}
 
 # Variables
 host=$(cat /etc/pywebdriver/config.ini | grep -m 1 host | awk '{print substr($0,6)}')
@@ -23,11 +29,12 @@ if [[ $REPLY =~ ^[Yy]$ ]]
 then
 	sudo mkdir -p /etc/pywebdriver/cert
 	sudo chown pywebdriver:$(whoami) /etc/pywebdriver/cert
-	sudo wget https://github.com/FiloSottile/mkcert/releases/download/v1.4.4/mkcert-v1.4.4-linux-amd64 -P /etc/pywebdriver/cert
-	sudo chmod +x /etc/pywebdriver/cert/mkcert-v1.4.4-linux-amd64
+	mkcert="mkcert-v1.4.4-linux-${mkcert_arch}"
+	sudo wget https://github.com/FiloSottile/mkcert/releases/download/v1.4.4/${mkcert} -P /etc/pywebdriver/cert
+	sudo chmod +x /etc/pywebdriver/cert/${mkcert}
 	cd /etc/pywebdriver/cert
-	sudo /etc/pywebdriver/cert/mkcert-v1.4.4-linux-amd64 -install
-	sudo /etc/pywebdriver/cert/mkcert-v1.4.4-linux-amd64 localhost 127.0.0.1
+	sudo /etc/pywebdriver/cert/${mkcert} -install
+	sudo /etc/pywebdriver/cert/${mkcert} localhost 127.0.0.1
 	sudo chown -R pywebdriver:$(whoami) /etc/pywebdriver/cert
 	sudo sed -i 's/.*sslcert.*/sslcert=\/etc\/pywebdriver\/cert\/localhost+1.pem/' /etc/pywebdriver/config.ini
 	sudo sed -i 's/.*sslkey.*/sslkey=\/etc\/pywebdriver\/cert\/localhost+1-key.pem/' /etc/pywebdriver/config.ini
