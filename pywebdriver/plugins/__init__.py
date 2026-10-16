@@ -10,6 +10,7 @@ DEFAULT_DRIVERS = [
     "escpos_driver",
     "scale_driver",
     "serial_driver",
+    "scan_driver",
     "signature_driver",
     "telium_driver",
     "opcua_driver",

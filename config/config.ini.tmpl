@@ -89,6 +89,18 @@ protocol_name=toledo
 ;port=/dev/ttyS0
 ;baudrate=9600
 
+[scan_driver]
+port=/dev/ttyS0
+baudrate=9600
+bytesize=8
+parity=N
+stopbits=1
+rtscts=false
+xonxoff=true
+timeout=0
+eol_cr=True
+eol_lf=false
+
 
 ; if sections loggers, handlers and formatters are present
 ; configure the logging module using logging.config.fileConfig
